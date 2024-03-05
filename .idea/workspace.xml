@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/dddq/client/Controller.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/client/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/dddq/client/client.fxml" beforeDir="false" />
-    </list>
+    <list default="true" id="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" name="Changes" comment="Basic UI setup" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -133,11 +127,24 @@
       <updated>1709590658358</updated>
       <workItem from="1709590659426" duration="12446000" />
       <workItem from="1709605084034" duration="3135000" />
-      <workItem from="1709608633217" duration="1046000" />
+      <workItem from="1709608633217" duration="1416000" />
     </task>
+    <task id="LOCAL-00001" summary="Basic UI setup">
+      <option name="closed" value="true" />
+      <created>1709610012630</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1709610012631</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Basic UI setup" />
+    <option name="LAST_COMMIT_MESSAGE" value="Basic UI setup" />
   </component>
 </project>
