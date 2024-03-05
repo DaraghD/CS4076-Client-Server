@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" name="Changes" comment="Basic UI setup" />
+    <list default="true" id="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" name="Changes" comment="Basic UI setup">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/client/Client.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/dddq/client/client.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/dddq/client/client.fxml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -62,7 +66,7 @@
       <recent name="$PROJECT_DIR$/src/main/java/dddq/client" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Client">
+  <component name="RunManager">
     <configuration name="App" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="dddq.client.App" />
       <module name="Client" />

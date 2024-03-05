@@ -33,9 +33,7 @@ import javafx.event.EventHandler;
 import javafx.collections.*;
 import javafx.stage.Stage;
 
-/**
- * JavaFX App
- */
+
 public class Client extends Application {
 
     @Override
@@ -87,11 +85,31 @@ public class Client extends Application {
 
         optionBox.setPrefWidth(180);
         optionBox.setPrefHeight(30);
+        Label actionLabel = new Label("Select Action");
+        actionLabel.setLayoutX(37.0);
+        actionLabel.setLayoutY(31.0);
+        actionLabel.setPrefHeight(38.0);
+        actionLabel.setPrefWidth(134.0);
+        actionLabel.setMouseTransparent(true);
 
+        Label moduleLabel = new Label("Choose Module");
+        moduleLabel.setLayoutX(207.0);
+        moduleLabel.setLayoutY(31.0);
+        moduleLabel.setPrefHeight(38.0);
+        moduleLabel.setPrefWidth(134.0);
+        moduleLabel.setMouseTransparent(true);
+
+        Label dateLabel = new Label("Choose Date");
+        dateLabel.setLayoutX(404.0);
+        dateLabel.setLayoutY(31.0);
+        dateLabel.setPrefHeight(38.0);
+        dateLabel.setPrefWidth(134.0);
+        dateLabel.setMouseTransparent(true);
         // if the item of the list is changed
         optionBox.getSelectionModel().selectedIndexProperty().addListener((ov, value, new_value) -> {
             OPTION = options[new_value.intValue()];
             System.out.println(OPTION);
+            actionLabel.setVisible(false);
         });
         optionPane.getChildren().add(optionBox);
 
@@ -109,6 +127,7 @@ public class Client extends Application {
                 link = new Socket(host, PORT);
                 PrintWriter out = new PrintWriter(link.getOutputStream(), true);
                 out.println("STOP");
+                System.out.println("hooray.");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -155,23 +174,36 @@ public class Client extends Application {
         DatePicker datePicker = new DatePicker();
         datePicker.setLayoutX(386);
         datePicker.setLayoutY(31);
+        datePicker.setPrefHeight(38);
+        datePicker.setPrefWidth(202);
 
         // ChoiceBox
-        ChoiceBox<String> choiceBox = new ChoiceBox<>();
-        choiceBox.setLayoutX(31);
-        choiceBox.setLayoutY(31);
+
+        optionBox.setLayoutX(31);
+        optionBox.setLayoutY(31);
+        optionBox.setPrefHeight(38);
+        optionBox.setPrefWidth(148);
 
 
         Button sendButton = new Button("Send");
         sendButton.setLayoutX(240);
         sendButton.setLayoutY(152);
+        sendButton.setPrefWidth(177);
+        sendButton.setPrefHeight(38);
+
 
         // TextField
         TextField textField = new TextField();
         textField.setLayoutX(194);
         textField.setLayoutY(31);
+        textField.setPrefHeight(38);
+        textField.setPrefWidth(177);
 
-        anchorPane.getChildren().addAll(stopButton, datePicker, choiceBox, sendButton, textField);
+
+
+
+
+        anchorPane.getChildren().addAll(stopButton, datePicker, optionBox, sendButton, textField, dateLabel, moduleLabel, actionLabel);
 
 
         Scene scene = new Scene(anchorPane, 600, 400);
