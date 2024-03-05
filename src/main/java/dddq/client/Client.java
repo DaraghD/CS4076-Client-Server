@@ -13,7 +13,9 @@ import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -43,8 +45,10 @@ public class Client extends Application {
     Label label = new Label("Pick a date from the Calendar");
     TextField textField = new TextField("");
     Button sendButton = new Button("Send");
+
+    Button stopButton = new Button("STOP");
     DatePicker datePicker = new DatePicker();
-    Button stopButton = new Button("Stop");
+
     Pane optionPane = new Pane();
     Pane datePane = new Pane();
     String options[] = {"DISPLAY", "ADD", "REMOVE"};
@@ -57,7 +61,10 @@ public class Client extends Application {
     String CLASS;
 
     @Override
-    public void start(Stage stage) {
+    public void start(Stage stage) throws IOException {
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("client.fxml"));
+       Parent root = loader.load();
 
         ChoiceBox optionBox = new ChoiceBox(FXCollections.observableArrayList(options));
         // OptionBoxHandler handler = new OptionBoxHandler();
@@ -82,12 +89,16 @@ public class Client extends Application {
         });
 
 
+
+
+
         stopButton.setOnAction(actionEvent -> {
             Socket link;
             try {
                 link = new Socket(host, PORT);
                 PrintWriter out = new PrintWriter(link.getOutputStream(), true);
                 out.println("STOP");
+                System.out.print("Good job man");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -126,24 +137,46 @@ public class Client extends Application {
                 }
             }
         });
-        HBox buttonBox = new HBox(sendButton, stopButton);
-        HBox.setHgrow(sendButton, Priority.ALWAYS);
+        AnchorPane anchorPane = new AnchorPane();
 
-        GridPane gridPane = new GridPane();
-        gridPane.setAlignment(Pos.CENTER);
-        gridPane.setVgap(50);
+        // Button
+        Button stopButton = new Button("STOP");
+        stopButton.setStyle("-fx-background-color: #ea2727");
+        stopButton.setPrefWidth(119);
+        stopButton.setPrefHeight(47);
+        stopButton.setLayoutX(453);
+        stopButton.setLayoutY(325);
+
+        // DatePicker
+        DatePicker datePicker = new DatePicker();
+        datePicker.setLayoutX(386);
+        datePicker.setLayoutY(31);
+
+        // ChoiceBox
+        ChoiceBox<String> choiceBox = new ChoiceBox<>();
+        choiceBox.setLayoutX(31);
+        choiceBox.setLayoutY(31);
+
+
+        Button sendButton = new Button("Send");
+        sendButton.setLayoutX(240);
+        sendButton.setLayoutY(152);
+
+        // TextField
+        TextField textField = new TextField();
+        textField.setLayoutX(194);
+        textField.setLayoutY(31);
+
+
+        anchorPane.getChildren().addAll(stopButton, datePicker, choiceBox, sendButton, textField);
+
+
+        Scene scene = new Scene(anchorPane, 600, 400);
 
 
 
 
-        gridPane.add(optionPane, 0, 1);
-        gridPane.add(textField, 1, 1);
-        gridPane.add(datePane, 0, 3);
-        gridPane.add(label, 1, 3, 2, 1);
-        gridPane.add(buttonBox, 0, 4, 2, 1);
 
-
-        var scene = new Scene(gridPane, 1000, 1000);
         stage.setScene(scene);
         stage.show();
     }
