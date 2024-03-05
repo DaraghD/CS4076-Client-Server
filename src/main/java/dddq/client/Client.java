@@ -37,21 +37,33 @@ import javafx.stage.Stage;
  * JavaFX App
  */
 public class Client extends Application {
+
+    @Override
+    public void init() {
+        System.out.println("9999");
+    }
     static InetAddress host;
 
-
+    static {
+        try {
+            host = InetAddress.getLocalHost();
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
+    }
     private Label choiceBox;
     static final int PORT = 1234;
     Label label = new Label("Pick a date from the Calendar");
     TextField textField = new TextField("");
     Button sendButton = new Button("Send");
 
-    Button stopButton = new Button("STOP");
     DatePicker datePicker = new DatePicker();
 
     Pane optionPane = new Pane();
     Pane datePane = new Pane();
     String options[] = {"DISPLAY", "ADD", "REMOVE"};
+
+    Button stopButton = new Button("STOP");
     // JAVAFX ALERT DIALOG FOR EXCCEPTION HANDLIN
     // (ADD) LM051-2022 [2022-03-04] 10:00 Room1 Test
     //DISPLAY - ADD - REMOVE - STOP - DEBUG(PRINTALL)
@@ -63,8 +75,11 @@ public class Client extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("client.fxml"));
-       Parent root = loader.load();
+        stopButton.setStyle("-fx-background-color: #ea2727");
+        stopButton.setPrefWidth(119);
+        stopButton.setPrefHeight(47);
+        stopButton.setLayoutX(453);
+        stopButton.setLayoutY(325);
 
         ChoiceBox optionBox = new ChoiceBox(FXCollections.observableArrayList(options));
         // OptionBoxHandler handler = new OptionBoxHandler();
@@ -88,22 +103,18 @@ public class Client extends Application {
 
         });
 
-
-
-
-
         stopButton.setOnAction(actionEvent -> {
             Socket link;
             try {
                 link = new Socket(host, PORT);
                 PrintWriter out = new PrintWriter(link.getOutputStream(), true);
                 out.println("STOP");
-                System.out.print("Good job man");
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
         sendButton.setOnAction(t -> {
+            System.out.println("1111");
             try {
                 host = InetAddress.getLocalHost();
             } catch (UnknownHostException e) {
@@ -139,13 +150,6 @@ public class Client extends Application {
         });
         AnchorPane anchorPane = new AnchorPane();
 
-        // Button
-        Button stopButton = new Button("STOP");
-        stopButton.setStyle("-fx-background-color: #ea2727");
-        stopButton.setPrefWidth(119);
-        stopButton.setPrefHeight(47);
-        stopButton.setLayoutX(453);
-        stopButton.setLayoutY(325);
 
         // DatePicker
         DatePicker datePicker = new DatePicker();
@@ -167,14 +171,10 @@ public class Client extends Application {
         textField.setLayoutX(194);
         textField.setLayoutY(31);
 
-
         anchorPane.getChildren().addAll(stopButton, datePicker, choiceBox, sendButton, textField);
 
 
         Scene scene = new Scene(anchorPane, 600, 400);
-
-
-
 
 
         stage.setScene(scene);
