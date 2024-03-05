@@ -1,77 +1,110 @@
 package dddq.client;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
+
+import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.time.LocalDate;
-
-import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Button;
-import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
-import javafx.scene.control.CheckBox;
-
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.collections.*;
-import javafx.stage.Stage;
-
+import java.util.ArrayList;
 
 public class Client extends Application {
-
-    @Override
-    public void init() {
-        System.out.println("9999");
-    }
     static InetAddress host;
 
     static {
         try {
             host = InetAddress.getLocalHost();
         } catch (UnknownHostException e) {
-            throw new RuntimeException(e);
+            System.out.println("Host ID not found!");
+            System.exit(1);
         }
     }
-    private Label choiceBox;
     static final int PORT = 1234;
+
     Label label = new Label("Pick a date from the Calendar");
-    TextField textField = new TextField("");
-    Button sendButton = new Button("Send");
-
-    DatePicker datePicker = new DatePicker();
-
-    Pane optionPane = new Pane();
-    Pane datePane = new Pane();
+    TextField textField = new TextField();
     String options[] = {"DISPLAY", "ADD", "REMOVE"};
+    ChoiceBox optionBox = new ChoiceBox(FXCollections.observableArrayList(options));
 
+    Label actionLabel = new Label("Select Action");
     Button stopButton = new Button("STOP");
+    Label moduleLabel = new Label("Choose Module");
+    Label dateLabel = new Label("Choose Date");
+    DatePicker datePicker = new DatePicker();
+    Button sendButton = new Button("Send");
+    AnchorPane anchorPane = new AnchorPane();
+    Button gridButton = new Button("Choose Slots");
+
+    Spinner START_TIME_SPINNER = new Spinner();
+    Spinner END_TIME_SPINNER = new Spinner();
+
+    Socket link;
+    PrintWriter out;
+
+    ByteArrayOutputStream byteStream;
+    ObjectOutputStream objectStream;
+
+
+    String OPTION;
+    LocalDate DATE = null;
+    String CLASS;
+    ArrayList<String> TimeSlots = new ArrayList<>();
+
+
     // JAVAFX ALERT DIALOG FOR EXCCEPTION HANDLIN
     // (ADD) LM051-2022 [2022-03-04] 10:00 Room1 Test
     //DISPLAY - ADD - REMOVE - STOP - DEBUG(PRINTALL)
-    // Ask abdul do we make a preset list of classes to choose from or type freestyle - clash testing
-    String OPTION;
-    LocalDate DATE; // maybe change this to dateTime class object ?
-    String CLASS;
 
     @Override
-    public void start(Stage stage) throws IOException {
+    public void init() {
+        try {
+            link = new Socket(host, PORT);
+            out = new PrintWriter(link.getOutputStream(), true);
+            byteStream = new ByteArrayOutputStream();
+            objectStream = new ObjectOutputStream(byteStream);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        //do layout for spinners here
+        START_TIME_SPINNER.setLayoutX(67);
+        START_TIME_SPINNER.setLayoutY(163);
+        //START_TIME_SPINNER.setPrefHeight();
+        //START_TIME_SPINNER.setPrefWidth();
+
+        END_TIME_SPINNER.setLayoutX(378);
+        END_TIME_SPINNER.setLayoutY(163);
+        //END_TIME_SPINNER.setPrefHeight();
+        //END_TIME_SPINNER.setPrefWidth();
+
+        datePicker.setLayoutX(386);
+        datePicker.setLayoutY(31);
+        datePicker.setPrefHeight(38);
+        datePicker.setPrefWidth(202);
+
+        optionBox.setLayoutX(31);
+        optionBox.setLayoutY(31);
+        optionBox.setPrefHeight(38);
+        optionBox.setPrefWidth(148);
+
+        sendButton.setLayoutX(240);
+        sendButton.setLayoutY(152);
+        sendButton.setPrefWidth(177);
+        sendButton.setPrefHeight(38);
+
+        textField.setLayoutX(194);
+        textField.setLayoutY(31);
+        textField.setPrefHeight(38);
+        textField.setPrefWidth(177);
 
         stopButton.setStyle("-fx-background-color: #ea2727");
         stopButton.setPrefWidth(119);
@@ -79,67 +112,72 @@ public class Client extends Application {
         stopButton.setLayoutX(453);
         stopButton.setLayoutY(325);
 
-        ChoiceBox optionBox = new ChoiceBox(FXCollections.observableArrayList(options));
-        // OptionBoxHandler handler = new OptionBoxHandler();
-        //handler.optionBox = optionBox;
-
         optionBox.setPrefWidth(180);
         optionBox.setPrefHeight(30);
-        Label actionLabel = new Label("Select Action");
         actionLabel.setLayoutX(37.0);
         actionLabel.setLayoutY(31.0);
         actionLabel.setPrefHeight(38.0);
         actionLabel.setPrefWidth(134.0);
         actionLabel.setMouseTransparent(true);
 
-        Label moduleLabel = new Label("Choose Module");
         moduleLabel.setLayoutX(207.0);
         moduleLabel.setLayoutY(31.0);
         moduleLabel.setPrefHeight(38.0);
         moduleLabel.setPrefWidth(134.0);
         moduleLabel.setMouseTransparent(true);
 
-        Label dateLabel = new Label("Choose Date");
         dateLabel.setLayoutX(404.0);
         dateLabel.setLayoutY(31.0);
         dateLabel.setPrefHeight(38.0);
         dateLabel.setPrefWidth(134.0);
         dateLabel.setMouseTransparent(true);
-        // if the item of the list is changed
+
         optionBox.getSelectionModel().selectedIndexProperty().addListener((ov, value, new_value) -> {
             OPTION = options[new_value.intValue()];
             System.out.println(OPTION);
             actionLabel.setVisible(false);
         });
-        optionPane.getChildren().add(optionBox);
 
-        //send response - OPTION , DATE , CLASS -
-        datePane.getChildren().add(datePicker);
-        datePicker.setOnAction(e -> {
-            DATE = datePicker.getValue();
-            System.out.println(DATE);
+        gridButton.setOnAction(actionEvent -> {
+            if(DATE == null) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Alert");
+                //throw exception with text -> move text into alert - exception incorrection action !! ? ?
+                alert.setHeaderText(null);
+                alert.setContentText("You must select a date before viewing schedule");
+                alert.showAndWait();
+                //pop up stage.
+                // show schedule with date
+                // return time slots that they choose.
+            }
+
+            out.println("VIEW "+ DATE);
+            try {
+                objectStream.writeObject(new Message("VIEW",DATE.toString()));
+            } catch (IOException e) {
+                System.out.println("Couldnt send object");
+            }
+
 
         });
 
         stopButton.setOnAction(actionEvent -> {
-            Socket link;
-            try {
-                link = new Socket(host, PORT);
-                PrintWriter out = new PrintWriter(link.getOutputStream(), true);
                 out.println("STOP");
-                System.out.println("hooray.");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         });
+    }
+
+    @Override
+    public void start(Stage stage) throws IOException {
+        datePicker.setOnAction(e -> {
+            DATE = datePicker.getValue();
+            System.out.println(DATE);
+            dateLabel.setVisible(false);
+
+        });
+
         sendButton.setOnAction(t -> {
             System.out.println("1111");
-            try {
-                host = InetAddress.getLocalHost();
-            } catch (UnknownHostException e) {
-                System.out.println("Host ID not found!");
-                System.exit(1);
-            }
+
             Socket link = null;
             try {
                 link = new Socket(host, PORT);
@@ -155,6 +193,7 @@ public class Client extends Application {
                 out.println(message);
                 response = in.readLine();
                 label.setText(response);
+
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
@@ -167,48 +206,15 @@ public class Client extends Application {
                 }
             }
         });
-        AnchorPane anchorPane = new AnchorPane();
-
-
-        // DatePicker
-        DatePicker datePicker = new DatePicker();
-        datePicker.setLayoutX(386);
-        datePicker.setLayoutY(31);
-        datePicker.setPrefHeight(38);
-        datePicker.setPrefWidth(202);
-
-        // ChoiceBox
-
-        optionBox.setLayoutX(31);
-        optionBox.setLayoutY(31);
-        optionBox.setPrefHeight(38);
-        optionBox.setPrefWidth(148);
-
-
-        Button sendButton = new Button("Send");
-        sendButton.setLayoutX(240);
-        sendButton.setLayoutY(152);
-        sendButton.setPrefWidth(177);
-        sendButton.setPrefHeight(38);
-
-
-        // TextField
-        TextField textField = new TextField();
-        textField.setLayoutX(194);
-        textField.setLayoutY(31);
-        textField.setPrefHeight(38);
-        textField.setPrefWidth(177);
 
 
 
 
+        anchorPane.getChildren().addAll(stopButton, datePicker, optionBox, sendButton, textField, dateLabel, moduleLabel, actionLabel,gridButton);
 
-        anchorPane.getChildren().addAll(stopButton, datePicker, optionBox, sendButton, textField, dateLabel, moduleLabel, actionLabel);
 
 
         Scene scene = new Scene(anchorPane, 600, 400);
-
-
         stage.setScene(scene);
         stage.show();
     }

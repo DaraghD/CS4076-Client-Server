@@ -13,5 +13,13 @@
       <Label layoutX="37.0" layoutY="31.0" prefHeight="38.0" prefWidth="134.0" text="Select Action" />
       <Label layoutX="207.0" layoutY="31.0" prefHeight="38.0" prefWidth="134.0" text="Choose Module" />
       <Label layoutX="217.0" layoutY="41.0" prefHeight="38.0" prefWidth="134.0" text="Choose Module" />
+      <Spinner layoutX="67.0" layoutY="163.0" />
+      <Spinner layoutX="378.0" layoutY="163.0" />
+      <SplitMenuButton layoutX="-9.0" layoutY="278.0" mnemonicParsing="false" text="SplitMenuButton">
+        <items>
+          <MenuItem mnemonicParsing="false" text="Action 1" />
+          <MenuItem mnemonicParsing="false" text="Action 2" />
+        </items>
+      </SplitMenuButton>
     </children>
 </AnchorPane>
