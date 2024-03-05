@@ -5,4 +5,6 @@ module dddq.client {
 
     opens dddq.client to javafx.fxml;
     exports dddq.client;
+    exports dddq.server;
+    opens dddq.server to javafx.fxml;
 }

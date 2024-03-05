@@ -1,11 +1,13 @@
-package dddq.client;
+package dddq.server;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import dddq.client.IncorrectActionException;
+import dddq.client.Message;
+import dddq.client.Schedule;
+
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,9 +18,9 @@ public class Server {
     static Map<String, String> classSchedules = new HashMap<>();
 
     //hashmap of dates - schedules for that date
-
-    static HashMap<Date,Schedule> timeTables = new HashMap<>();
-
+    static HashMap<LocalDate, Schedule> timeTables = new HashMap<>();
+    static ObjectInputStream objectInputStream;
+    static ObjectOutputStream objectOutputStream;
 
     public static void main(String[] args) {
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
@@ -29,17 +31,57 @@ public class Server {
             while (true) {
 
                 Socket link = serverSocket.accept();
-                BufferedReader in = new BufferedReader(new InputStreamReader(link.getInputStream()));
-                PrintWriter out = new PrintWriter(link.getOutputStream(), true);
+                //BufferedReader in = new BufferedReader(new InputStreamReader(link.getInputStream()));
+                //PrintWriter out = new PrintWriter(link.getOutputStream(), true);
 
-                String message = in.readLine();
-                String x = processClientMessage(message);
+                objectInputStream = new ObjectInputStream(link.getInputStream());
+                objectOutputStream = new ObjectOutputStream(link.getOutputStream());
+
+                //String message = in.readLine();
+                //String x = processClientMessage(message);
+                Message message = (Message) objectInputStream.readObject();
+                System.out.println(message);
+                System.out.println(message.getClass());
+                processClientMessage(message);
 
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (ClassNotFoundException | IncorrectActionException e) {
+           System.out.println(e);
         } finally {
-                System.out.println("\n Closing Connection... ");
+            System.out.println("\n Closing Connection... ");
+        }
+    }
+
+    private static void processClientMessage(Message message) throws IOException, IncorrectActionException {
+        switch (message.getOPTION()) {
+            case "ADD":
+                break;
+
+            case "VIEW":
+
+                Schedule schedule = timeTables.get(message.getDate());
+                if(schedule == null){
+                    //if schedule not there, create new empty schedule and add it to timetable
+                    schedule = new Schedule();
+                }
+                System.out.println("VIEWING SCHEDULE FOR : " + message.getDate());
+
+                timeTables.put(message.getDate(),schedule);
+                // if()
+
+                objectOutputStream.writeObject(schedule);
+               // objectOutputStream.writeObject(classSchedules.get(message.getCONTENTS()));
+                break;
+            case "REMOVE":
+                break;
+            case "DEBUG":
+                break;
+            case "DISPLAY":
+                break;
+            default:
+                throw new IncorrectActionException("NOT A VALID COMMAND");
         }
     }
 
@@ -47,7 +89,7 @@ public class Server {
     private static String processClientMessage(String clientMessage) {
         // Action format: ADD LM051-2022 2022-03-04 9:00 - 10:00 Room1
         //                                          START_TIME - END_TIME
-        switch(clientMessage.split("\\s+")[0]) {
+        switch (clientMessage.split("\\s+")[0]) {
             case "ADD":
                 // Extract the information after "ADD" and add it to the schedule
                 String classInfo = clientMessage.substring("ADD".length()).trim();
@@ -64,7 +106,9 @@ public class Server {
                 break;
             case "VIEW":
                 //VIEW 12/07/06
-                if timeTables.containsKey(clientMessage); // send full objects TODO: aaaa
+
+
+                //if timeTables.containsKey(clientMessage); // send full objects TODO: aaaa
             case "REMOVE":
                 // ... (existing REMOVE logic)
                 break;
@@ -73,9 +117,8 @@ public class Server {
             default:
                 return "Invalid action";
         }
-
-
-
+        return "";
+    }
 
 
     private static String displaySchedule(String clientMessage) {
@@ -88,8 +131,6 @@ public class Server {
             return "No schedule found for " + className;
         }
     }
-
-
 
 
     private String getAllSchedules() {
@@ -114,7 +155,7 @@ public class Server {
             if (filteredSchedules.length() > 0) {
                 return filteredSchedules.toString();
             } else {
-                return "No schedules found for the specified filter: " ;
+                return "No schedules found for the specified filter: ";
             }
         }
     }

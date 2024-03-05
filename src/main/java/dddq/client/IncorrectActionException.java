@@ -2,8 +2,12 @@ package dddq.client;
 
 public class IncorrectActionException extends Exception{
 
-    IncorrectActionException(){
+    public IncorrectActionException(){
         super();
+    }
+
+    public IncorrectActionException(String e){
+        super(e);
     }
 
 

@@ -1,16 +1,11 @@
 package dddq.client;
 
-import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.GridPane;
-
+import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
-public class Schedule  {
+public class Schedule implements Serializable {
     private LocalDate date;
     private HashMap<String,Boolean> timeTable = new HashMap<>();
     public Schedule() {
@@ -54,6 +49,14 @@ public class Schedule  {
             return true;
         }
         return false;
+    }
+    @Override
+    public String toString(){
+        StringBuilder string = new StringBuilder();
+        for(Map.Entry<String,Boolean> entry : timeTable.entrySet()){
+           string.append(entry.getKey() + ":" + entry.getValue()+"\n");
+        }
+        return string.toString();
     }
 
     // INITIALIZE SERVER, WHEN START SERVER, CHECK ALL SCHEDULES, IF SCHEDULE.DAY < CURRENT DAY - DELETE SCHEDULE
