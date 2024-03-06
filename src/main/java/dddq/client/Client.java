@@ -164,10 +164,6 @@ public class Client extends Application {
                         scheduleStage.setScene(scheduleScene);
                         scheduleStage.show();
 
-
-
-
-
                         System.out.println(schedule);
                     } catch (IOException | ClassNotFoundException e) {
                         System.out.println("Couldnt send object");
@@ -240,6 +236,18 @@ public class Client extends Application {
         launch();
     }
 
+
+    public static class submitScheduleHandler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent actionEvent) {
+            Button button = (Button) actionEvent.getSource();
+            Scene scene = button.getScene();
+            Stage stage = (Stage) scene.getWindow();
+            //might need some submit logic here ?>
+            stage.close();
+
+        }
+    }
 
     public static class buttonScheduleHandler implements EventHandler<ActionEvent> {
         @Override

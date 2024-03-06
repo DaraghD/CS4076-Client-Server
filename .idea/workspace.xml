@@ -4,12 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" name="Changes" comment="created schedule stage, redid schedule class to allow for modules to be in the schedule instead of just boolean.">
+    <list default="true" id="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" name="Changes" comment="Can now select times, orange = selected. Need to make some test data ( persistent )">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/client/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/Schedule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/client/Schedule.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/TCPEchoServer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dddq/server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/server/Server.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/ScheduleStage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/client/ScheduleStage.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -150,7 +148,7 @@
       <workItem from="1709590659426" duration="12446000" />
       <workItem from="1709605084034" duration="3135000" />
       <workItem from="1709608633217" duration="1416000" />
-      <workItem from="1709749425052" duration="4912000" />
+      <workItem from="1709749425052" duration="6415000" />
     </task>
     <task id="LOCAL-00001" summary="Basic UI setup">
       <option name="closed" value="true" />
@@ -192,7 +190,23 @@
       <option name="project" value="LOCAL" />
       <updated>1709755658002</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Can now select times, orange = selected. Need to make some test data ( persistent )">
+      <option name="closed" value="true" />
+      <created>1709757582353</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1709757582353</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Can now select times, orange = selected. Need to make some test data ( persistent )">
+      <option name="closed" value="true" />
+      <created>1709757593179</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1709757593179</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -215,6 +229,7 @@
     <MESSAGE value="added eventhandler for schedule buttons" />
     <MESSAGE value="up" />
     <MESSAGE value="created schedule stage, redid schedule class to allow for modules to be in the schedule instead of just boolean." />
-    <option name="LAST_COMMIT_MESSAGE" value="created schedule stage, redid schedule class to allow for modules to be in the schedule instead of just boolean." />
+    <MESSAGE value="Can now select times, orange = selected. Need to make some test data ( persistent )" />
+    <option name="LAST_COMMIT_MESSAGE" value="Can now select times, orange = selected. Need to make some test data ( persistent )" />
   </component>
 </project>
