@@ -15,7 +15,8 @@ import java.util.Map;
 public class Server {
     private static ServerSocket serverSocket;
     private static final int PORT = 1234;
-    static Map<String, String> classSchedules = new HashMap<>();
+    //static Map<String, String> classSchedules = new HashMap<>();
+    //change this to schedule object
 
     //hashmap of dates - schedules for that date
     static HashMap<LocalDate, Schedule> timeTables = new HashMap<>();

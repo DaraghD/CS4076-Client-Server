@@ -133,7 +133,7 @@ public class Client extends Application {
                 actionLabel.setVisible(false);
             });
 
-            //viewing schedules
+            //viewing schedules button
             gridButton.setOnAction(actionEvent -> {
                 if (DATE == null) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -142,33 +142,34 @@ public class Client extends Application {
                     alert.setHeaderText(null);
                     alert.setContentText("You must select a date before viewing schedule");
                     alert.showAndWait();
-                    return;
                     //pop up stage.
                     // show schedule with date
                     // return time slots that they choose.
                 }
                 //make handler in this class so it can access these variables, but give the handler to the button in other class
+                else { //
+                    try {
+                        Message message = new Message("VIEW");
+                        message.setDate(DATE);
+                        //maybe do a builder for messages ?
+                        //send view date - > server replies with schedule object, create grid view wit hthis
+
+                        objectOutputStream.writeObject(message);
+                        objectOutputStream.flush();
+                        Schedule schedule = (Schedule) objectInputStream.readObject();
 
 
-                try {
-                    Message message = new Message("VIEW");
-                    message.setDate(DATE);
-                    //maybe do a builder for messages ?
-                    //send view date - > server replies with schedule object, create grid view wit hthis
-
-                    objectOutputStream.writeObject(message);
-                    objectOutputStream.flush();
-                    Schedule schedule = (Schedule) objectInputStream.readObject();
 
 
-                    System.out.println(schedule);
-                } catch (IOException | ClassNotFoundException e) {
-                    System.out.println("Couldnt send object");
-                    e.printStackTrace();
-                }
+                        System.out.println(schedule);
+                    } catch (IOException | ClassNotFoundException e) {
+                        System.out.println("Couldnt send object");
+                        e.printStackTrace();
+                    }
 
 
-            });
+                }});
+
 
             stopButton.setOnAction(actionEvent -> {
                 out.println("STOP");
@@ -211,6 +212,9 @@ public class Client extends Application {
                 //LocalDate
                 dateLabel.setVisible(false);
             });
+            
+            //eventhandler for textbox for module code , how to make it so when they are finishehd typing it updates the variable,
+            // maybe just pull the variable e.g textbox.gettext(), when they click send .
 
 
         }
@@ -234,7 +238,7 @@ public class Client extends Application {
         @Override
         public void handle(ActionEvent actionEvent) {
             Button button = (Button) actionEvent.getSource();
-            test.buttonData data = (test.buttonData) button.getUserData();
+            ScheduleStage.buttonData data = (ScheduleStage.buttonData) button.getUserData();
             if (data.isAVAILABLE()) {
                 // change colour of it
                 System.out.println("Selected  time : " + button.getText());
