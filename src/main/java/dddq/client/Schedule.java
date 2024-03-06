@@ -38,20 +38,23 @@ public class Schedule implements Serializable {
         timeTable.put("17:00", new TimeSlot());
         timeTable.put("17:30", new TimeSlot());
         timeTable.put("18:00", new TimeSlot());
+        timeTable.put("18:30", new TimeSlot());
 
     }
 
-    public HashMap<String, Boolean> getTimeTable() {
+    public HashMap<String, TimeSlot> getTimeTable() {
         return timeTable;
     }
 
     public boolean checkTime(String time) {
-        return timeTable.get(time);
+        System.out.println("CHECKING TIEM "+ time);
+        System.out.println("TIME IS : " + timeTable.get(time).isTaken());
+        return timeTable.get(time).isTaken();
     }
 
-    public boolean bookTime(String time) {
-        if (timeTable.get(time) != false) {
-            timeTable.put(time, true);
+    public boolean bookTime(String time) throws IncorrectActionException {
+        if (timeTable.get(time).isTaken() != false) {
+            timeTable.get(time).takeSlot();
             return true;
         }
         return false;
@@ -60,8 +63,8 @@ public class Schedule implements Serializable {
     @Override
     public String toString() {
         StringBuilder string = new StringBuilder();
-        for (Map.Entry<String, Boolean> entry : timeTable.entrySet()) {
-            string.append(entry.getKey() + ":" + entry.getValue() + "\n");
+        for (Map.Entry<String, TimeSlot> entry : timeTable.entrySet()) {
+            string.append(entry.getKey() + ":" + entry.getValue().isTaken() + "\n");
         }
         return string.toString();
     }

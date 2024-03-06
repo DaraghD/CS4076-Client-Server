@@ -157,6 +157,13 @@ public class Client extends Application {
                         objectOutputStream.writeObject(message);
                         objectOutputStream.flush();
                         Schedule schedule = (Schedule) objectInputStream.readObject();
+                        Stage scheduleStage = new Stage();
+
+                        GridPane scheduleGrid = ScheduleStage.createButtonGrid(schedule);
+                        Scene scheduleScene = new Scene(scheduleGrid,400,300);
+                        scheduleStage.setScene(scheduleScene);
+                        scheduleStage.show();
+
 
 
 
@@ -239,7 +246,8 @@ public class Client extends Application {
         public void handle(ActionEvent actionEvent) {
             Button button = (Button) actionEvent.getSource();
             ScheduleStage.buttonData data = (ScheduleStage.buttonData) button.getUserData();
-            if (data.isAVAILABLE()) {
+
+            if (!data.isTaken()) {
                 // change colour of it
                 System.out.println("Selected  time : " + button.getText());
                 if(listOfTimes.contains(button.getText())){
