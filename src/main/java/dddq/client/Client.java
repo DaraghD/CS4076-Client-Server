@@ -2,9 +2,12 @@ package dddq.client;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import java.io.*;
@@ -39,8 +42,7 @@ public class Client extends Application {
     Button sendButton = new Button("Send");
     AnchorPane anchorPane = new AnchorPane();
     Button gridButton = new Button("Choose Slots");
-    Spinner START_TIME_SPINNER = new Spinner();
-    Spinner END_TIME_SPINNER = new Spinner();
+    GridPane schedulePane = new GridPane();
     Socket link;
     PrintWriter out;
     BufferedReader in;
@@ -48,12 +50,14 @@ public class Client extends Application {
     ObjectInputStream objectInputStream;
     String OPTION;
     LocalDate DATE = null;
+    static ArrayList<String> listOfTimes = new ArrayList<>();
     String CLASS;
     ArrayList<String> TimeSlots = new ArrayList<>();
 
     // JAVAFX ALERT DIALOG FOR EXCCEPTION HANDLIN
     // (ADD) LM051-2022 [2022-03-04] 10:00 Room1 Test
     //DISPLAY - ADD - REMOVE - STOP - DEBUG(PRINTALL)
+
 
     @Override
     public void init() {
@@ -66,24 +70,13 @@ public class Client extends Application {
             objectInputStream = new ObjectInputStream(link.getInputStream());
 
         } catch (IOException e) {
-            System.out.println(e+"\n\n\n");
+            System.out.println(e + "\n\n\n");
             e.printStackTrace();
-       }
+        }
 
         //Putting things into { } lets us close it to make the file smaller when viewing.
         //components
         {
-            //do layout for spinners here
-            START_TIME_SPINNER.setLayoutX(67);
-            START_TIME_SPINNER.setLayoutY(163);
-            //START_TIME_SPINNER.setPrefHeight();
-            //START_TIME_SPINNER.setPrefWidth();
-
-            END_TIME_SPINNER.setLayoutX(378);
-            END_TIME_SPINNER.setLayoutY(163);
-            //END_TIME_SPINNER.setPrefHeight();
-            //END_TIME_SPINNER.setPrefWidth();
-
             datePicker.setLayoutX(386);
             datePicker.setLayoutY(31);
             datePicker.setPrefHeight(38);
@@ -154,6 +147,7 @@ public class Client extends Application {
                     // show schedule with date
                     // return time slots that they choose.
                 }
+                //make handler in this class so it can access these variables, but give the handler to the button in other class
 
 
                 try {
@@ -165,6 +159,8 @@ public class Client extends Application {
                     objectOutputStream.writeObject(message);
                     objectOutputStream.flush();
                     Schedule schedule = (Schedule) objectInputStream.readObject();
+
+
                     System.out.println(schedule);
                 } catch (IOException | ClassNotFoundException e) {
                     System.out.println("Couldnt send object");
@@ -215,6 +211,8 @@ public class Client extends Application {
                 //LocalDate
                 dateLabel.setVisible(false);
             });
+
+
         }
     }
 
@@ -231,5 +229,32 @@ public class Client extends Application {
         launch();
     }
 
+
+    public static class buttonScheduleHandler implements EventHandler<ActionEvent> {
+        @Override
+        public void handle(ActionEvent actionEvent) {
+            Button button = (Button) actionEvent.getSource();
+            test.buttonData data = (test.buttonData) button.getUserData();
+            if (data.isAVAILABLE()) {
+                // change colour of it
+                System.out.println("Selected  time : " + button.getText());
+                if(listOfTimes.contains(button.getText())){
+                    // popup here
+                    System.out.println("Already added time slot ");
+                }
+                else{
+                    listOfTimes.add(button.getText());
+                    button.setStyle("-fx-background-color: orange; fx-text-fill:white;");
+                    //orange = selected, red = taken by soemone else
+                }
+
+                data.click();
+            } else {
+                System.out.println("Time slot in use "); // alert popup instead ?
+                return;
+            }
+
+        }
+    }
 
 }

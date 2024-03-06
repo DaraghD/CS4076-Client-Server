@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
+import dddq.client.Client.buttonScheduleHandler;
 public class test extends Application {
 
     public void createSchedule(){
@@ -31,6 +32,18 @@ public class test extends Application {
         primaryStage.show();
     }
 
+    public class buttonData{
+        private boolean AVAILABLE = true;
+
+        public void click(){
+            AVAILABLE = !AVAILABLE;
+        }
+        public boolean isAVAILABLE(){
+            return AVAILABLE;
+        }
+
+
+    }
     // Method to create a 4x5 grid pane with buttons
     private GridPane createButtonGrid() {
         GridPane gridPane = new GridPane();
@@ -63,6 +76,9 @@ public class test extends Application {
                 }
                 // Create a button with the time as text
                 Button button = new Button(formattedTime);
+                button.setUserData(new buttonData());
+                buttonScheduleHandler handler1 = new buttonScheduleHandler();
+                button.setOnAction(handler1);
                 // Add the button to the grid
                 gridPane.add(button, col, row);
             }
