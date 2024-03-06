@@ -58,9 +58,7 @@ public class Server {
         switch (message.getOPTION()) {
             case "ADD":
                 break;
-
             case "VIEW":
-
                 Schedule schedule = timeTables.get(message.getDate());
                 if(schedule == null){
                     //if schedule not there, create new empty schedule and add it to timetable
