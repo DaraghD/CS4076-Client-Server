@@ -4,11 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" name="Changes" comment="up">
+    <list default="true" id="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" name="Changes" comment="created schedule stage, redid schedule class to allow for modules to be in the schedule instead of just boolean.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/client/Client.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/Schedule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/client/Schedule.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/test.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/TCPEchoServer.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dddq/server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/server/Server.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -150,7 +150,7 @@
       <workItem from="1709590659426" duration="12446000" />
       <workItem from="1709605084034" duration="3135000" />
       <workItem from="1709608633217" duration="1416000" />
-      <workItem from="1709749425052" duration="2797000" />
+      <workItem from="1709749425052" duration="4912000" />
     </task>
     <task id="LOCAL-00001" summary="Basic UI setup">
       <option name="closed" value="true" />
@@ -184,7 +184,15 @@
       <option name="project" value="LOCAL" />
       <updated>1709737586553</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="created schedule stage, redid schedule class to allow for modules to be in the schedule instead of just boolean.">
+      <option name="closed" value="true" />
+      <created>1709755658002</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1709755658002</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -206,6 +214,7 @@
     <MESSAGE value="can send objects back and forth, need to work on displaying schedule on popup stage,&#10;might also wanna make a builder for message class" />
     <MESSAGE value="added eventhandler for schedule buttons" />
     <MESSAGE value="up" />
-    <option name="LAST_COMMIT_MESSAGE" value="up" />
+    <MESSAGE value="created schedule stage, redid schedule class to allow for modules to be in the schedule instead of just boolean." />
+    <option name="LAST_COMMIT_MESSAGE" value="created schedule stage, redid schedule class to allow for modules to be in the schedule instead of just boolean." />
   </component>
 </project>
