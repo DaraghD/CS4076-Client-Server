@@ -13,7 +13,6 @@ public class ScheduleStage {
 
     public static class buttonData{
         private boolean isTaken = false;
-
         public buttonData(boolean taken){
             isTaken = taken;
         }
@@ -78,11 +77,15 @@ public class ScheduleStage {
                 button.setOnAction(handler1);
                 gridPane.add(button, col, row);
 
+
             }
 
 
         }
         return gridPane;
+
+        //todo : undo all of schedule stuff, work on days not date, only need calendar of 5 days
+        // make different stage for all 5 days?
     }
 
 }

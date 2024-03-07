@@ -32,7 +32,7 @@ public class Client extends Application {
     static final int PORT = 1234;
     Label label = new Label("Pick a date from the Calendar");
     TextField textField = new TextField();
-    String options[] = {"DISPLAY", "ADD", "REMOVE"};
+    String[] options = {"DISPLAY", "ADD", "REMOVE"};
     ChoiceBox optionBox = new ChoiceBox(FXCollections.observableArrayList(options));
     Label actionLabel = new Label("Select Action");
     Button stopButton = new Button("STOP");
@@ -50,14 +50,11 @@ public class Client extends Application {
     ObjectInputStream objectInputStream;
     String OPTION;
     LocalDate DATE = null;
-    static ArrayList<String> listOfTimes = new ArrayList<>();
+    static ArrayList<String> chosenTimes = new ArrayList<>();
     String CLASS;
-    ArrayList<String> TimeSlots = new ArrayList<>();
-
     // JAVAFX ALERT DIALOG FOR EXCCEPTION HANDLIN
     // (ADD) LM051-2022 [2022-03-04] 10:00 Room1 Test
     //DISPLAY - ADD - REMOVE - STOP - DEBUG(PRINTALL)
-
 
     @Override
     public void init() {
@@ -149,6 +146,7 @@ public class Client extends Application {
                 //make handler in this class so it can access these variables, but give the handler to the button in other class
                 else { //
                     try {
+                        chosenTimes = new ArrayList<>(); // Clearing arraylist, if they choose times then reopen schedule- it resets chosen times.
                         Message message = new Message("VIEW");
                         message.setDate(DATE);
                         //maybe do a builder for messages ?
@@ -164,13 +162,10 @@ public class Client extends Application {
                         scheduleStage.setScene(scheduleScene);
                         scheduleStage.show();
 
-                        System.out.println(schedule);
                     } catch (IOException | ClassNotFoundException e) {
                         System.out.println("Couldnt send object");
                         e.printStackTrace();
                     }
-
-
                 }});
 
 
@@ -180,8 +175,6 @@ public class Client extends Application {
             });
 
             sendButton.setOnAction(t -> {
-                System.out.println("1111");
-
                 Socket link = null;
                 try {
                     link = new Socket(host, PORT);
@@ -193,7 +186,7 @@ public class Client extends Application {
                     System.out.println("Enter message to be sent to server: ");
                     message = textField.getText().toString();
                     out.println(message);
-                    response = in.readLine();
+                   // response = in.readLine();
                     label.setText(response);
 
                 } catch (IOException e) {
@@ -217,8 +210,7 @@ public class Client extends Application {
             });
             
             //eventhandler for textbox for module code , how to make it so when they are finishehd typing it updates the variable,
-            // maybe just pull the variable e.g textbox.gettext(), when they click send .
-
+            // maybe just pull the variable e.g textbox.gettext(), when they click send
 
         }
     }
@@ -258,12 +250,12 @@ public class Client extends Application {
             if (!data.isTaken()) {
                 // change colour of it
                 System.out.println("Selected  time : " + button.getText());
-                if(listOfTimes.contains(button.getText())){
+                if(chosenTimes.contains(button.getText())){
                     // popup here
                     System.out.println("Already added time slot ");
                 }
                 else{
-                    listOfTimes.add(button.getText());
+                    chosenTimes.add(button.getText());
                     button.setStyle("-fx-background-color: orange; fx-text-fill:white;");
                     //orange = selected, red = taken by soemone else
                 }

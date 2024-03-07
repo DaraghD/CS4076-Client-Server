@@ -58,6 +58,8 @@ public class Server {
     private static void processClientMessage(Message message) throws IOException, IncorrectActionException {
         switch (message.getOPTION()) {
             case "ADD":
+
+                // take a list of times, Module , date
                 break;
             case "VIEW":
                 Schedule schedule = timeTables.get(message.getDate());
