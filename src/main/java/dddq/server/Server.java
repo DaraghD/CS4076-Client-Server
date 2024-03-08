@@ -12,72 +12,60 @@ import java.util.HashMap;
 
 public class Server {
     private static final int PORT = 1234;
+    static Socket link;
     static HashMap<LocalDate, Schedule> timeTables = new HashMap<>();
 
-    public static void main(String[] args) {
-        try (ServerSocket serverSocket = new ServerSocket(PORT)) {
-            System.out.println("Server is running and waiting for connections...");
+    public static void main(String[] args) throws IOException {
+        try {
+            try (ServerSocket serverSocket = new ServerSocket(PORT)) {
+                System.out.println("Server is running and waiting for connections...");
+                // Wait for a client to connect
+                link = serverSocket.accept();
+            }
+            catch (IOException e) {
+                System.out.println("Error: " + e.getMessage());
+            }
+            System.out.println("Client connected: " + link.getInetAddress());
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(link.getOutputStream());
+            ObjectInputStream objectInputStream = new ObjectInputStream(link.getInputStream());
 
             while (true) {
-                Socket link = serverSocket.accept();
-                System.out.println("Client connected: " + link.getInetAddress());
-
-                //Create new thread to handle the client
-                Thread clientHandler = new Thread(() -> {
-                    try (
-                            ObjectOutputStream objectOutputStream = new ObjectOutputStream(link.getOutputStream());
-                            ObjectInputStream objectInputStream = new ObjectInputStream(link.getInputStream())
-                    ) {
-                        processClientMessages(objectInputStream, objectOutputStream);
-                    } catch (IOException | ClassNotFoundException | IncorrectActionException e) {
-                        e.printStackTrace();
-                    } finally {
-                        System.out.println("Closing connection with client: " + link.getInetAddress());
-                        try {
-                            link.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-
-                //Start  thread to handle the client
-                clientHandler.start();
+                // Process messages from the client
+                processClientMessage(objectInputStream, objectOutputStream);
             }
-        } catch (IOException e) {
+
+        } catch (IOException | ClassNotFoundException | IncorrectActionException e) {
             e.printStackTrace();
+            // send message back to client ? incorrect action >
+        } finally {
+            // Close the connection with the client
+            System.out.println("Closing connection with client: " + link.getInetAddress());
+            link.close();
         }
     }
 
-    private static void processClientMessages(ObjectInputStream objectInputStream, ObjectOutputStream objectOutputStream)
-            throws IOException, ClassNotFoundException, IncorrectActionException {
-        while (true) {
-            Message message = (Message) objectInputStream.readObject();
-            System.out.println("Received message: " + message);
-            processClientMessage(message, objectOutputStream);
-        }
-    }
+    private static void processClientMessage(ObjectInputStream objectInputStream, ObjectOutputStream objectOutputStream) throws IOException, IncorrectActionException, ClassNotFoundException {
+        Message message1 = (Message) objectInputStream.readObject();
+        System.out.println("Received message: " + message1);
 
-    private static void processClientMessage(Message message, ObjectOutputStream objectOutputStream) throws IOException, IncorrectActionException {
-        switch (message.getOPTION()) {
+        switch (message1.getOPTION()) {
             case "ADD":
 
                 // take a list of times, Module , date
                 break;
             case "VIEW":
-                Schedule schedule = timeTables.get(message.getDate());
-                {
-                    //if schedule not there, create new empty schedule and add it to timetable
-                    schedule = new Schedule();
-                }
-                System.out.println("VIEWING SCHEDULE FOR : " + message.getDate());
+                Schedule schedule = timeTables.get(message1.getDate());
+            {
+                //if schedule not there, create new empty schedule and add it to timetable
+                schedule = new Schedule();
+            }
+            System.out.println("VIEWING SCHEDULE FOR : " + message1.getDate());
 
-                timeTables.put(message.getDate(),schedule);
-                // if()
-
-                objectOutputStream.writeObject(schedule);
-               // objectOutputStream.writeObject(classSchedules.get(message.getCONTENTS()));
-                break;
+            timeTables.put(message1.getDate(), schedule);
+            // if()
+            objectOutputStream.writeObject(schedule);
+            // objectOutputStream.writeObject(classSchedules.get(message.getCONTENTS()));
+            break;
             case "REMOVE":
                 break;
             case "DEBUG":
@@ -87,9 +75,6 @@ public class Server {
             default:
                 throw new IncorrectActionException("NOT A VALID COMMAND");
         }
-
     }
-
-
 }
 
