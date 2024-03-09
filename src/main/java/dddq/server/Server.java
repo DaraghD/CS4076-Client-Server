@@ -33,7 +33,9 @@ public class Server {
                 ObjectInputStream objectInputStream = new ObjectInputStream(link.getInputStream());
 
                 // Process messages from the client
-                processClientMessage(objectInputStream, objectOutputStream);
+                while(!link.isClosed()){
+                    processClientMessage(objectInputStream, objectOutputStream);
+                }
 
             } catch (IOException | ClassNotFoundException | IncorrectActionException e) {
                 e.printStackTrace();
