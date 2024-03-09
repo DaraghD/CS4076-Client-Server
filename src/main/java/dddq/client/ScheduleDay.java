@@ -5,11 +5,11 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Schedule implements Serializable {
+public class ScheduleDay implements Serializable {
     private LocalDate date;
     private HashMap<String, TimeSlot> timeTable = new HashMap<>();
 
-    public Schedule() {
+    public ScheduleDay() {
         // make it so when they try to click to opne schedule, it displays error unless date is already selected !
         // When date is selected and they click to view schedule we ask the server to send us the schedule for the day. and display that
         // event handler will need to take in a timetable or schedule object and then do some forloop over to create buttons for each tiem .
@@ -17,8 +17,7 @@ public class Schedule implements Serializable {
         // displaySchedule() <-  popup new stage with the buttons for schedule .
         // user can click multiple times - making them red when selected, they then click confirm.
         date = LocalDate.now();
-        timeTable.put("08:00", new TimeSlot());
-        timeTable.put("08:30", new TimeSlot());
+
         timeTable.put("09:00", new TimeSlot());
         timeTable.put("09:30", new TimeSlot());
         timeTable.put("10:00", new TimeSlot());
@@ -38,8 +37,6 @@ public class Schedule implements Serializable {
         timeTable.put("17:00", new TimeSlot());
         timeTable.put("17:30", new TimeSlot());
         timeTable.put("18:00", new TimeSlot());
-        timeTable.put("18:30", new TimeSlot());
-
     }
 
     public HashMap<String, TimeSlot> getTimeTable() {
@@ -53,23 +50,19 @@ public class Schedule implements Serializable {
     }
 
     public boolean bookTime(String time) throws IncorrectActionException {
-        if (timeTable.get(time).isTaken() != false) {
-            timeTable.get(time).takeSlot();
-            return true;
+        if (timeTable.get(time).isTaken()) {
+            return false;
         }
-        return false;
+        timeTable.get(time).takeSlot();
+        return true;
     }
 
     @Override
     public String toString() {
         StringBuilder string = new StringBuilder();
         for (Map.Entry<String, TimeSlot> entry : timeTable.entrySet()) {
-            string.append(entry.getKey() + ":" + entry.getValue().isTaken() + "\n");
+            string.append(entry.getKey()).append(":").append(entry.getValue().isTaken()).append("\n");
         }
         return string.toString();
     }
-
-    // INITIALIZE SERVER, WHEN START SERVER, CHECK ALL SCHEDULES, IF SCHEDULE.DAY < CURRENT DAY - DELETE SCHEDULE
-
-
 }

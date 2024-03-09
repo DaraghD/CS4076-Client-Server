@@ -3,12 +3,8 @@ package dddq.client;
 import java.io.Serializable;
 
 public class TimeSlot implements Serializable {
-
-
     private boolean isTaken;
-
     private String moduleName;
-
 
     public TimeSlot() {
         //Time slots by default are not Taken, and thus have no module name

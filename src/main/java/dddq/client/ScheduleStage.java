@@ -1,13 +1,8 @@
 package dddq.client;
 
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
-
-
-import dddq.client.Client.buttonScheduleHandler;
 
 public class ScheduleStage {
 
@@ -24,7 +19,7 @@ public class ScheduleStage {
         }
     }
     // Method to create a 4x5 grid pane with buttons
-    public static GridPane createButtonGrid(Schedule schedule) {
+    public static GridPane createButtonGrid(ScheduleDay scheduleDay) {
         GridPane gridPane = new GridPane();
         gridPane.setHgap(10);
         gridPane.setVgap(10);
@@ -64,9 +59,9 @@ public class ScheduleStage {
                 // Create a button with the time as text
 
                 Button button = new Button(formattedTime);
-                button.setUserData(new buttonData(schedule.checkTime(formattedTime)));
+                button.setUserData(new buttonData(scheduleDay.checkTime(formattedTime)));
                 //flase means its NOT TAKEN e.g availabl.e, true means its taken
-                boolean isTaken = schedule.checkTime(formattedTime);
+                boolean isTaken = scheduleDay.checkTime(formattedTime);
                 if (isTaken){
                     button.setStyle("-fx-background-color: red; -fx-text-fill: white");
                 }

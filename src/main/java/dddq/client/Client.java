@@ -48,7 +48,6 @@ public class Client extends Application {
     BufferedReader in;
     ObjectOutputStream objectOutputStream;
     ObjectInputStream objectInputStream;
-    String OPTION;
     LocalDate DATE = null;
     static ArrayList<String> chosenTimes = new ArrayList<>();
     String CLASS;
@@ -125,8 +124,6 @@ public class Client extends Application {
         //Listenrs / event handlers scope
         {
             optionBox.getSelectionModel().selectedIndexProperty().addListener((ov, value, new_value) -> {
-                OPTION = options[new_value.intValue()];
-                System.out.println(OPTION);
                 actionLabel.setVisible(false);
             });
 
@@ -154,119 +151,130 @@ public class Client extends Application {
 
                         objectOutputStream.writeObject(message);
                         objectOutputStream.flush();
-                        Schedule schedule = (Schedule) objectInputStream.readObject();
+                        ScheduleDay scheduleDay = (ScheduleDay) objectInputStream.readObject();
                         Stage scheduleStage = new Stage();
 
-                        GridPane scheduleGrid = ScheduleStage.createButtonGrid(schedule);
-                        Scene scheduleScene = new Scene(scheduleGrid,400,300);
+                        GridPane scheduleGrid = ScheduleStage.createButtonGrid(scheduleDay);
+                        Scene scheduleScene = new Scene(scheduleGrid, 400, 300);
                         scheduleStage.setScene(scheduleScene);
                         scheduleStage.show();
+
 
                     } catch (IOException | ClassNotFoundException e) {
                         System.out.println("Couldnt send object");
                         e.printStackTrace();
                     }
-                }});
+                }
+            });
 
 
             stopButton.setOnAction(actionEvent -> {
-                out.println("STOP");
-                System.exit(1);
-            });
-
-            sendButton.setOnAction(t -> {
-                Socket link = null;
                 try {
-                    link = new Socket(host, PORT);
-                    //link = new Socket( "192.168.0.59", PORT);
+                    objectOutputStream.writeObject(new Message("STOP"));
 
-                    String message = null;
-                    String response = null;
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Stop Alert");
+                    alert.setHeaderText(null);
+                    Message response = (Message) objectInputStream.readObject();
 
-                    System.out.println("Enter message to be sent to server: ");
-                    message = textField.getText().toString();
-                    out.println(message);
-                   // response = in.readLine();
-                    label.setText(response);
+                    alert.setContentText(response.getOPTION() + " " + response.getCONTENTS());
+                    alert.showAndWait();
+                    System.exit(1);
 
-                } catch (IOException e) {
+                }catch(Exception e ){
                     e.printStackTrace();
-                } finally {
+                }
+                });
+
+                sendButton.setOnAction(t -> {
+                    // check all fields / buttons make sure they are all filled out. Trigger popup and break/ return if not
                     try {
-                        System.out.println("\n* Closing connection... *");
-                        link.close();                //Step 4.
-                    } catch (IOException e) {
-                        System.out.println("Unable to disconnect/close!");
-                        System.exit(1);
+                        Message message = new Message(optionBox.getValue().toString());
+                        for (String time : chosenTimes) {
+                            message.addTime(time);
+                        }
+
+                        objectOutputStream.writeObject(new Message(""));
+                        Message response = (Message) objectInputStream.readObject();
+                        label.setText(response.getOPTION() + " " + response.getCONTENTS());
+
+                        if (response.getOPTION().equals("ERROR")) {
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setTitle("Alert");
+                            alert.setHeaderText(null);
+                            alert.setContentText(response.getCONTENTS());
+                            alert.showAndWait();
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                }
-            });
+                });
 
-            datePicker.setOnAction(e -> {
-                DATE = datePicker.getValue();
-                System.out.println(DATE.getClass());
-                //LocalDate
-                dateLabel.setVisible(false);
-            });
-            
-            //eventhandler for textbox for module code , how to make it so when they are finishehd typing it updates the variable,
-            // maybe just pull the variable e.g textbox.gettext(), when they click send
+                datePicker.setOnAction(e -> {
+                    DATE = datePicker.getValue();
+                    System.out.println(DATE.getClass());
+                    //LocalDate
+                    dateLabel.setVisible(false);
+                });
 
-        }
-    }
+                //eventhandler for textbox for module code , how to make it so when they are finishehd typing it updates the variable,
+                // maybe just pull the variable e.g textbox.gettext(), when they click send
 
-    @Override
-    public void start(Stage stage) throws IOException {
-        anchorPane.getChildren().addAll(stopButton, datePicker, optionBox, sendButton, textField, dateLabel, moduleLabel, actionLabel, gridButton);
-
-        Scene scene = new Scene(anchorPane, 600, 400);
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    public static void main(String[] args) {
-        launch();
-    }
-
-
-    public static class submitScheduleHandler implements EventHandler<ActionEvent>{
-        @Override
-        public void handle(ActionEvent actionEvent) {
-            Button button = (Button) actionEvent.getSource();
-            Scene scene = button.getScene();
-            Stage stage = (Stage) scene.getWindow();
-            //might need some submit logic here ?>
-            stage.close();
-
-        }
-    }
-
-    public static class buttonScheduleHandler implements EventHandler<ActionEvent> {
-        @Override
-        public void handle(ActionEvent actionEvent) {
-            Button button = (Button) actionEvent.getSource();
-            ScheduleStage.buttonData data = (ScheduleStage.buttonData) button.getUserData();
-
-            if (!data.isTaken()) {
-                // change colour of it
-                System.out.println("Selected  time : " + button.getText());
-                if(chosenTimes.contains(button.getText())){
-                    // popup here
-                    System.out.println("Already added time slot ");
-                }
-                else{
-                    chosenTimes.add(button.getText());
-                    button.setStyle("-fx-background-color: orange; fx-text-fill:white;");
-                    //orange = selected, red = taken by soemone else
-                }
-
-                data.click();
-            } else {
-                System.out.println("Time slot in use "); // alert popup instead ?
-                return;
             }
-
         }
-    }
 
-}
+        @Override
+        public void start (Stage stage) throws IOException {
+            anchorPane.getChildren().addAll(stopButton, datePicker, optionBox, sendButton, textField, dateLabel, moduleLabel, actionLabel, gridButton);
+
+            Scene scene = new Scene(anchorPane, 600, 400);
+            stage.setScene(scene);
+            stage.show();
+        }
+
+        public static void main (String[]args){
+            launch();
+        }
+
+
+        public static class submitScheduleHandler implements EventHandler<ActionEvent> {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                Button button = (Button) actionEvent.getSource();
+                Scene scene = button.getScene();
+                Stage stage = (Stage) scene.getWindow();
+                //might need some submit logic here ?>
+                stage.close();
+
+            }
+        }
+
+        public static class buttonScheduleHandler implements EventHandler<ActionEvent> {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                Button button = (Button) actionEvent.getSource();
+                ScheduleStage.buttonData data = (ScheduleStage.buttonData) button.getUserData();
+
+                if (!data.isTaken()) {
+                    // change colour of it
+                    System.out.println("Selected  time : " + button.getText());
+                    if (chosenTimes.contains(button.getText())) {
+                        // popup here
+                        System.out.println("Already added time slot ");
+                    } else {
+                        chosenTimes.add(button.getText());
+                        button.setStyle("-fx-background-color: orange; fx-text-fill:white;");
+                        //orange = selected, red = taken by soemone else
+                    }
+
+                    data.click();
+                } else {
+                    System.out.println("Time slot in use "); // alert popup instead ?
+                    return;
+                }
+
+            }
+        }
+
+    }
