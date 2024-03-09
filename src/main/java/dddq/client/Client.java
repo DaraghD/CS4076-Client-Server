@@ -8,6 +8,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 import java.io.*;
@@ -30,38 +32,31 @@ public class Client extends Application {
     }
 
     static final int PORT = 1234;
-    Label label = new Label("Pick a date from the Calendar");
+    Label label = new Label("Pick a day");
     TextField textField = new TextField();
     String[] options = {"DISPLAY", "ADD", "REMOVE"};
     ChoiceBox optionBox = new ChoiceBox(FXCollections.observableArrayList(options));
     Label actionLabel = new Label("Select Action");
     Button stopButton = new Button("STOP");
     Label moduleLabel = new Label("Choose Module");
-    Label dateLabel = new Label("Choose Date");
-    DatePicker datePicker = new DatePicker();
+    Label dayLabel = new Label("Choose Day");
     Button sendButton = new Button("Send");
     AnchorPane anchorPane = new AnchorPane();
     Button gridButton = new Button("Choose Slots");
     GridPane schedulePane = new GridPane();
     Socket link;
-    PrintWriter out;
-    BufferedReader in;
     ObjectOutputStream objectOutputStream;
     ObjectInputStream objectInputStream;
-    LocalDate DATE = null;
     static ArrayList<String> chosenTimes = new ArrayList<>();
-    String CLASS;
-    // JAVAFX ALERT DIALOG FOR EXCCEPTION HANDLIN
-    // (ADD) LM051-2022 [2022-03-04] 10:00 Room1 Test
-    //DISPLAY - ADD - REMOVE - STOP - DEBUG(PRINTALL)
+    String[] days = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
+    ChoiceBox dayBox = new ChoiceBox(FXCollections.observableArrayList(days));
+    static Label chosenTimesLabel = new Label("Chosen Times : ");
 
     @Override
     public void init() {
         //initalising in  / out streams
         try {
             link = new Socket(host, PORT);
-            out = new PrintWriter(link.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(link.getInputStream()));
             objectOutputStream = new ObjectOutputStream(link.getOutputStream());
             objectInputStream = new ObjectInputStream(link.getInputStream());
 
@@ -73,10 +68,15 @@ public class Client extends Application {
         //Putting things into { } lets us close it to make the file smaller when viewing.
         //components
         {
-            datePicker.setLayoutX(386);
-            datePicker.setLayoutY(31);
-            datePicker.setPrefHeight(38);
-            datePicker.setPrefWidth(202);
+
+            chosenTimesLabel.setLayoutY(200);
+            chosenTimesLabel.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD, 20));
+
+            dayBox.setLayoutX(386);
+            dayBox.setLayoutY(31);
+            dayBox.setPrefHeight(38);
+            dayBox.setPrefWidth(202);
+            dayBox.setVisible(true);
 
             optionBox.setLayoutX(31);
             optionBox.setLayoutY(31);
@@ -84,9 +84,14 @@ public class Client extends Application {
             optionBox.setPrefWidth(148);
 
             sendButton.setLayoutX(240);
-            sendButton.setLayoutY(152);
-            sendButton.setPrefWidth(177);
-            sendButton.setPrefHeight(38);
+            sendButton.setLayoutY(325);
+            sendButton.setPrefWidth(119);
+            sendButton.setPrefHeight(47);
+
+            gridButton.setLayoutX(31);
+            gridButton.setLayoutY(325);
+            gridButton.setPrefWidth(119);
+            gridButton.setPrefHeight(47);
 
             textField.setLayoutX(194);
             textField.setLayoutY(31);
@@ -99,8 +104,6 @@ public class Client extends Application {
             stopButton.setLayoutX(453);
             stopButton.setLayoutY(325);
 
-            optionBox.setPrefWidth(180);
-            optionBox.setPrefHeight(30);
             actionLabel.setLayoutX(37.0);
             actionLabel.setLayoutY(31.0);
             actionLabel.setPrefHeight(38.0);
@@ -113,44 +116,51 @@ public class Client extends Application {
             moduleLabel.setPrefWidth(134.0);
             moduleLabel.setMouseTransparent(true);
 
-            dateLabel.setLayoutX(404.0);
-            dateLabel.setLayoutY(31.0);
-            dateLabel.setPrefHeight(38.0);
-            dateLabel.setPrefWidth(134.0);
-            dateLabel.setMouseTransparent(true);
+            dayBox.setLayoutX(404.0);
+            dayBox.setLayoutY(31.0);
+            dayBox.setPrefHeight(38.0);
+            dayBox.setPrefWidth(134.0);
 
+            dayLabel.setLayoutX(404.0);
+            dayLabel.setLayoutY(31.0);
+            dayLabel.setPrefHeight(38.0);
+            dayLabel.setPrefWidth(134.0);
+            dayLabel.setMouseTransparent(true);
         }
 
-        //Listenrs / event handlers scope
+        //Listeners / event handlers scope
         {
+
+            textField.textProperty().addListener((observable, oldValue, newValue) -> {
+                if (!newValue.isEmpty()) {
+                    moduleLabel.setVisible(false); // Hide the label
+                } else {
+                    moduleLabel.setVisible(true); // Show the label
+                }
+            });
+
             optionBox.getSelectionModel().selectedIndexProperty().addListener((ov, value, new_value) -> {
                 actionLabel.setVisible(false);
             });
 
             //viewing schedules button
             gridButton.setOnAction(actionEvent -> {
-                if (DATE == null) {
+                if (dayBox.getValue() == null) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Alert");
-                    //throw exception with text -> move text into alert - exception incorrection action !! ? ?
+                    alert.setTitle("Viewing Schedule Error");
                     alert.setHeaderText(null);
-                    alert.setContentText("You must select a date before viewing schedule");
+                    alert.setContentText("You must select a day before viewing schedule");
                     alert.showAndWait();
-                    //pop up stage.
-                    // show schedule with date
-                    // return time slots that they choose.
-                }
-                //make handler in this class so it can access these variables, but give the handler to the button in other class
-                else { //
+                } else {
                     try {
                         chosenTimes = new ArrayList<>(); // Clearing arraylist, if they choose times then reopen schedule- it resets chosen times.
                         Message message = new Message("VIEW");
-                        message.setDate(DATE);
+                        message.setDay(dayBox.getValue().toString());
                         //maybe do a builder for messages ?
                         //send view date - > server replies with schedule object, create grid view wit hthis
-
                         objectOutputStream.writeObject(message);
                         objectOutputStream.flush();
+                        System.out.println(dayBox.getValue().toString());
                         ScheduleDay scheduleDay = (ScheduleDay) objectInputStream.readObject();
                         Stage scheduleStage = new Stage();
 
@@ -181,100 +191,101 @@ public class Client extends Application {
                     alert.showAndWait();
                     System.exit(1);
 
-                }catch(Exception e ){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
-                });
+            });
 
-                sendButton.setOnAction(t -> {
-                    // check all fields / buttons make sure they are all filled out. Trigger popup and break/ return if not
-                    try {
-                        Message message = new Message(optionBox.getValue().toString());
-                        for (String time : chosenTimes) {
-                            message.addTime(time);
-                        }
-
-                        objectOutputStream.writeObject(new Message(""));
-                        Message response = (Message) objectInputStream.readObject();
-                        label.setText(response.getOPTION() + " " + response.getCONTENTS());
-
-                        if (response.getOPTION().equals("ERROR")) {
-                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                            alert.setTitle("Alert");
-                            alert.setHeaderText(null);
-                            alert.setContentText(response.getCONTENTS());
-                            alert.showAndWait();
-                        }
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
+            sendButton.setOnAction(t -> {
+                // check all fields / buttons make sure they are all filled out. Trigger popup and break/ return if not
+                try {
+                    Message message = new Message(optionBox.getValue().toString());
+                    for (String time : chosenTimes) {
+                        message.addTime(time);
                     }
-                });
+                    message.setDay(dayBox.getValue().toString());
 
-                datePicker.setOnAction(e -> {
-                    DATE = datePicker.getValue();
-                    System.out.println(DATE.getClass());
-                    //LocalDate
-                    dateLabel.setVisible(false);
-                });
 
-                //eventhandler for textbox for module code , how to make it so when they are finishehd typing it updates the variable,
-                // maybe just pull the variable e.g textbox.gettext(), when they click send
+                    objectOutputStream.writeObject(message);
+                    Message response = (Message) objectInputStream.readObject();
+                    label.setText(response.getOPTION() + " " + response.getCONTENTS());
 
-            }
+                    if (response.getOPTION().equals("ERROR")) {
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Alert");
+                        alert.setHeaderText(null);
+                        alert.setContentText(response.getCONTENTS());
+                        alert.showAndWait();
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+
+            dayBox.setOnAction(e -> {
+                dayLabel.setVisible(false);
+            });
+
+            //eventhandler for textbox for module code , how to make it so when they are finishehd typing it updates the variable,
+            // maybe just pull the variable e.g textbox.gettext(), when they click send
+
         }
+    }
 
+    @Override
+    public void start(Stage stage) throws IOException {
+        anchorPane.getChildren().addAll(stopButton, dayBox, optionBox, sendButton, textField, label, moduleLabel, actionLabel, gridButton, chosenTimesLabel, dayLabel);
+
+        Scene scene = new Scene(anchorPane, 600, 400);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public static void main(String[] args) {
+        launch();
+    }
+
+
+    public static class submitScheduleHandler implements EventHandler<ActionEvent> {
         @Override
-        public void start (Stage stage) throws IOException {
-            anchorPane.getChildren().addAll(stopButton, datePicker, optionBox, sendButton, textField, dateLabel, moduleLabel, actionLabel, gridButton);
+        public void handle(ActionEvent actionEvent) {
+            Button button = (Button) actionEvent.getSource();
+            Scene scene = button.getScene();
+            Stage stage = (Stage) scene.getWindow();
+            chosenTimesLabel.setText("Chosen Times : " + chosenTimes.toString());
+            //might need some submit logic here ?>
 
-            Scene scene = new Scene(anchorPane, 600, 400);
-            stage.setScene(scene);
-            stage.show();
+            stage.close();
+
         }
+    }
 
-        public static void main (String[]args){
-            launch();
-        }
+    public static class buttonScheduleHandler implements EventHandler<ActionEvent> {
+        @Override
+        public void handle(ActionEvent actionEvent) {
+            Button button = (Button) actionEvent.getSource();
+            ScheduleStage.buttonData data = (ScheduleStage.buttonData) button.getUserData();
 
-
-        public static class submitScheduleHandler implements EventHandler<ActionEvent> {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                Button button = (Button) actionEvent.getSource();
-                Scene scene = button.getScene();
-                Stage stage = (Stage) scene.getWindow();
-                //might need some submit logic here ?>
-                stage.close();
-
-            }
-        }
-
-        public static class buttonScheduleHandler implements EventHandler<ActionEvent> {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                Button button = (Button) actionEvent.getSource();
-                ScheduleStage.buttonData data = (ScheduleStage.buttonData) button.getUserData();
-
-                if (!data.isTaken()) {
-                    // change colour of it
-                    System.out.println("Selected  time : " + button.getText());
-                    if (chosenTimes.contains(button.getText())) {
-                        // popup here
-                        System.out.println("Already added time slot ");
-                    } else {
-                        chosenTimes.add(button.getText());
-                        button.setStyle("-fx-background-color: orange; fx-text-fill:white;");
-                        //orange = selected, red = taken by soemone else
-                    }
-
-                    data.click();
+            if (!data.isTaken()) {
+                // change colour of it
+                System.out.println("Selected  time : " + button.getText());
+                if (chosenTimes.contains(button.getText())) {
+                    // popup here
+                    System.out.println("Already added time slot ");
                 } else {
-                    System.out.println("Time slot in use "); // alert popup instead ?
-                    return;
+                    chosenTimes.add(button.getText());
+                    button.setStyle("-fx-background-color: orange; fx-text-fill:white;");
+                    //orange = selected, red = taken by soemone else
                 }
 
+                data.click();
+            } else {
+                System.out.println("Time slot in use "); // alert popup instead ?
+                return;
             }
-        }
 
+        }
     }
+
+}
