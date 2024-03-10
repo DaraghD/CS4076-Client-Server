@@ -8,13 +8,12 @@ import dddq.client.ScheduleWeek;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.time.LocalDate;
 import java.util.HashMap;
 
 public class Server {
     private static final int PORT = 1234;
     static Socket link;
-    static HashMap<LocalDate, ScheduleDay> timeTables = new HashMap<>(); // class : schedule 5 days
+    static HashMap<String, ScheduleDay> timeTables = new HashMap<>(); // class : schedule 5 days
     static HashMap<String, ScheduleWeek> roomTimetables = new HashMap<>(); // room : schedule 5 days
     //load from disk, persistant data
 
@@ -50,15 +49,15 @@ public class Server {
 
     private static void processClientMessage(ObjectInputStream objectInputStream, ObjectOutputStream objectOutputStream) throws IOException, IncorrectActionException, ClassNotFoundException {
         Message message1 = (Message) objectInputStream.readObject();
-        System.out.println("Received message: " + message1);
+        System.out.println("Received message: " + message1 + "\n \n" + message1.getListOfTimes().toString() + "\n" + message1.getOPTION() + "\n" + message1.getCONTENTS() + "\n" + message1.getDay());
 
         //might want to build response here.
 
 
         switch (message1.getOPTION()) {
-            // add a class to a room at a time  // take a list of times, Module , date
+            // add a class to a room at a time  // take a list of times, Module ,
             case "ADD":
-                ScheduleDay scheduleDay1 = timeTables.get(message1.getDate());
+                ScheduleDay scheduleDay1 = timeTables.get(message1.getDay());
                 if (scheduleDay1 == null) {
                     scheduleDay1 = new ScheduleDay();
                 }
@@ -80,15 +79,15 @@ public class Server {
 
                 break;
             case "VIEW": // viewing schedule for a day
-                ScheduleDay scheduleDay = timeTables.get(message1.getDate());
+                ScheduleDay scheduleDay = timeTables.get(message1.getDay());
                 if (scheduleDay == null) {
                     //if schedule not there, create new empty schedule and add it to timetable
                     scheduleDay = new ScheduleDay();
                 }
-                System.out.println("VIEWING SCHEDULE FOR : " + message1.getDate());
+                System.out.println("VIEWING SCHEDULE FOR : " + message1.getDay());
                 scheduleDay.bookTime("11:00");
 
-                timeTables.put(message1.getDate(), scheduleDay);
+                timeTables.put(message1.getDay(), scheduleDay);
                 objectOutputStream.writeObject(scheduleDay);
                 break;
             case "REMOVE":

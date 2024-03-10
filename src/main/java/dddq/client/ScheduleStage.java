@@ -8,6 +8,7 @@ public class ScheduleStage {
 
     public static class buttonData{
         private boolean isTaken = false;
+        private boolean selected = false;
         public buttonData(boolean taken){
             isTaken = taken;
         }

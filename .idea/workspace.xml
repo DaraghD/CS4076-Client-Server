@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" name="Changes" comment="Added submit button- closes stage, and handler . Need to store dates selected on client side.">
+    <list default="true" id="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" name="Changes" comment="fix : small error in server">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/client/Client.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/client/Message.java" afterDir="false" />
@@ -19,8 +19,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="FxmlFile" />
         <option value="Class" />
+        <option value="FxmlFile" />
       </list>
     </option>
   </component>
@@ -72,9 +72,9 @@
       <recent name="$PROJECT_DIR$/src/main/java/dddq/client" />
     </key>
   </component>
-  <component name="RunManager">
-    <configuration name="App" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="dddq.client.App" />
+  <component name="RunManager" selected="Application.Client">
+    <configuration name="Client" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="dddq.client.Client" />
       <module name="Client" />
       <extension name="coverage">
         <pattern>
@@ -86,8 +86,8 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Client" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="dddq.client.Client" />
+    <configuration name="Server" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="dddq.server.Server" />
       <module name="Client" />
       <extension name="coverage">
         <pattern>
@@ -127,9 +127,9 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.test" />
         <item itemvalue="Application.Client" />
-        <item itemvalue="Application.App" />
+        <item itemvalue="Application.Server" />
+        <item itemvalue="Application.test" />
         <item itemvalue="Application.TCPEchoServer" />
       </list>
     </recent_temporary>
@@ -155,6 +155,8 @@
       <workItem from="1709608633217" duration="1416000" />
       <workItem from="1709749425052" duration="17938000" />
       <workItem from="1709851145510" duration="4070000" />
+      <workItem from="1710000155061" duration="977000" />
+      <workItem from="1710002333893" duration="6538000" />
     </task>
     <task id="LOCAL-00001" summary="Basic UI setup">
       <option name="closed" value="true" />
@@ -220,7 +222,23 @@
       <option name="project" value="LOCAL" />
       <updated>1709759395660</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="course + scheduleweek classes">
+      <option name="closed" value="true" />
+      <created>1709951613016</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1709951613016</updated>
+    </task>
+    <task id="LOCAL-00010" summary="fix : small error in server">
+      <option name="closed" value="true" />
+      <created>1709951933407</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1709951933407</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -245,6 +263,8 @@
     <MESSAGE value="created schedule stage, redid schedule class to allow for modules to be in the schedule instead of just boolean." />
     <MESSAGE value="Can now select times, orange = selected. Need to make some test data ( persistent )" />
     <MESSAGE value="Added submit button- closes stage, and handler . Need to store dates selected on client side." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added submit button- closes stage, and handler . Need to store dates selected on client side." />
+    <MESSAGE value="course + scheduleweek classes" />
+    <MESSAGE value="fix : small error in server" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix : small error in server" />
   </component>
 </project>

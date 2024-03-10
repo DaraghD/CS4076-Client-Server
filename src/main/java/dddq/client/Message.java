@@ -10,10 +10,8 @@ public class Message implements Serializable {
     // ADD , VIEW , DISPLAY , REMOVE ETC.
     private String CONTENTS = null;
     private final String MODULE_NAME = null;
-    private LocalDate DATE = null;
+    private String Day= null;
     private final String ROOM_NUMBER = null;
-    private final String START_TIME = null;
-    private final String END_TIME = null;
     private ArrayList<String> listOfTimes = new ArrayList<String>();
     // list of times,
 
@@ -24,12 +22,12 @@ public class Message implements Serializable {
         OPTION = option;
     }
 
-    public void setDate(LocalDate date){
-        DATE = date;
+    public void setDay(String date){
+        Day = date;
     }
 
-    public LocalDate getDate(){
-        return this.DATE;
+    public String getDay() {
+        return Day;
     }
     public String getOPTION() {
         return OPTION;
