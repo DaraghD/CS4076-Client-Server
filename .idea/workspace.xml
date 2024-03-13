@@ -4,14 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" name="Changes" comment="fix : small error in server">
+    <list default="true" id="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" name="Changes" comment="refactored how we handle schedules,">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/client/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/client/Message.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/ScheduleDay.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/client/ScheduleDay.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/ScheduleStage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/client/ScheduleStage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/ScheduleWeek.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/TimeSlot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/client/TimeSlot.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dddq/server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/server/Server.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -160,7 +155,7 @@
       <workItem from="1709851145510" duration="4070000" />
       <workItem from="1710000155061" duration="977000" />
       <workItem from="1710002333893" duration="6538000" />
-      <workItem from="1710294632814" duration="7699000" />
+      <workItem from="1710294632814" duration="9364000" />
     </task>
     <task id="LOCAL-00001" summary="Basic UI setup">
       <option name="closed" value="true" />
@@ -242,7 +237,15 @@
       <option name="project" value="LOCAL" />
       <updated>1709951933407</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="refactored how we handle schedules,">
+      <option name="closed" value="true" />
+      <created>1710316351146</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1710316351146</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -269,6 +272,7 @@
     <MESSAGE value="Added submit button- closes stage, and handler . Need to store dates selected on client side." />
     <MESSAGE value="course + scheduleweek classes" />
     <MESSAGE value="fix : small error in server" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix : small error in server" />
+    <MESSAGE value="refactored how we handle schedules," />
+    <option name="LAST_COMMIT_MESSAGE" value="refactored how we handle schedules," />
   </component>
 </project>

@@ -14,27 +14,24 @@ public class Server {
     private static final int PORT = 1234;
     static Socket link;
     static HashMap<String, ScheduleDay> timeTables = new HashMap<>(); // remove this
-    static HashMap<String, ArrayList<ScheduleDay>> moduleTimetable = new HashMap<>(); // DAY : list of  MODULE SCHEDULEs , maybe hashmap of room name to day instaad of list
-    static HashMap<String, ArrayList<ScheduleDay>> roomTimetable = new HashMap<>(); // DAY : list of room schedules on that day
+    static HashMap<String, HashMap<String, ScheduleDay>> moduleTimetable = new HashMap<>(); // DAY : list of  MODULE SCHEDULEs , maybe hashmap of room name to day instaad of list
+    static HashMap<String, HashMap<String, ScheduleDay>> roomTimetable = new HashMap<>(); // DAY : list of room schedules on that day
     static String[] dayOfTheWeek = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
 
-
     public static void init() throws IncorrectActionException {
-        for(String day: dayOfTheWeek){
-            moduleTimetable.put(day, new ArrayList<ScheduleDay>());
-            roomTimetable.put(day, new ArrayList<ScheduleDay>());
+        for (String day : dayOfTheWeek) {
+            moduleTimetable.put(day, new HashMap<String, ScheduleDay>());
+            roomTimetable.put(day, new HashMap<String, ScheduleDay>());
         }
-
         // load data from disk in this function
-
-
         //testing
         {
             ScheduleDay test = new ScheduleDay("test");
             test.bookTime("09:00");
-            roomTimetable.get("Monday").add(test);
+            roomTimetable.get("Monday").put("test", test);
         }
     }
+
     public static void main(String[] args) throws IOException, IncorrectActionException {
         init();
         while (true) {
@@ -50,7 +47,7 @@ public class Server {
                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(link.getOutputStream());
                 ObjectInputStream objectInputStream = new ObjectInputStream(link.getInputStream());
 
-                while(!link.isClosed()){
+                while (!link.isClosed()) {
                     processClientMessage(objectInputStream, objectOutputStream);
                 }
 
@@ -66,18 +63,18 @@ public class Server {
     }
 
     private static void processClientMessage(ObjectInputStream objectInputStream, ObjectOutputStream objectOutputStream) throws IOException, IncorrectActionException, ClassNotFoundException {
-        Message message1 = (Message) objectInputStream.readObject();
-        System.out.println(message1);
+        Message message = (Message) objectInputStream.readObject();
+        System.out.println(message);
 
-        switch (message1.getOPTION()) {
+        switch (message.getOPTION()) {
             case "ADD":
                 //room,module, day, list of times, class
-                ScheduleDay scheduleDay1 = timeTables.get(message1.getDay());
+                ScheduleDay scheduleDay1 = timeTables.get(message.getDay());
                 if (scheduleDay1 == null) {
                     //scheduleDay1 = new ScheduleDay();
                     // need to redo logic to add scheduleday if it isnt there for specific room / module .
                 }
-                for (String time : message1.getListOfTimes()) {
+                for (String time : message.getListOfTimes()) {
                     if (scheduleDay1.checkTime(time)) {
                         Message RESPONSE = new Message("ERROR");
                         RESPONSE.setCONTENTS("TIME ALREADY TAKEN : " + time);
@@ -86,47 +83,52 @@ public class Server {
                     }
                 }
                 //we know they are all free now, since we made it here.
-                for (String time : message1.getListOfTimes()) {
+                for (String time : message.getListOfTimes()) {
                     scheduleDay1.bookTime(time);
                 }
 
                 Message RESPONSE = new Message("SUCCESS");
-                RESPONSE.setCONTENTS("BOOKED TIMES +  " + message1.getListOfTimes().toString());
+                RESPONSE.setCONTENTS("BOOKED TIMES +  " + message.getListOfTimes().toString());
                 //make it so it displays module + room etc for booked
                 objectOutputStream.writeObject(RESPONSE);
 
                 break;
             case "VIEW": // viewing schedule for a day
-                String room = message1.getROOM_NUMBER();
-                String module = message1.getMODULE_NAME();
+                String room = message.getROOM_NUMBER();
+                String day = message.getDay();
+                String module = message.getMODULE_NAME();
 
-                ArrayList<ScheduleDay> moduleSchedules = moduleTimetable.get(message1.getDay());
+                var moduleSchedules = moduleTimetable.get(day);
                 System.out.println(moduleSchedules);
 
-
-                ArrayList<ScheduleDay> roomSchedules = roomTimetable.get(message1.getDay());
-
-
+                HashMap<String, ScheduleDay> roomSchedules = roomTimetable.get(day);
                 ArrayList<String> listOfTakenTimes = new ArrayList<>();
 
-                for(ScheduleDay day : moduleSchedules){
-                    if(day.getModuleName().equals(module)){
-                        listOfTakenTimes.addAll(day.getTakenTimes());
-                    }
+                // Basically tries to get scheduleDay form hashmap, if its not there adds it. Concise null check
+
+                ScheduleDay moduleDay = moduleSchedules.computeIfAbsent(module, k -> {
+                    var x = new ScheduleDay(module);
+                    moduleTimetable.get(day).put(module, x);
+                    return x;
+                    // only adds it if its not there
+                });
+                ScheduleDay a = moduleSchedules.get(module);
+                if(a == null){
+                    var y = new ScheduleDay(module);
+                    moduleTimetable.get(day).put(module, y);
                 }
-                for(ScheduleDay day : roomSchedules){
-                    boolean added = false;
-                    if(day.getRoom().equals(room)){
-                        //there should only be one schedule day per room ,
-                        listOfTakenTimes.addAll(day.getTakenTimes());
-                        break;
-                    }
-                    //if we havent break then its not there,
-                    ScheduleDay roomDay = new ScheduleDay(null);
-                    day.setRoom(room);
-                    roomTimetable.get(message1.getDay()).add(roomDay);
-                }
-                System.out.println("VIEWING SCHEDULE FOR : " + message1.getDay() + " ROOM : " + room + " MODULE : " + module);
+
+                ScheduleDay roomDay = roomSchedules.computeIfAbsent(room, k -> {
+                    var x = new ScheduleDay("test");
+                    x.setRoom(room);
+                    roomTimetable.get(day).put(room, x);
+                    return x;
+                });
+
+                listOfTakenTimes.addAll(moduleDay.getTakenTimes());
+                listOfTakenTimes.addAll(roomDay.getTakenTimes());
+
+                System.out.println("VIEWING SCHEDULE FOR : " + day + " ROOM : " + room + " MODULE : " + module);
 
                 Message responseV = new Message("VIEW");
                 responseV.setListOfTimes(listOfTakenTimes);

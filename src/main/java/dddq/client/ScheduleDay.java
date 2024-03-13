@@ -7,9 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ScheduleDay implements Serializable {
-    private String moduleName;
-
-    private String room;
+    private String moduleName; // may be redundant since we are using hashmap now ?
+    private String room; // same as above,  possibly redundant
     private HashMap<String, TimeSlot> timeTable = new HashMap<>();
 
     public ScheduleDay(String moduleName) {
