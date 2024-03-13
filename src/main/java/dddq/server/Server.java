@@ -5,6 +5,7 @@ import dddq.client.Message;
 import dddq.client.ScheduleDay;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public class Server {
         {
             ScheduleDay test = new ScheduleDay("test");
             test.bookTime("09:00");
-            roomTimetable.get("Monday").put("test", test);
+            roomTimetable.get("Monday").put("test", test); // not showing up when requested?
         }
     }
 
@@ -66,6 +67,11 @@ public class Server {
         Message message = (Message) objectInputStream.readObject();
         System.out.println(message);
 
+        String room = message.getROOM_NUMBER();
+        String day = message.getDay();
+        String module = message.getMODULE_NAME();
+
+
         switch (message.getOPTION()) {
             case "ADD":
                 //room,module, day, list of times, class
@@ -94,34 +100,17 @@ public class Server {
 
                 break;
             case "VIEW": // viewing schedule for a day
-                String room = message.getROOM_NUMBER();
-                String day = message.getDay();
-                String module = message.getMODULE_NAME();
 
-                var moduleSchedules = moduleTimetable.get(day);
-                System.out.println(moduleSchedules);
-
-                HashMap<String, ScheduleDay> roomSchedules = roomTimetable.get(day);
                 ArrayList<String> listOfTakenTimes = new ArrayList<>();
 
                 // Basically tries to get scheduleDay form hashmap, if its not there adds it. Concise null check
 
-                ScheduleDay moduleDay = moduleSchedules.computeIfAbsent(module, k -> {
-                    var x = new ScheduleDay(module);
-                    moduleTimetable.get(day).put(module, x);
-                    return x;
-                    // only adds it if its not there
-                });
-                ScheduleDay a = moduleSchedules.get(module);
-                if(a == null){
-                    var y = new ScheduleDay(module);
-                    moduleTimetable.get(day).put(module, y);
-                }
+                // change this to access the main timetable directly instead of copying it .
+                ScheduleDay moduleDay = moduleTimetable.get(day).computeIfAbsent(module, k -> new ScheduleDay(module));
 
-                ScheduleDay roomDay = roomSchedules.computeIfAbsent(room, k -> {
-                    var x = new ScheduleDay("test");
+                ScheduleDay roomDay = roomTimetable.get(day).computeIfAbsent(room, k -> {
+                    var x = new ScheduleDay(room);
                     x.setRoom(room);
-                    roomTimetable.get(day).put(room, x);
                     return x;
                 });
 
@@ -135,8 +124,10 @@ public class Server {
                 objectOutputStream.writeObject(responseV);
                 break;
             case "REMOVE":
-                break;
-            case "DEBUG":
+                //remove - need room , time(multiple?), class, module
+                ArrayList<String> times = message.getListOfTimes();
+
+
                 break;
             case "DISPLAY":
                 break;
