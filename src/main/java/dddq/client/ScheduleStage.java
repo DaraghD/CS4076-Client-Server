@@ -4,6 +4,8 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 
+import java.util.ArrayList;
+
 public class ScheduleStage {
 
     public static class buttonData{
@@ -20,7 +22,7 @@ public class ScheduleStage {
         }
     }
     // Method to create a 4x5 grid pane with buttons
-    public static GridPane createButtonGrid(ScheduleDay scheduleDay) {
+    public static GridPane createButtonGrid(ArrayList<String> times) {
         GridPane gridPane = new GridPane();
         gridPane.setHgap(10);
         gridPane.setVgap(10);
@@ -60,9 +62,10 @@ public class ScheduleStage {
                 // Create a button with the time as text
 
                 Button button = new Button(formattedTime);
-                button.setUserData(new buttonData(scheduleDay.checkTime(formattedTime)));
+                button.setUserData(new buttonData(times.contains(formattedTime)));
                 //flase means its NOT TAKEN e.g availabl.e, true means its taken
-                boolean isTaken = scheduleDay.checkTime(formattedTime);
+
+                boolean isTaken = times.contains(formattedTime);
                 if (isTaken){
                     button.setStyle("-fx-background-color: red; -fx-text-fill: white");
                 }

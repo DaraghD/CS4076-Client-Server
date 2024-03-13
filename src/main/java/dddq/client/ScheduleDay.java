@@ -2,21 +2,18 @@ package dddq.client;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ScheduleDay implements Serializable {
-    private LocalDate date;
+    private String moduleName;
+
+    private String room;
     private HashMap<String, TimeSlot> timeTable = new HashMap<>();
 
-    public ScheduleDay() {
-        // make it so when they try to click to opne schedule, it displays error unless date is already selected !
-        // When date is selected and they click to view schedule we ask the server to send us the schedule for the day. and display that
-        // event handler will need to take in a timetable or schedule object and then do some forloop over to create buttons for each tiem .
-
-        // displaySchedule() <-  popup new stage with the buttons for schedule .
-        // user can click multiple times - making them red when selected, they then click confirm.
-        date = LocalDate.now();
+    public ScheduleDay(String moduleName) {
+        this.moduleName = moduleName;
 
         timeTable.put("09:00", new TimeSlot());
         timeTable.put("09:30", new TimeSlot());
@@ -39,14 +36,41 @@ public class ScheduleDay implements Serializable {
         timeTable.put("18:00", new TimeSlot());
     }
 
+
     public HashMap<String, TimeSlot> getTimeTable() {
         return timeTable;
     }
 
     public boolean checkTime(String time) {
-        System.out.println("CHECKING TIEM "+ time);
-        System.out.println("TIME IS : " + timeTable.get(time).isTaken());
+        System.out.println(time + ": IS TAKEN : " + timeTable.get(time).isTaken());
         return timeTable.get(time).isTaken();
+    }
+    public String getModuleName() {
+        return moduleName;
+    }
+
+    public String getRoom() {
+        return room;
+    }
+    public void setRoom(String room) {
+        this.room = room;
+    }
+
+    public void setModuleName(String moduleName) {
+        this.moduleName = moduleName;
+    }
+
+    public ArrayList<String> getTakenTimes() {
+        ArrayList<String> listOfTakenTimes = new ArrayList<>();
+        for (Map.Entry<String, TimeSlot> entry : timeTable.entrySet()) {
+            TimeSlot a = entry.getValue();
+            String time = entry.getKey();
+            if (a.isTaken()) {
+                listOfTakenTimes.add(time);
+            }
+        }
+        return listOfTakenTimes;
+
     }
 
     public boolean bookTime(String time) throws IncorrectActionException {

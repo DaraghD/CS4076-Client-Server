@@ -16,7 +16,6 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Client extends Application {
@@ -32,8 +31,9 @@ public class Client extends Application {
     }
 
     static final int PORT = 1234;
-    Label label = new Label("Pick a day");
-    TextField textField = new TextField();
+    TextField moduleField = new TextField();
+    TextField roomField = new TextField();
+    Label roomLabel = new Label("Choose Room");
     String[] options = {"DISPLAY", "ADD", "REMOVE"};
     ChoiceBox optionBox = new ChoiceBox(FXCollections.observableArrayList(options));
     Label actionLabel = new Label("Select Action");
@@ -68,6 +68,13 @@ public class Client extends Application {
         //Putting things into { } lets us close it to make the file smaller when viewing.
         //components
         {
+            roomField.setPrefWidth(119);
+            roomField.setPrefHeight(47);
+            roomField.setLayoutX(31);
+            roomField.setLayoutY(150);
+
+            roomLabel.setLayoutX(31);
+            roomLabel.setLayoutY(150);
 
             chosenTimesLabel.setLayoutY(200);
             chosenTimesLabel.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD, 20));
@@ -93,10 +100,10 @@ public class Client extends Application {
             gridButton.setPrefWidth(119);
             gridButton.setPrefHeight(47);
 
-            textField.setLayoutX(194);
-            textField.setLayoutY(31);
-            textField.setPrefHeight(38);
-            textField.setPrefWidth(177);
+            moduleField.setLayoutX(194);
+            moduleField.setLayoutY(31);
+            moduleField.setPrefHeight(38);
+            moduleField.setPrefWidth(177);
 
             stopButton.setStyle("-fx-background-color: #ea2727");
             stopButton.setPrefWidth(119);
@@ -131,7 +138,15 @@ public class Client extends Application {
         //Listeners / event handlers scope
         {
 
-            textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            roomField.textProperty().addListener((observable, oldValue, newValue) -> {
+                if (!newValue.isEmpty()) {
+                    roomLabel.setVisible(false); // Hide the label
+                } else {
+                    roomLabel.setVisible(true); // Show the label
+                }
+            });
+
+            moduleField.textProperty().addListener((observable, oldValue, newValue) -> {
                 if (!newValue.isEmpty()) {
                     moduleLabel.setVisible(false); // Hide the label
                 } else {
@@ -141,6 +156,8 @@ public class Client extends Application {
 
             optionBox.getSelectionModel().selectedIndexProperty().addListener((ov, value, new_value) -> {
                 actionLabel.setVisible(false);
+                // methods here to show different buttons depending on new_value e.g if display -> dont need to show room field or choose time etc.
+
             });
 
             //viewing schedules button
@@ -153,22 +170,21 @@ public class Client extends Application {
                     alert.showAndWait();
                 } else {
                     try {
+                        String module = moduleField.getText();
                         chosenTimes = new ArrayList<>(); // Clearing arraylist, if they choose times then reopen schedule- it resets chosen times.
                         Message message = new Message("VIEW");
                         message.setDay(dayBox.getValue().toString());
-                        //maybe do a builder for messages ?
-                        //send view date - > server replies with schedule object, create grid view wit hthis
                         objectOutputStream.writeObject(message);
                         objectOutputStream.flush();
                         System.out.println(dayBox.getValue().toString());
-                        ScheduleDay scheduleDay = (ScheduleDay) objectInputStream.readObject();
-                        Stage scheduleStage = new Stage();
 
-                        GridPane scheduleGrid = ScheduleStage.createButtonGrid(scheduleDay);
+                        Message timesMessage = (Message) objectInputStream.readObject();
+                        //schedule should show red for rooms booked at that time, aswell as classes of the same module
+                        Stage scheduleStage = new Stage();
+                        GridPane scheduleGrid = ScheduleStage.createButtonGrid(timesMessage.getListOfTimes());
                         Scene scheduleScene = new Scene(scheduleGrid, 400, 300);
                         scheduleStage.setScene(scheduleScene);
                         scheduleStage.show();
-
 
                     } catch (IOException | ClassNotFoundException e) {
                         System.out.println("Couldnt send object");
@@ -204,19 +220,18 @@ public class Client extends Application {
                         message.addTime(time);
                     }
                     message.setDay(dayBox.getValue().toString());
-
+                    message.setROOM_NUMBER(roomField.getText());
+                    message.setMODULE_NAME(moduleField.getText());
 
                     objectOutputStream.writeObject(message);
                     Message response = (Message) objectInputStream.readObject();
-                    label.setText(response.getOPTION() + " " + response.getCONTENTS());
+                    //label.setText(response.getOPTION() + " " + response.getCONTENTS());
 
-                    if (response.getOPTION().equals("ERROR")) {
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Alert");
-                        alert.setHeaderText(null);
-                        alert.setContentText(response.getCONTENTS());
-                        alert.showAndWait();
-                    }
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle(response.getOPTION());
+                    alert.setHeaderText(null);
+                    alert.setContentText(response.getCONTENTS());
+                    alert.showAndWait();
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -235,8 +250,7 @@ public class Client extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        anchorPane.getChildren().addAll(stopButton, dayBox, optionBox, sendButton, textField, label, moduleLabel, actionLabel, gridButton, chosenTimesLabel, dayLabel);
-
+        anchorPane.getChildren().addAll(stopButton, dayBox, optionBox, sendButton, moduleField, moduleLabel, actionLabel, gridButton, chosenTimesLabel, dayLabel, roomLabel, roomField);
         Scene scene = new Scene(anchorPane, 600, 400);
         stage.setScene(scene);
         stage.show();
@@ -245,7 +259,6 @@ public class Client extends Application {
     public static void main(String[] args) {
         launch();
     }
-
 
     public static class submitScheduleHandler implements EventHandler<ActionEvent> {
         @Override
@@ -261,6 +274,7 @@ public class Client extends Application {
         }
     }
 
+    // this needs to be here as it needs to access the chosenTimes arraylist
     public static class buttonScheduleHandler implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent actionEvent) {
@@ -286,6 +300,19 @@ public class Client extends Application {
             }
 
         }
+    }
+
+    // functions to toggle visibility of fields / buttons depending on action selected
+    private static void addActionFields() {
+
+    }
+
+    private static void removeActionFields() {
+
+    }
+
+    private static void displayActionFields() {
+
     }
 
 }

@@ -6,12 +6,12 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Message implements Serializable {
-    private final String OPTION;
+    private String OPTION;
     // ADD , VIEW , DISPLAY , REMOVE ETC.
-    private String CONTENTS = null;
-    private final String MODULE_NAME = null;
-    private String Day= null;
-    private final String ROOM_NUMBER = null;
+    private String CONTENTS;
+    private String MODULE_NAME;
+    private String Day;
+    private String ROOM_NUMBER;
     private ArrayList<String> listOfTimes = new ArrayList<String>();
     // list of times,
 
@@ -38,11 +38,42 @@ public class Message implements Serializable {
     public void addTime(String time){
         listOfTimes.add(time);
     }
+    public void setListOfTimes(ArrayList<String> listOfTimes) {
+        this.listOfTimes = listOfTimes;
+    }
     public void setCONTENTS(String CONTENTS) {
         this.CONTENTS = CONTENTS;
+    }
+    public void setROOM_NUMBER(String ROOM_NUMBER) {
+        this.ROOM_NUMBER = ROOM_NUMBER;
     }
 
     public String getCONTENTS() {
         return CONTENTS;
+    }
+
+    public String getROOM_NUMBER() {
+        return ROOM_NUMBER;
+    }
+
+    public String getMODULE_NAME() {
+        return MODULE_NAME;
+    }
+
+    public void setMODULE_NAME(String MODULE_NAME) {
+        this.MODULE_NAME = MODULE_NAME;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "OPTION='" + OPTION + '\'' +
+                ", CONTENTS='" + CONTENTS + '\'' +
+                ", MODULE_NAME='" + MODULE_NAME + '\'' +
+                ", Day='" + Day + '\'' +
+                ", ROOM_NUMBER='" + ROOM_NUMBER + '\'' +
+                ", listOfTimes=" + listOfTimes +
+                '}';
     }
 }

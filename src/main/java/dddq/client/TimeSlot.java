@@ -4,16 +4,10 @@ import java.io.Serializable;
 
 public class TimeSlot implements Serializable {
     private boolean isTaken;
-    private String moduleName;
 
     public TimeSlot() {
         //Time slots by default are not Taken, and thus have no module name
         isTaken = false;
-        moduleName = null;
-    }
-
-    public void setModuleName(String moduleName) {
-        this.moduleName = moduleName;
     }
 
     public boolean isTaken(){

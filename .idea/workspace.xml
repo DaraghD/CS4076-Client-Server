@@ -8,7 +8,10 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/client/Client.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/client/Message.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/ScheduleDay.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/client/ScheduleDay.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/ScheduleStage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/client/ScheduleStage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/ScheduleWeek.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/TimeSlot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/client/TimeSlot.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dddq/server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/server/Server.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -157,6 +160,7 @@
       <workItem from="1709851145510" duration="4070000" />
       <workItem from="1710000155061" duration="977000" />
       <workItem from="1710002333893" duration="6538000" />
+      <workItem from="1710294632814" duration="7699000" />
     </task>
     <task id="LOCAL-00001" summary="Basic UI setup">
       <option name="closed" value="true" />

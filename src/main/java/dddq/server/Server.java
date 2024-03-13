@@ -3,21 +3,40 @@ package dddq.server;
 import dddq.client.IncorrectActionException;
 import dddq.client.Message;
 import dddq.client.ScheduleDay;
-import dddq.client.ScheduleWeek;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Server {
     private static final int PORT = 1234;
     static Socket link;
-    static HashMap<String, ScheduleDay> timeTables = new HashMap<>(); // class : schedule 5 days
-    static HashMap<String, ScheduleWeek> roomTimetables = new HashMap<>(); // room : schedule 5 days
-    //load from disk, persistant data
+    static HashMap<String, ScheduleDay> timeTables = new HashMap<>(); // remove this
+    static HashMap<String, ArrayList<ScheduleDay>> moduleTimetable = new HashMap<>(); // DAY : list of  MODULE SCHEDULEs , maybe hashmap of room name to day instaad of list
+    static HashMap<String, ArrayList<ScheduleDay>> roomTimetable = new HashMap<>(); // DAY : list of room schedules on that day
+    static String[] dayOfTheWeek = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
 
-    public static void main(String[] args) throws IOException {
+
+    public static void init() throws IncorrectActionException {
+        for(String day: dayOfTheWeek){
+            moduleTimetable.put(day, new ArrayList<ScheduleDay>());
+            roomTimetable.put(day, new ArrayList<ScheduleDay>());
+        }
+
+        // load data from disk in this function
+
+
+        //testing
+        {
+            ScheduleDay test = new ScheduleDay("test");
+            test.bookTime("09:00");
+            roomTimetable.get("Monday").add(test);
+        }
+    }
+    public static void main(String[] args) throws IOException, IncorrectActionException {
+        init();
         while (true) {
             try {
                 try (ServerSocket serverSocket = new ServerSocket(PORT)) {
@@ -31,7 +50,6 @@ public class Server {
                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(link.getOutputStream());
                 ObjectInputStream objectInputStream = new ObjectInputStream(link.getInputStream());
 
-                // Process messages from the client
                 while(!link.isClosed()){
                     processClientMessage(objectInputStream, objectOutputStream);
                 }
@@ -49,20 +67,18 @@ public class Server {
 
     private static void processClientMessage(ObjectInputStream objectInputStream, ObjectOutputStream objectOutputStream) throws IOException, IncorrectActionException, ClassNotFoundException {
         Message message1 = (Message) objectInputStream.readObject();
-        System.out.println("Received message: " + message1 + "\n \n" + message1.getListOfTimes().toString() + "\n" + message1.getOPTION() + "\n" + message1.getCONTENTS() + "\n" + message1.getDay());
-
-        //might want to build response here.
-
+        System.out.println(message1);
 
         switch (message1.getOPTION()) {
-            // add a class to a room at a time  // take a list of times, Module ,
             case "ADD":
+                //room,module, day, list of times, class
                 ScheduleDay scheduleDay1 = timeTables.get(message1.getDay());
                 if (scheduleDay1 == null) {
-                    scheduleDay1 = new ScheduleDay();
+                    //scheduleDay1 = new ScheduleDay();
+                    // need to redo logic to add scheduleday if it isnt there for specific room / module .
                 }
                 for (String time : message1.getListOfTimes()) {
-                    if (!scheduleDay1.checkTime(time)) {
+                    if (scheduleDay1.checkTime(time)) {
                         Message RESPONSE = new Message("ERROR");
                         RESPONSE.setCONTENTS("TIME ALREADY TAKEN : " + time);
                         objectOutputStream.writeObject(RESPONSE);
@@ -76,19 +92,45 @@ public class Server {
 
                 Message RESPONSE = new Message("SUCCESS");
                 RESPONSE.setCONTENTS("BOOKED TIMES +  " + message1.getListOfTimes().toString());
+                //make it so it displays module + room etc for booked
+                objectOutputStream.writeObject(RESPONSE);
 
                 break;
             case "VIEW": // viewing schedule for a day
-                ScheduleDay scheduleDay = timeTables.get(message1.getDay());
-                if (scheduleDay == null) {
-                    //if schedule not there, create new empty schedule and add it to timetable
-                    scheduleDay = new ScheduleDay();
-                }
-                System.out.println("VIEWING SCHEDULE FOR : " + message1.getDay());
-                scheduleDay.bookTime("11:00");
+                String room = message1.getROOM_NUMBER();
+                String module = message1.getMODULE_NAME();
 
-                timeTables.put(message1.getDay(), scheduleDay);
-                objectOutputStream.writeObject(scheduleDay);
+                ArrayList<ScheduleDay> moduleSchedules = moduleTimetable.get(message1.getDay());
+                System.out.println(moduleSchedules);
+
+
+                ArrayList<ScheduleDay> roomSchedules = roomTimetable.get(message1.getDay());
+
+
+                ArrayList<String> listOfTakenTimes = new ArrayList<>();
+
+                for(ScheduleDay day : moduleSchedules){
+                    if(day.getModuleName().equals(module)){
+                        listOfTakenTimes.addAll(day.getTakenTimes());
+                    }
+                }
+                for(ScheduleDay day : roomSchedules){
+                    boolean added = false;
+                    if(day.getRoom().equals(room)){
+                        //there should only be one schedule day per room ,
+                        listOfTakenTimes.addAll(day.getTakenTimes());
+                        break;
+                    }
+                    //if we havent break then its not there,
+                    ScheduleDay roomDay = new ScheduleDay(null);
+                    day.setRoom(room);
+                    roomTimetable.get(message1.getDay()).add(roomDay);
+                }
+                System.out.println("VIEWING SCHEDULE FOR : " + message1.getDay() + " ROOM : " + room + " MODULE : " + module);
+
+                Message responseV = new Message("VIEW");
+                responseV.setListOfTimes(listOfTakenTimes);
+                objectOutputStream.writeObject(responseV);
                 break;
             case "REMOVE":
                 break;
