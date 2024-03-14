@@ -30,26 +30,26 @@ public class Client extends Application {
         }
     }
 
-    static final int PORT = 12345;
+    static final int PORT = 1234;
     static TextField moduleField = new TextField();
     static TextField roomField = new TextField();
-    Label roomLabel = new Label("Choose Room");
-    String[] options = {"DISPLAY", "ADD", "REMOVE"};
-    ChoiceBox optionBox = new ChoiceBox(FXCollections.observableArrayList(options));
-    Label actionLabel = new Label("Select Action");
+    static Label roomLabel = new Label("Choose Room");
+    static String[] options = {"DISPLAY", "ADD", "REMOVE"};
+    static ChoiceBox optionBox = new ChoiceBox(FXCollections.observableArrayList(options));
+    static Label actionLabel = new Label("Select Action");
     Button stopButton = new Button("STOP");
-    Label moduleLabel = new Label("Choose Module");
-    Label dayLabel = new Label("Choose Day");
+    static Label moduleLabel = new Label("Choose Module");
+    static Label dayLabel = new Label("Choose Day");
     Button sendButton = new Button("Send");
     AnchorPane anchorPane = new AnchorPane();
-    Button gridButton = new Button("Choose Slots");
+    static Button gridButton = new Button("Choose Slots");
     GridPane schedulePane = new GridPane();
     Socket link;
     ObjectOutputStream objectOutputStream;
     ObjectInputStream objectInputStream;
     static ArrayList<String> chosenTimes = new ArrayList<>();
-    String[] days = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
-    ChoiceBox dayBox = new ChoiceBox(FXCollections.observableArrayList(days));
+    static String[]  days = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
+    static ChoiceBox dayBox = new ChoiceBox(FXCollections.observableArrayList(days));
     static Label chosenTimesLabel = new Label("Chosen Times : ");
 
     @Override
@@ -144,6 +144,7 @@ public class Client extends Application {
 
         //Listeners / event handlers scope
         {
+
             roomField.textProperty().addListener((observable, oldValue, newValue) -> {
                 if (!newValue.isEmpty()) {
                     roomLabel.setVisible(false); // Hide the label
@@ -161,27 +162,33 @@ public class Client extends Application {
             });
 
             optionBox.getSelectionModel().selectedIndexProperty().addListener((ov, value, new_value) -> {
-
-//                switch(new_value) {
-//                     // case "DISPLAY":
-//                       // displayActionFields();
-//                        //break;
-//                }
-
                 actionLabel.setVisible(false);
-                // methods here to show different buttons depending on new_value e.g if display -> dont need to show room field or choose time etc.
-            });
+                String selectedOption = (String) optionBox.getItems().get(new_value.intValue());
+                switch (selectedOption) {
+                    case "ADD":
+                        addActionFields();
+                        break;
+                    case "REMOVE":
+                        removeActionFields();
+                        break;
+                    case "DISPLAY":
+                        displayActionFields();
+                        break;
+                    default:
+
+
+            }});
+
             //viewing schedules button
             gridButton.setOnAction(actionEvent -> {
-                if (dayBox.getValue() == null || moduleField.getText().isEmpty() || roomField.getText().isEmpty()) {
+                if (dayBox.getValue() == null) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Viewing Schedule Error");
                     alert.setHeaderText(null);
-                    alert.setContentText("You must fill out the day, module and room fields to view the schedule.");
+                    alert.setContentText("You must select a day before viewing schedule");
                     alert.showAndWait();
                 } else {
                     try {
-                        // need room, module, day -> if any missing throw error
                         String module = moduleField.getText();
                         chosenTimes = new ArrayList<>(); // Clearing arraylist, if they choose times then reopen schedule- it resets chosen times.
                         Message message = new Message("VIEW");
@@ -246,7 +253,6 @@ public class Client extends Application {
                     objectOutputStream.writeObject(message);
                     Message response = (Message) objectInputStream.readObject();
                     //label.setText(response.getOPTION() + " " + response.getCONTENTS());
-
 
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle(response.getOPTION());
@@ -328,27 +334,44 @@ public class Client extends Application {
 
     // functions to toggle visibility of fields / buttons depending on action selected
     private static void addActionFields() {
-        //everything needs to be visible
+        roomField.setVisible(true);
+        moduleField.setVisible(true);
+        roomLabel.setVisible(true);
 
-        roomField.setVisible(true);
-        //.setVisible(true);
-        roomField.setVisible(true);
-        roomField.setVisible(true);
-        roomField.setVisible(true);
-        roomField.setVisible(true);
+
+        moduleLabel.setVisible(true);
+        dayLabel.setVisible(true);
+        gridButton.setVisible(true);
+        dayBox.setVisible(true);
+        chosenTimesLabel.setVisible(true);
 
 
     }
 
     private static void removeActionFields() {
-        // global variable -> make it so that you can click times that are already taken, basically INVERT the timetable ? -> pass variable to method stage
+        moduleField.setVisible(true);
+        roomField.setVisible(true);
+        roomLabel.setVisible(true);
 
+
+        moduleLabel.setVisible(true);
+        dayLabel.setVisible(true);
+        gridButton.setVisible(true);
+        dayBox.setVisible(true);
+        chosenTimesLabel.setVisible(true);
     }
 
     private static void displayActionFields() {
+        moduleField.setVisible(true);
         roomField.setVisible(false);
+        roomLabel.setVisible(false);
 
 
+        moduleLabel.setVisible(true);
+        dayLabel.setVisible(false);
+        gridButton.setVisible(false);
+        dayBox.setVisible(false);
+        chosenTimesLabel.setVisible(false);
     }
 
 }
