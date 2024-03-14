@@ -53,6 +53,7 @@ public class Server {
 
             } catch (IOException | ClassNotFoundException | IncorrectActionException e) {
                 e.printStackTrace();
+
                 // send message back to client ? incorrect action >
             } finally {
                 // Close the connection with the client
@@ -73,48 +74,46 @@ public class Server {
         switch (message.getOPTION()) {
             case "ADD":
                 //room,module, day, list of times, class
-                ScheduleDay scheduleDay1 = new ScheduleDay("TEST");
-                        // timeTables.get(message.getDay());
-                if (scheduleDay1 == null) {
-                    //scheduleDay1 = new ScheduleDay();
-                    // need to redo logic to add scheduleday if it isnt there for specific room / module .
-                }
+
+                ScheduleDay moduleDay = moduleTimetable.get(day).computeIfAbsent(module, k -> new ScheduleDay(module));
+                ScheduleDay roomDay = roomTimetable.get(day).computeIfAbsent(room, k -> {
+                    var x = new ScheduleDay(module);
+                    x.setRoom(room);
+                    return x;
+                });
+
                 for (String time : message.getListOfTimes()) {
-                    if (scheduleDay1.checkTime(time)) {
-                        Message RESPONSE = new Message("ERROR");
-                        RESPONSE.setCONTENTS("TIME ALREADY TAKEN : " + time);
-                        objectOutputStream.writeObject(RESPONSE);
-                        break;
-                    }
-                }
-                //we know they are all free now, since we made it here.
-                for (String time : message.getListOfTimes()) {
-                    scheduleDay1.bookTime(time);
+                    // we dont have to check time is taken because we only send a list of free times
+                    moduleDay.bookTime(time);
+                    roomDay.bookTime(time);
                 }
 
                 Message RESPONSE = new Message("SUCCESS");
                 RESPONSE.setCONTENTS("BOOKED TIMES +  " + message.getListOfTimes().toString());
                 //make it so it displays module + room etc for booked
                 objectOutputStream.writeObject(RESPONSE);
-
                 break;
             case "VIEW": // viewing schedule for a day
-
+                System.out.println(moduleTimetable.get(day).toString());
+                // need room , day, module
                 ArrayList<String> listOfTakenTimes = new ArrayList<>();
 
                 // Basically tries to get scheduleDay form hashmap, if its not there adds it. Concise null check
 
                 // change this to access the main timetable directly instead of copying it .
-                ScheduleDay moduleDay = moduleTimetable.get(day).computeIfAbsent(module, k -> new ScheduleDay(module));
+                ScheduleDay moduleDay1 = moduleTimetable.get(day).computeIfAbsent(module, k -> new ScheduleDay(module));
 
-                ScheduleDay roomDay = roomTimetable.get(day).computeIfAbsent(room, k -> {
+                ScheduleDay roomDay1 = roomTimetable.get(day).computeIfAbsent(room, k -> {
                     var x = new ScheduleDay(room);
                     x.setRoom(room);
                     return x;
                 });
 
-                listOfTakenTimes.addAll(moduleDay.getTakenTimes());
-                listOfTakenTimes.addAll(roomDay.getTakenTimes());
+                listOfTakenTimes.addAll(moduleDay1.getTakenTimes());
+                listOfTakenTimes.addAll(roomDay1.getTakenTimes());
+                for (String time : listOfTakenTimes) {
+                    System.out.println("TIME TAKEN : " + time);
+                }
 
                 System.out.println("VIEWING SCHEDULE FOR : " + day + " ROOM : " + room + " MODULE : " + module);
 

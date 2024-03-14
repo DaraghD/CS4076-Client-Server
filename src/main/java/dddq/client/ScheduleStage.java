@@ -75,11 +75,7 @@ public class ScheduleStage {
                 Client.buttonScheduleHandler handler1 = new Client.buttonScheduleHandler();
                 button.setOnAction(handler1);
                 gridPane.add(button, col, row);
-
-
             }
-
-
         }
         return gridPane;
 

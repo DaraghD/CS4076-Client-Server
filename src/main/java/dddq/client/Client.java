@@ -32,7 +32,7 @@ public class Client extends Application {
 
     static final int PORT = 1234;
     TextField moduleField = new TextField();
-    TextField roomField = new TextField();
+    static TextField roomField = new TextField();
     Label roomLabel = new Label("Choose Room");
     String[] options = {"DISPLAY", "ADD", "REMOVE"};
     ChoiceBox optionBox = new ChoiceBox(FXCollections.observableArrayList(options));
@@ -144,7 +144,6 @@ public class Client extends Application {
 
         //Listeners / event handlers scope
         {
-
             roomField.textProperty().addListener((observable, oldValue, newValue) -> {
                 if (!newValue.isEmpty()) {
                     roomLabel.setVisible(false); // Hide the label
@@ -162,21 +161,27 @@ public class Client extends Application {
             });
 
             optionBox.getSelectionModel().selectedIndexProperty().addListener((ov, value, new_value) -> {
+
+//                switch(new_value) {
+//                     // case "DISPLAY":
+//                       // displayActionFields();
+//                        //break;
+//                }
+
                 actionLabel.setVisible(false);
                 // methods here to show different buttons depending on new_value e.g if display -> dont need to show room field or choose time etc.
-
             });
-
             //viewing schedules button
             gridButton.setOnAction(actionEvent -> {
-                if (dayBox.getValue() == null) {
+                if (dayBox.getValue() == null || moduleField.getText().isEmpty() || roomField.getText().isEmpty()) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Viewing Schedule Error");
                     alert.setHeaderText(null);
-                    alert.setContentText("You must select a day before viewing schedule");
+                    alert.setContentText("You must fill out the day, module and room fields to view the schedule.");
                     alert.showAndWait();
                 } else {
                     try {
+                        // need room, module, day -> if any missing throw error
                         String module = moduleField.getText();
                         chosenTimes = new ArrayList<>(); // Clearing arraylist, if they choose times then reopen schedule- it resets chosen times.
                         Message message = new Message("VIEW");
@@ -234,8 +239,12 @@ public class Client extends Application {
                     Message response = (Message) objectInputStream.readObject();
                     //label.setText(response.getOPTION() + " " + response.getCONTENTS());
 
+
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle(response.getOPTION());
+                    if(response.getOPTION().equals("SUCCESS")){
+                        chosenTimes = new ArrayList<>();
+                    }
                     alert.setHeaderText(null);
                     alert.setContentText(response.getCONTENTS());
                     alert.showAndWait();
@@ -311,14 +320,26 @@ public class Client extends Application {
 
     // functions to toggle visibility of fields / buttons depending on action selected
     private static void addActionFields() {
+        //everything needs to be visible
+
+        roomField.setVisible(true);
+        //.setVisible(true);
+        roomField.setVisible(true);
+        roomField.setVisible(true);
+        roomField.setVisible(true);
+        roomField.setVisible(true);
+
 
     }
 
     private static void removeActionFields() {
+        // global variable -> make it so that you can click times that are already taken, basically INVERT the timetable ? -> pass variable to method stage
 
     }
 
     private static void displayActionFields() {
+        roomField.setVisible(false);
+
 
     }
 
