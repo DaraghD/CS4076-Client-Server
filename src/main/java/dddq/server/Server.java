@@ -14,7 +14,6 @@ import java.util.HashMap;
 public class Server {
     private static final int PORT = 1234;
     static Socket link;
-    static HashMap<String, ScheduleDay> timeTables = new HashMap<>(); // remove this
     static HashMap<String, HashMap<String, ScheduleDay>> moduleTimetable = new HashMap<>(); // DAY : list of  MODULE SCHEDULEs , maybe hashmap of room name to day instaad of list
     static HashMap<String, HashMap<String, ScheduleDay>> roomTimetable = new HashMap<>(); // DAY : list of room schedules on that day
     static String[] dayOfTheWeek = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
@@ -71,11 +70,11 @@ public class Server {
         String day = message.getDay();
         String module = message.getMODULE_NAME();
 
-
         switch (message.getOPTION()) {
             case "ADD":
                 //room,module, day, list of times, class
-                ScheduleDay scheduleDay1 = timeTables.get(message.getDay());
+                ScheduleDay scheduleDay1 = new ScheduleDay("TEST");
+                        // timeTables.get(message.getDay());
                 if (scheduleDay1 == null) {
                     //scheduleDay1 = new ScheduleDay();
                     // need to redo logic to add scheduleday if it isnt there for specific room / module .
@@ -126,7 +125,6 @@ public class Server {
             case "REMOVE":
                 //remove - need room , time(multiple?), class, module
                 ArrayList<String> times = message.getListOfTimes();
-
 
                 break;
             case "DISPLAY":

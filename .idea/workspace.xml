@@ -4,10 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" name="Changes" comment="refactored how we handle schedules,">
+    <list default="true" id="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" name="Changes" comment="fixed error on accessing hashmaps">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/ScheduleDay.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/client/ScheduleDay.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dddq/server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/server/Server.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,6 +53,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;/home/daragh/CS4076/Midterm/Client/src/main/java/dddq/client&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -135,7 +134,6 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="jdk-21.0.1-openjdk-21.0.1-4caba194b151-e47b9c39" />
         <option value="jdk-21.0.2-openjdk-21.0.2-4caba194b151-78a6f59c" />
       </set>
     </attachedChunks>
@@ -156,6 +154,8 @@
       <workItem from="1710000155061" duration="977000" />
       <workItem from="1710002333893" duration="6538000" />
       <workItem from="1710294632814" duration="9364000" />
+      <workItem from="1710347940277" duration="1171000" />
+      <workItem from="1710373266661" duration="645000" />
     </task>
     <task id="LOCAL-00001" summary="Basic UI setup">
       <option name="closed" value="true" />
@@ -273,6 +273,7 @@
     <MESSAGE value="course + scheduleweek classes" />
     <MESSAGE value="fix : small error in server" />
     <MESSAGE value="refactored how we handle schedules," />
-    <option name="LAST_COMMIT_MESSAGE" value="refactored how we handle schedules," />
+    <MESSAGE value="fixed error on accessing hashmaps" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed error on accessing hashmaps" />
   </component>
 </project>
