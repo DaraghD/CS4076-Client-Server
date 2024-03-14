@@ -68,13 +68,20 @@ public class Client extends Application {
         //Putting things into { } lets us close it to make the file smaller when viewing.
         //components
         {
+            roomLabel.setLayoutX(50);
+            roomLabel.setLayoutY(158);
+            roomLabel.setPrefHeight(38);
+            roomLabel.setPrefWidth(202);
+            roomLabel.setVisible(true);
+            roomLabel.setMouseTransparent(true);
+
+
             roomField.setPrefWidth(119);
             roomField.setPrefHeight(47);
             roomField.setLayoutX(31);
             roomField.setLayoutY(150);
 
-            roomLabel.setLayoutX(31);
-            roomLabel.setLayoutY(150);
+
 
             chosenTimesLabel.setLayoutY(200);
             chosenTimesLabel.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD, 20));
@@ -250,7 +257,7 @@ public class Client extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        anchorPane.getChildren().addAll(stopButton, dayBox, optionBox, sendButton, moduleField, moduleLabel, actionLabel, gridButton, chosenTimesLabel, dayLabel, roomLabel, roomField);
+        anchorPane.getChildren().addAll(stopButton, dayBox, optionBox, sendButton, moduleField, moduleLabel, actionLabel, gridButton, chosenTimesLabel, dayLabel, roomField,roomLabel);
         Scene scene = new Scene(anchorPane, 600, 400);
         stage.setScene(scene);
         stage.show();
