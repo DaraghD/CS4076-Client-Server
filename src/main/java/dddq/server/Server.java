@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Server {
-    private static final int PORT = 12345;
+    private static final int PORT = 1234;
     static Socket link;
     static HashMap<String, HashMap<String, ScheduleDay>> moduleTimetable = new HashMap<>(); // DAY : list of  MODULE SCHEDULEs , maybe hashmap of room name to day instaad of list
     static HashMap<String, HashMap<String, ScheduleDay>> roomTimetable = new HashMap<>(); // DAY : list of room schedules on that day

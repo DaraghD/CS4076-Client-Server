@@ -262,6 +262,7 @@ public class Client extends Application {
                     alert.setHeaderText(null);
                     alert.setContentText(response.getCONTENTS());
                     alert.showAndWait();
+                    refreshLabels();
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -277,6 +278,7 @@ public class Client extends Application {
 
         }
     }
+
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -360,6 +362,14 @@ public class Client extends Application {
         dayBox.setVisible(true);
         chosenTimesLabel.setVisible(true);
     }
+
+    private static void refreshLabels() {
+        moduleField.setText("");
+        roomField.setText("");
+        dayBox.setValue("");
+        dayBox.setValue("");
+
+    };
 
     private static void displayActionFields() {
         moduleField.setVisible(true);
