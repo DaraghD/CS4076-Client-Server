@@ -31,26 +31,28 @@ public class Client extends Application {
     }
 
     static final int PORT = 1234;
-    static TextField moduleField = new TextField();
+    static TextField ProgrammeField = new TextField();
     static TextField roomField = new TextField();
     static Label roomLabel = new Label("Choose Room");
     static String[] options = {"DISPLAY", "ADD", "REMOVE"};
     static ChoiceBox optionBox = new ChoiceBox(FXCollections.observableArrayList(options));
     static Label actionLabel = new Label("Select Action");
     Button stopButton = new Button("STOP");
-    static Label moduleLabel = new Label("Choose Module");
+    static Label ProgrammeLabel = new Label("Choose Programme");
     static Label dayLabel = new Label("Choose Day");
     Button sendButton = new Button("Send");
     AnchorPane anchorPane = new AnchorPane();
     static Button gridButton = new Button("Choose Slots");
-    GridPane schedulePane = new GridPane();
     Socket link;
     ObjectOutputStream objectOutputStream;
     ObjectInputStream objectInputStream;
     static ArrayList<String> chosenTimes = new ArrayList<>();
-    static String[]  days = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
+    static String[] days = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
     static ChoiceBox dayBox = new ChoiceBox(FXCollections.observableArrayList(days));
     static Label chosenTimesLabel = new Label("Chosen Times : ");
+    static TextField moduleField = new TextField();
+    static Label moduleLabel = new Label("Choose module");
+
 
     @Override
     public void init() {
@@ -75,13 +77,10 @@ public class Client extends Application {
             roomLabel.setVisible(true);
             roomLabel.setMouseTransparent(true);
 
-
             roomField.setPrefWidth(119);
             roomField.setPrefHeight(47);
             roomField.setLayoutX(31);
             roomField.setLayoutY(150);
-
-
 
             chosenTimesLabel.setLayoutY(200);
             chosenTimesLabel.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD, 20));
@@ -107,10 +106,21 @@ public class Client extends Application {
             gridButton.setPrefWidth(119);
             gridButton.setPrefHeight(47);
 
+            ProgrammeField.setLayoutX(194);
+            ProgrammeField.setLayoutY(31);
+            ProgrammeField.setPrefHeight(38);
+            ProgrammeField.setPrefWidth(177);
+
             moduleField.setLayoutX(194);
-            moduleField.setLayoutY(31);
+            moduleField.setLayoutY(75);
             moduleField.setPrefHeight(38);
             moduleField.setPrefWidth(177);
+
+            moduleLabel.setLayoutX(207);
+            moduleLabel.setLayoutY(75);
+            moduleLabel.setPrefHeight(38);
+            moduleLabel.setPrefWidth(134);
+            moduleLabel.setMouseTransparent(true);
 
             stopButton.setStyle("-fx-background-color: #ea2727");
             stopButton.setPrefWidth(119);
@@ -124,11 +134,11 @@ public class Client extends Application {
             actionLabel.setPrefWidth(134.0);
             actionLabel.setMouseTransparent(true);
 
-            moduleLabel.setLayoutX(207.0);
-            moduleLabel.setLayoutY(31.0);
-            moduleLabel.setPrefHeight(38.0);
-            moduleLabel.setPrefWidth(134.0);
-            moduleLabel.setMouseTransparent(true);
+            ProgrammeLabel.setLayoutX(207.0);
+            ProgrammeLabel.setLayoutY(31.0);
+            ProgrammeLabel.setPrefHeight(38.0);
+            ProgrammeLabel.setPrefWidth(134.0);
+            ProgrammeLabel.setMouseTransparent(true);
 
             dayBox.setLayoutX(404.0);
             dayBox.setLayoutY(31.0);
@@ -144,7 +154,6 @@ public class Client extends Application {
 
         //Listeners / event handlers scope
         {
-
             roomField.textProperty().addListener((observable, oldValue, newValue) -> {
                 if (!newValue.isEmpty()) {
                     roomLabel.setVisible(false); // Hide the label
@@ -153,11 +162,11 @@ public class Client extends Application {
                 }
             });
 
-            moduleField.textProperty().addListener((observable, oldValue, newValue) -> {
+            ProgrammeField.textProperty().addListener((observable, oldValue, newValue) -> {
                 if (!newValue.isEmpty()) {
-                    moduleLabel.setVisible(false); // Hide the label
+                    ProgrammeLabel.setVisible(false); // Hide the label
                 } else {
-                    moduleLabel.setVisible(true); // Show the label
+                    ProgrammeLabel.setVisible(true); // Show the label
                 }
             });
 
@@ -175,9 +184,8 @@ public class Client extends Application {
                         displayActionFields();
                         break;
                     default:
-
-
-            }});
+                }
+            });
 
             //viewing schedules button
             gridButton.setOnAction(actionEvent -> {
@@ -189,23 +197,23 @@ public class Client extends Application {
                     alert.showAndWait();
                 } else {
                     try {
-                        String module = moduleField.getText();
+                        String Programme = ProgrammeField.getText();
                         chosenTimes = new ArrayList<>(); // Clearing arraylist, if they choose times then reopen schedule- it resets chosen times.
                         Message message = new Message("VIEW");
                         message.setDay(dayBox.getValue().toString());
                         message.setROOM_NUMBER(roomField.getText());
-                        message.setMODULE_NAME(moduleField.getText());
+                        message.setProgramme_NAME(ProgrammeField.getText());
 
                         objectOutputStream.writeObject(message);
                         objectOutputStream.flush();
                         System.out.println(dayBox.getValue().toString());
 
                         Message timesMessage = (Message) objectInputStream.readObject();
-                        //schedule should show red for rooms booked at that time, aswell as classes of the same module
+                        //schedule should show red for rooms booked at that time, aswell as classes of the same Programme
                         Stage scheduleStage = new Stage();
 
                         boolean remove = false;
-                        if(optionBox.getValue().toString().equals("REMOVE")){
+                        if (optionBox.getValue().toString().equals("REMOVE")) {
                             remove = true;
                         }
                         GridPane scheduleGrid = ScheduleStage.createButtonGrid(timesMessage.getListOfTimes(), remove);
@@ -219,7 +227,6 @@ public class Client extends Application {
                     }
                 }
             });
-
 
             stopButton.setOnAction(actionEvent -> {
                 try {
@@ -240,15 +247,49 @@ public class Client extends Application {
             });
 
             sendButton.setOnAction(t -> {
+                switch (optionBox.getValue().toString()) {
+                    case "ADD":
+                        if (ProgrammeField.getText().isEmpty() || roomField.getText().isEmpty() || dayBox.getValue() == null || chosenTimes.isEmpty() || moduleField.getText().isEmpty()) {
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setTitle("Add Schedule Error");
+                            alert.setHeaderText(null);
+                            alert.setContentText("You must fill out all fields before adding a schedule");
+                            alert.showAndWait();
+                            return;
+                        }
+                        break;
+                    case "REMOVE":
+                        if (ProgrammeField.getText().isEmpty() || dayBox.getValue() == null || chosenTimes.isEmpty()) {
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setTitle("Remove Schedule Error");
+                            alert.setHeaderText(null);
+                            alert.setContentText("You must fill out all fields before removing a schedule");
+                            alert.showAndWait();
+                            return;
+                        }
+                        break;
+                    case "DISPLAY":
+                        if (ProgrammeField.getText().isEmpty() || dayBox.getValue() == null) {
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setTitle("Display Schedule Error");
+                            alert.setHeaderText(null);
+                            alert.setContentText("You must fill out all fields before displaying a schedule");
+                            alert.showAndWait();
+                            return;
+                        }
+                        break;
+                }
                 // check all fields / buttons make sure they are all filled out. Trigger popup and break/ return if not
                 try {
                     Message message = new Message(optionBox.getValue().toString());
                     for (String time : chosenTimes) {
                         message.addTime(time);
                     }
+                    message.setModule(moduleField.getText());
                     message.setDay(dayBox.getValue().toString());
                     message.setROOM_NUMBER(roomField.getText());
-                    message.setMODULE_NAME(moduleField.getText());
+                    message.setProgramme_NAME(ProgrammeField.getText());
+
 
                     objectOutputStream.writeObject(message);
                     Message response = (Message) objectInputStream.readObject();
@@ -256,7 +297,7 @@ public class Client extends Application {
 
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle(response.getOPTION());
-                    if(response.getOPTION().equals("SUCCESS")){
+                    if (response.getOPTION().equals("SUCCESS")) {
                         chosenTimes = new ArrayList<>();
                     }
                     alert.setHeaderText(null);
@@ -268,21 +309,15 @@ public class Client extends Application {
                     e.printStackTrace();
                 }
             });
-
             dayBox.setOnAction(e -> {
                 dayLabel.setVisible(false);
             });
-
-            //eventhandler for textbox for module code , how to make it so when they are finishehd typing it updates the variable,
-            // maybe just pull the variable e.g textbox.gettext(), when they click send
-
         }
     }
 
-
     @Override
     public void start(Stage stage) throws IOException {
-        anchorPane.getChildren().addAll(stopButton, dayBox, optionBox, sendButton, moduleField, moduleLabel, actionLabel, gridButton, chosenTimesLabel, dayLabel, roomField,roomLabel);
+        anchorPane.getChildren().addAll(stopButton, dayBox, optionBox, sendButton, ProgrammeField, ProgrammeLabel, actionLabel, gridButton, chosenTimesLabel, dayLabel, roomField, roomLabel, moduleField, moduleLabel);
         Scene scene = new Scene(anchorPane, 600, 400);
         stage.setScene(scene);
         stage.show();
@@ -306,7 +341,7 @@ public class Client extends Application {
         }
     }
 
-    // this needs to be here as it needs to access the chosenTimes arraylist
+    // this needs to be here as it needs to access the chosenTimes arraylist from this scope
     public static class buttonScheduleHandler implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent actionEvent) {
@@ -337,26 +372,20 @@ public class Client extends Application {
     // functions to toggle visibility of fields / buttons depending on action selected
     private static void addActionFields() {
         roomField.setVisible(true);
-        moduleField.setVisible(true);
+        ProgrammeField.setVisible(true);
         roomLabel.setVisible(true);
-
-
-        moduleLabel.setVisible(true);
+        ProgrammeLabel.setVisible(true);
         dayLabel.setVisible(true);
         gridButton.setVisible(true);
         dayBox.setVisible(true);
         chosenTimesLabel.setVisible(true);
-
-
     }
 
     private static void removeActionFields() {
-        moduleField.setVisible(true);
+        ProgrammeField.setVisible(true);
         roomField.setVisible(true);
         roomLabel.setVisible(true);
-
-
-        moduleLabel.setVisible(true);
+        ProgrammeLabel.setVisible(true);
         dayLabel.setVisible(true);
         gridButton.setVisible(true);
         dayBox.setVisible(true);
@@ -364,24 +393,25 @@ public class Client extends Application {
     }
 
     private static void refreshLabels() {
-        moduleField.setText("");
+        ProgrammeField.setText("");
         roomField.setText("");
         dayBox.setValue("");
         dayBox.setValue("");
-
-    };
+    }
 
     private static void displayActionFields() {
-        moduleField.setVisible(true);
+        ProgrammeField.setVisible(true);
         roomField.setVisible(false);
         roomLabel.setVisible(false);
-
-
-        moduleLabel.setVisible(true);
+        ProgrammeLabel.setVisible(true);
         dayLabel.setVisible(false);
         gridButton.setVisible(false);
         dayBox.setVisible(false);
         chosenTimesLabel.setVisible(false);
+    }
+
+    private static void verifyInputs() {
+        //check if all fields are filled out
     }
 
 }

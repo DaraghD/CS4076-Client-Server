@@ -9,9 +9,10 @@ public class Message implements Serializable {
     private String OPTION;
     // ADD , VIEW , DISPLAY , REMOVE ETC.
     private String CONTENTS;
-    private String MODULE_NAME;
+    private String Programme_NAME;
     private String Day;
     private String ROOM_NUMBER;
+    private String module;
     private ArrayList<String> listOfTimes = new ArrayList<String>();
     // list of times,
 
@@ -56,12 +57,12 @@ public class Message implements Serializable {
         return ROOM_NUMBER;
     }
 
-    public String getMODULE_NAME() {
-        return MODULE_NAME;
+    public String getProgramme_NAME() {
+        return Programme_NAME;
     }
 
-    public void setMODULE_NAME(String MODULE_NAME) {
-        this.MODULE_NAME = MODULE_NAME;
+    public void setProgramme_NAME(String Programme_NAME) {
+        this.Programme_NAME = Programme_NAME;
     }
 
 
@@ -70,10 +71,18 @@ public class Message implements Serializable {
         return "Message{" +
                 "OPTION='" + OPTION + '\'' +
                 ", CONTENTS='" + CONTENTS + '\'' +
-                ", MODULE_NAME='" + MODULE_NAME + '\'' +
+                ", Programme_NAME='" + Programme_NAME + '\'' +
                 ", Day='" + Day + '\'' +
                 ", ROOM_NUMBER='" + ROOM_NUMBER + '\'' +
                 ", listOfTimes=" + listOfTimes +
                 '}';
+    }
+
+    public String getModule() {
+        return module;
+    }
+
+    public void setModule(String module) {
+        this.module = module;
     }
 }

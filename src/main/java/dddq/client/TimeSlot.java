@@ -5,8 +5,9 @@ import java.io.Serializable;
 public class TimeSlot implements Serializable {
     private boolean isTaken;
 
+
     public TimeSlot() {
-        //Time slots by default are not Taken, and thus have no module name
+        //Time slots by default are not Taken, and thus have no Programme name
         isTaken = false;
     }
 

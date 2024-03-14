@@ -7,12 +7,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ScheduleDay implements Serializable {
-    private String moduleName; // may be redundant since we are using hashmap now ?
+    private String ProgrammeName; // may be redundant since we are using hashmap now ?
     private String room; // same as above,  possibly redundant
     private HashMap<String, TimeSlot> timeTable = new HashMap<>();
 
-    public ScheduleDay(String moduleName) {
-        this.moduleName = moduleName;
+    public ScheduleDay(String ProgrammeName) {
+        this.ProgrammeName = ProgrammeName;
 
         timeTable.put("09:00", new TimeSlot());
         timeTable.put("09:30", new TimeSlot());
@@ -43,8 +43,8 @@ public class ScheduleDay implements Serializable {
     public boolean checkTime(String time) {
         return timeTable.get(time).isTaken();
     }
-    public String getModuleName() {
-        return moduleName;
+    public String getProgrammeName() {
+        return ProgrammeName;
     }
 
     public String getRoom() {
@@ -54,8 +54,8 @@ public class ScheduleDay implements Serializable {
         this.room = room;
     }
 
-    public void setModuleName(String moduleName) {
-        this.moduleName = moduleName;
+    public void setProgrammeName(String ProgrammeName) {
+        this.ProgrammeName = ProgrammeName;
     }
 
     public ArrayList<String> getTakenTimes() {

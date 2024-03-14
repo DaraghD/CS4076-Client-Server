@@ -8,19 +8,23 @@ import java.util.ArrayList;
 
 public class ScheduleStage {
 
-    public static class buttonData{
+    public static class buttonData {
         private boolean isTaken = false;
         private boolean selected = false;
-        public buttonData(boolean taken){
+
+        public buttonData(boolean taken) {
             isTaken = taken;
         }
-        public void click(){
+
+        public void click() {
             isTaken = !isTaken;
         }
-        public boolean isTaken(){
+
+        public boolean isTaken() {
             return isTaken;
         }
     }
+
     // Method to create a 4x5 grid pane with buttons
     public static GridPane createButtonGrid(ArrayList<String> times, boolean remove) {
         GridPane gridPane = new GridPane();
@@ -36,11 +40,11 @@ public class ScheduleStage {
         for (int row = 0; row < 5; row++) {
             for (int col = 0; col < 4; col++) {
                 // Calculate the time
-                if(flagMinute){
+                if (flagMinute) {
                     currentMinute = 0;
-                    flagMinute = false;}
-                else{
-                    currentMinute=30;
+                    flagMinute = false;
+                } else {
+                    currentMinute = 30;
                     flagMinute = true;
                 }
                 String formattedTime = String.format("%02d:%02d", currentHour, currentMinute);
@@ -49,35 +53,33 @@ public class ScheduleStage {
                     button.setStyle("-fx-background-color: #0022ff; -fx-text-fill:white");
                     Client.submitScheduleHandler handler = new Client.submitScheduleHandler();
                     button.setOnAction(handler);
-                    gridPane.add(button,col,row);
+                    gridPane.add(button, col, row);
                     continue;
                 }
-                if(flagHour){
+                if (flagHour) {
                     currentHour++;
-                    flagHour=false;
-                }
-                else{
+                    flagHour = false;
+                } else {
                     flagHour = true;
                 }
                 // Create a button with the time as text
 
                 Button button = new Button(formattedTime);
 
-                if(remove){
+                if (remove) {
                     button.setUserData(new buttonData(!times.contains(formattedTime)));
-                }else{
+                } else {
                     button.setUserData(new buttonData(times.contains(formattedTime)));
                 }
                 //flase means its NOT TAKEN e.g availabl.e, true means its taken
 
                 boolean isTaken = times.contains(formattedTime);
-                if(remove){
+                if (remove) {
                     isTaken = !isTaken;
                 }
-                if (isTaken){
+                if (isTaken) {
                     button.setStyle("-fx-background-color: red; -fx-text-fill: white");
-                }
-                else{
+                } else {
                     button.setStyle("-fx-background-color: green; -fx-text-fill: white");
                 }
                 Client.buttonScheduleHandler handler1 = new Client.buttonScheduleHandler();
@@ -86,11 +88,7 @@ public class ScheduleStage {
             }
         }
         return gridPane;
-
-        //todo : undo all of schedule stuff, work on days not date, only need calendar of 5 days
-        // make different stage for all 5 days?
     }
-
 }
 
 

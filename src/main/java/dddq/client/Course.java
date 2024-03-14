@@ -4,18 +4,18 @@ import java.util.ArrayList;
 
 public class Course {
     private String courseName;
-    private ArrayList<String> modules;
+    private ArrayList<String> Programmes;
 
 
     public Course(String courseName){
         this.courseName = courseName;
-        modules = new ArrayList<String>();
+        Programmes = new ArrayList<String>();
     }
 
-    public void addModule(String moduleName) throws IncorrectActionException {
-        if(modules.size() == 5 ) {
-            throw new IncorrectActionException("Cannot add " + moduleName + "\nCourse already has 5 modules");
+    public void addProgramme(String ProgrammeName) throws IncorrectActionException {
+        if(Programmes.size() == 5 ) {
+            throw new IncorrectActionException("Cannot add " + ProgrammeName + "\nCourse already has 5 Programmes");
         }
-        modules.add(moduleName);
+        Programmes.add(ProgrammeName);
     }
 }
