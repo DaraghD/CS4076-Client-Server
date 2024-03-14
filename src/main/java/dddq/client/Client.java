@@ -196,7 +196,12 @@ public class Client extends Application {
                         Message timesMessage = (Message) objectInputStream.readObject();
                         //schedule should show red for rooms booked at that time, aswell as classes of the same module
                         Stage scheduleStage = new Stage();
-                        GridPane scheduleGrid = ScheduleStage.createButtonGrid(timesMessage.getListOfTimes());
+
+                        boolean remove = false;
+                        if(optionBox.getValue().toString().equals("REMOVE")){
+                            remove = true;
+                        }
+                        GridPane scheduleGrid = ScheduleStage.createButtonGrid(timesMessage.getListOfTimes(), remove);
                         Scene scheduleScene = new Scene(scheduleGrid, 400, 300);
                         scheduleStage.setScene(scheduleScene);
                         scheduleStage.show();

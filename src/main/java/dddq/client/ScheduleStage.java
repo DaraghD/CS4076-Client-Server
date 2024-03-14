@@ -22,7 +22,7 @@ public class ScheduleStage {
         }
     }
     // Method to create a 4x5 grid pane with buttons
-    public static GridPane createButtonGrid(ArrayList<String> times) {
+    public static GridPane createButtonGrid(ArrayList<String> times, boolean remove) {
         GridPane gridPane = new GridPane();
         gridPane.setHgap(10);
         gridPane.setVgap(10);
@@ -62,10 +62,18 @@ public class ScheduleStage {
                 // Create a button with the time as text
 
                 Button button = new Button(formattedTime);
-                button.setUserData(new buttonData(times.contains(formattedTime)));
+
+                if(remove){
+                    button.setUserData(new buttonData(!times.contains(formattedTime)));
+                }else{
+                    button.setUserData(new buttonData(times.contains(formattedTime)));
+                }
                 //flase means its NOT TAKEN e.g availabl.e, true means its taken
 
                 boolean isTaken = times.contains(formattedTime);
+                if(remove){
+                    isTaken = !isTaken;
+                }
                 if (isTaken){
                     button.setStyle("-fx-background-color: red; -fx-text-fill: white");
                 }
