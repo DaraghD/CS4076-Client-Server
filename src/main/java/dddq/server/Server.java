@@ -13,25 +13,33 @@ import java.util.concurrent.ScheduledExecutorService;
 
 public class Server {
     private static final int PORT = 1234;
+    static String filePath = "database.ser";
     static Socket link;
     static HashMap<String, HashMap<String, ScheduleDay>> ProgrammeTimetable = new HashMap<>(); // DAY : list of  Programme SCHEDULEs , maybe hashmap of room name to day instaad of list
     static HashMap<String, HashMap<String, ScheduleDay>> roomTimetable = new HashMap<>(); // DAY : list of room schedules on that day
     static HashMap<String, ArrayList<String>> programmeModuleList = new HashMap<>(); // Programme name : class list , class cant go over 5 (Unique)
     static String[] dayOfTheWeek = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
 
-    public static void init() throws IncorrectActionException {
-
-        //TODO: load from disk , only do thing below if NOT loading from disk e.g new file
-        for (String day : dayOfTheWeek) {
-            ProgrammeTimetable.put(day, new HashMap<String, ScheduleDay>());
-            roomTimetable.put(day, new HashMap<String, ScheduleDay>());
+    public static void init() throws IncorrectActionException, IOException, ClassNotFoundException {
+        File data = new File(filePath);
+        if (data.length() == 0) {
+            for (String day : dayOfTheWeek) {
+                ProgrammeTimetable.put(day, new HashMap<String, ScheduleDay>());
+                roomTimetable.put(day, new HashMap<String, ScheduleDay>());
+            }
+        } else {
+            readData();
         }
-        // load data from disk in this function
-
     }
 
-    public static void main(String[] args) throws IOException, IncorrectActionException {
-        init();
+    public static void main(String[] args) throws IOException, IncorrectActionException, ClassNotFoundException {
+        try {
+            init();
+        } catch (FileNotFoundException e) {
+            System.out.println("No data found, creating new file");
+        } catch (IOException e) {
+            System.out.println("Error reading data from file");
+        }
         while (true) {
             ObjectOutputStream objectOutputStream = null;
             try {
@@ -48,6 +56,7 @@ public class Server {
 
                 while (!link.isClosed()) {
                     processClientMessage(objectInputStream, objectOutputStream);
+                    saveData();
                 }
 
             } catch (IOException | ClassNotFoundException | IncorrectActionException e) {
@@ -76,14 +85,14 @@ public class Server {
                 //room,Programme, day, list of times, class
 
                 // Class doesnt have to be shown anywhere so we are only storing it to make sure that only 5 classes per Programme
-                programmeModuleList.computeIfAbsent(Programme, k ->{
+                programmeModuleList.computeIfAbsent(Programme, k -> {
                     ArrayList<String> x = new ArrayList<String>();
                     x.add(module);
                     return x;
                 });
 
                 //if its a new module and modules are > 5 then throw error
-                if(programmeModuleList.get(Programme).size() == 5 && !programmeModuleList.get(Programme).contains(module)){
+                if (programmeModuleList.get(Programme).size() == 5 && !programmeModuleList.get(Programme).contains(module)) {
                     throw new IncorrectActionException("Incorrect Action : Programme already has 5 classes");
                 }
 
@@ -137,9 +146,9 @@ public class Server {
                 ArrayList<String> times = message.getListOfTimes();
 
                 ScheduleDay programmeDay = ProgrammeTimetable.get(day).get(Programme);
-                ScheduleDay roomD= roomTimetable.get(day).get(room);
+                ScheduleDay roomD = roomTimetable.get(day).get(room);
 
-                for(String time:times){
+                for (String time : times) {
                     programmeDay.getTimeTable().get(time).freeSlot();
                     roomD.getTimeTable().get(time).freeSlot();
                 }
@@ -167,5 +176,33 @@ public class Server {
         return true;
         // make a check room function -> need to go through every schedule ? -> use roomTimetables
     }
+
+
+    private static void saveData() throws IOException {
+        // save data to disk
+        FileOutputStream fileOut = new FileOutputStream(filePath);
+        ObjectOutputStream out = new ObjectOutputStream(fileOut);
+        out.writeObject(ProgrammeTimetable);
+        out.writeObject(roomTimetable);
+        out.writeObject(programmeModuleList);
+        out.close();
+        fileOut.close();
+        System.out.println("Serialized data is saved in " + filePath);
+
+    }
+
+    private static void readData() throws FileNotFoundException, IOException, ClassNotFoundException {
+        FileInputStream fileIn = new FileInputStream(filePath);
+        ObjectInputStream in = new ObjectInputStream(fileIn);
+        ProgrammeTimetable = (HashMap<String, HashMap<String, ScheduleDay>>) in.readObject();
+        roomTimetable = (HashMap<String, HashMap<String, ScheduleDay>>) in.readObject();
+        programmeModuleList = (HashMap<String, ArrayList<String>>) in.readObject();
+        in.close();
+        fileIn.close();
+
+    }
+
+
 }
+
 

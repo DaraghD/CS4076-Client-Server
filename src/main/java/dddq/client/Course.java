@@ -1,8 +1,9 @@
 package dddq.client;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Course {
+public class Course implements Serializable {
     private String courseName;
     private ArrayList<String> Programmes;
 
