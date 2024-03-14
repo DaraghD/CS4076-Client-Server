@@ -30,8 +30,8 @@ public class Client extends Application {
         }
     }
 
-    static final int PORT = 1234;
-    TextField moduleField = new TextField();
+    static final int PORT = 12345;
+    static TextField moduleField = new TextField();
     static TextField roomField = new TextField();
     Label roomLabel = new Label("Choose Room");
     String[] options = {"DISPLAY", "ADD", "REMOVE"};
@@ -186,6 +186,9 @@ public class Client extends Application {
                         chosenTimes = new ArrayList<>(); // Clearing arraylist, if they choose times then reopen schedule- it resets chosen times.
                         Message message = new Message("VIEW");
                         message.setDay(dayBox.getValue().toString());
+                        message.setROOM_NUMBER(roomField.getText());
+                        message.setMODULE_NAME(moduleField.getText());
+
                         objectOutputStream.writeObject(message);
                         objectOutputStream.flush();
                         System.out.println(dayBox.getValue().toString());

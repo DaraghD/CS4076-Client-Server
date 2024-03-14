@@ -4,11 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" name="Changes" comment="fixed error on accessing hashmaps">
+    <list default="true" id="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" name="Changes" comment="u">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/client/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/IncorrectActionException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/client/IncorrectActionException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/ScheduleStage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/client/ScheduleStage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/ScheduleDay.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/client/ScheduleDay.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dddq/server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/server/Server.java" afterDir="false" />
     </list>
     <list id="c6d25357-034e-4181-a96d-31ae1c650f89" name="Changes by dmqui" comment="" />
@@ -51,7 +50,7 @@
   "keyToString": {
     "Application.App.executor": "Run",
     "Application.Client.executor": "Run",
-    "Application.Server.executor": "Run",
+    "Application.Server.executor": "Debug",
     "Application.TCPEchoServer.executor": "Run",
     "Application.test.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
@@ -74,7 +73,7 @@
       <recent name="$PROJECT_DIR$/src/main/java/dddq/client" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Server">
+  <component name="RunManager" selected="Application.Client">
     <configuration name="Client" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="dddq.client.Client" />
       <module name="Client" />
@@ -139,6 +138,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
+        <option value="jdk-21.0.1-openjdk-21.0.1-4caba194b151-e47b9c39" />
         <option value="jdk-21.0.2-openjdk-21.0.2-4caba194b151-78a6f59c" />
       </set>
     </attachedChunks>
@@ -161,6 +161,7 @@
       <workItem from="1710294632814" duration="9364000" />
       <workItem from="1710347940277" duration="1171000" />
       <workItem from="1710373266661" duration="645000" />
+      <workItem from="1710378965587" duration="654000" />
     </task>
     <task id="LOCAL-00001" summary="Basic UI setup">
       <option name="closed" value="true" />
@@ -250,7 +251,15 @@
       <option name="project" value="LOCAL" />
       <updated>1710316351146</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="u">
+      <option name="closed" value="true" />
+      <created>1710379039877</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1710379039877</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -279,6 +288,61 @@
     <MESSAGE value="fix : small error in server" />
     <MESSAGE value="refactored how we handle schedules," />
     <MESSAGE value="fixed error on accessing hashmaps" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed error on accessing hashmaps" />
+    <MESSAGE value="u" />
+    <option name="LAST_COMMIT_MESSAGE" value="u" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/dddq/server/Server.java</url>
+          <line>106</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/dddq/server/Server.java</url>
+          <line>105</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/dddq/server/Server.java</url>
+          <line>99</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/dddq/server/Server.java</url>
+          <line>77</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/dddq/server/Server.java</url>
+          <line>76</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/dddq/server/Server.java</url>
+          <line>75</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/dddq/server/Server.java</url>
+          <line>73</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/dddq/server/Server.java</url>
+          <line>74</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/dddq/server/Server.java</url>
+          <line>72</line>
+          <properties>
+            <option name="lambda-ordinal" value="-1" />
+          </properties>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

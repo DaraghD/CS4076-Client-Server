@@ -41,7 +41,6 @@ public class ScheduleDay implements Serializable {
     }
 
     public boolean checkTime(String time) {
-        System.out.println(time + ": IS TAKEN : " + timeTable.get(time).isTaken());
         return timeTable.get(time).isTaken();
     }
     public String getModuleName() {

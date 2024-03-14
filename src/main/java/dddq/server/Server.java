@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Server {
-    private static final int PORT = 1234;
+    private static final int PORT = 12345;
     static Socket link;
     static HashMap<String, HashMap<String, ScheduleDay>> moduleTimetable = new HashMap<>(); // DAY : list of  MODULE SCHEDULEs , maybe hashmap of room name to day instaad of list
     static HashMap<String, HashMap<String, ScheduleDay>> roomTimetable = new HashMap<>(); // DAY : list of room schedules on that day
@@ -24,12 +24,7 @@ public class Server {
             roomTimetable.put(day, new HashMap<String, ScheduleDay>());
         }
         // load data from disk in this function
-        //testing
-        {
-            ScheduleDay test = new ScheduleDay("test");
-            test.bookTime("09:00");
-            roomTimetable.get("Monday").put("test", test); // not showing up when requested?
-        }
+
     }
 
     public static void main(String[] args) throws IOException, IncorrectActionException {
@@ -94,7 +89,6 @@ public class Server {
                 objectOutputStream.writeObject(RESPONSE);
                 break;
             case "VIEW": // viewing schedule for a day
-                System.out.println(moduleTimetable.get(day).toString());
                 // need room , day, module
                 ArrayList<String> listOfTakenTimes = new ArrayList<>();
 
@@ -111,6 +105,7 @@ public class Server {
 
                 listOfTakenTimes.addAll(moduleDay1.getTakenTimes());
                 listOfTakenTimes.addAll(roomDay1.getTakenTimes());
+                System.out.println(99999);
                 for (String time : listOfTakenTimes) {
                     System.out.println("TIME TAKEN : " + time);
                 }
