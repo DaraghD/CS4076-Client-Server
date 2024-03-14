@@ -4,11 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" name="Changes" comment="added addRoom label">
+    <list default="true" id="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" name="Changes" comment="changed naming, programme and module, instead of module and class&#10;Need to work on persistent data -&gt; sql or jaxb">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/client/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/Course.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/client/Course.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/client/Message.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/ScheduleDay.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/client/ScheduleDay.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/TimeSlot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/client/TimeSlot.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dddq/server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/server/Server.java" afterDir="false" />
@@ -275,7 +272,15 @@
       <option name="project" value="LOCAL" />
       <updated>1710378729696</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="changed naming, programme and module, instead of module and class&#10;Need to work on persistent data -&gt; sql or jaxb">
+      <option name="closed" value="true" />
+      <created>1710399149028</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1710399149028</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -305,6 +310,7 @@
     <MESSAGE value="refactored how we handle schedules," />
     <MESSAGE value="fixed error on accessing hashmaps" />
     <MESSAGE value="added addRoom label" />
-    <option name="LAST_COMMIT_MESSAGE" value="added addRoom label" />
+    <MESSAGE value="changed naming, programme and module, instead of module and class&#10;Need to work on persistent data -&gt; sql or jaxb" />
+    <option name="LAST_COMMIT_MESSAGE" value="changed naming, programme and module, instead of module and class&#10;Need to work on persistent data -&gt; sql or jaxb" />
   </component>
 </project>

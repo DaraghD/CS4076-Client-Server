@@ -293,7 +293,6 @@ public class Client extends Application {
 
                     objectOutputStream.writeObject(message);
                     Message response = (Message) objectInputStream.readObject();
-                    //label.setText(response.getOPTION() + " " + response.getCONTENTS());
 
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle(response.getOPTION());

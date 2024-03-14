@@ -15,6 +15,14 @@ public class TimeSlot implements Serializable {
         return isTaken;
     }
 
+    public void freeSlot() throws IncorrectActionException {
+        if (!isTaken) {
+            throw new IncorrectActionException("Time slot already free");
+        } else {
+            isTaken = false;
+        }
+    }
+
     public void takeSlot() throws IncorrectActionException {
         if (isTaken) {
             throw new IncorrectActionException("Time slot already taken");

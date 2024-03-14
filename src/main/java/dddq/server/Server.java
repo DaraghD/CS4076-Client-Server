@@ -9,6 +9,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.ScheduledExecutorService;
 
 public class Server {
     private static final int PORT = 1234;
@@ -135,6 +136,18 @@ public class Server {
                 //remove - need room , time(multiple?), module, Programme
                 ArrayList<String> times = message.getListOfTimes();
 
+                ScheduleDay programmeDay = ProgrammeTimetable.get(day).get(Programme);
+                ScheduleDay roomD= roomTimetable.get(day).get(room);
+
+                for(String time:times){
+                    programmeDay.getTimeTable().get(time).freeSlot();
+                    roomD.getTimeTable().get(time).freeSlot();
+                }
+
+
+                Message responseR = new Message("SUCCESS");
+                responseR.setCONTENTS("REMOVED TIMES +  " + times.toString());
+                objectOutputStream.writeObject(responseR);
                 break;
             case "DISPLAY": // only needs to be displayed to terminal on SERVER side as per abdul's email
                 break;

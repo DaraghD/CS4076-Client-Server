@@ -13,7 +13,6 @@ public class ScheduleDay implements Serializable {
 
     public ScheduleDay(String ProgrammeName) {
         this.ProgrammeName = ProgrammeName;
-
         timeTable.put("09:00", new TimeSlot());
         timeTable.put("09:30", new TimeSlot());
         timeTable.put("10:00", new TimeSlot());
