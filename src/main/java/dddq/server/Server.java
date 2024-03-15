@@ -54,19 +54,21 @@ public class Server {
                 ObjectInputStream objectInputStream = new ObjectInputStream(link.getInputStream());
 
                 while (!link.isClosed()) {
-                    processClientMessage(objectInputStream, objectOutputStream);
-                    saveData();
+                    try {
+                        processClientMessage(objectInputStream, objectOutputStream);
+                        saveData();
+                    } catch (IncorrectActionException e) {
+                        var x = new Message("ERROR");
+                        x.setCONTENTS(e.getMessage());
+                        objectOutputStream.writeObject(x);
+                        e.printStackTrace();
+                    }
                 }
-
-            } catch (IOException | ClassNotFoundException | IncorrectActionException e) {
+            } catch (IOException | ClassNotFoundException e) {
                 var x = new Message("ERROR");
                 x.setCONTENTS(e.getMessage());
                 objectOutputStream.writeObject(x);
                 e.printStackTrace();
-            } finally {
-                // Close the connection with the client
-                System.out.println("Closing connection with client: " + link.getInetAddress());
-                link.close();
             }
         }
     }
@@ -90,12 +92,11 @@ public class Server {
                     return x;
                 });
 
-                if(programmeModuleList.get(Programme).size() < 5){
-                    if(!programmeModuleList.get(Programme).contains(module)){
+                if (programmeModuleList.get(Programme).size() < 5) {
+                    if (!programmeModuleList.get(Programme).contains(module)) {
                         programmeModuleList.get(Programme).add(module);
                     }
-                }
-                else{
+                } else {
                     throw new IncorrectActionException("Incorrect Action : Programme already has 5 classes");
                 }
                 //if its a new module and modules are > 5 then throw error
@@ -112,7 +113,6 @@ public class Server {
                     ProgrammeDay.bookTime(time);
                     roomDay.bookTime(time);
                 }
-
 
                 Message RESPONSE = new Message("SUCCESS");
                 RESPONSE.setCONTENTS("BOOKED TIMES +  " + message.getListOfTimes().toString());
@@ -134,7 +134,7 @@ public class Server {
                 listOfTakenTimes.addAll(ProgrammeDay1.getTakenTimes());
 
                 // dont show rooms if removing
-                if(!message.getCONTENTS().equals("r")){
+                if (!message.getCONTENTS().equals("r")) {
                     listOfTakenTimes.addAll(roomDay1.getTakenTimes());
                 }
                 for (String time : listOfTakenTimes) {
@@ -181,7 +181,6 @@ public class Server {
         return true;
         // make a check room function -> need to go through every schedule ? -> use roomTimetables
     }
-
 
     private static void saveData() throws IOException {
         // save data to disk

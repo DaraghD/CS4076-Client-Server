@@ -205,6 +205,8 @@ public class Client extends Application {
                         message.setProgramme_NAME(ProgrammeField.getText());
                         if (optionBox.getValue().equals("REMOVE")) {
                             message.setCONTENTS("r");
+                        }else{
+                            message.setCONTENTS("v");
                         }
                         objectOutputStream.writeObject(message);
                         objectOutputStream.flush();
