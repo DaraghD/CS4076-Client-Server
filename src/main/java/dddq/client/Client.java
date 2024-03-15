@@ -274,7 +274,7 @@ public class Client extends Application {
                         }
                         break;
                     case "DISPLAY":
-                        if (ProgrammeField.getText().isEmpty() || dayBox.getValue() == null) {
+                        if (ProgrammeField.getText().isEmpty()) {
                             Alert alert = new Alert(Alert.AlertType.INFORMATION);
                             alert.setTitle("Display Schedule Error");
                             alert.setHeaderText(null);
@@ -291,7 +291,10 @@ public class Client extends Application {
                         message.addTime(time);
                     }
                     message.setModule(moduleField.getText());
-                    message.setDay(dayBox.getValue().toString());
+
+                    if(dayBox.getValue() != null){
+                        message.setDay(dayBox.getValue().toString());
+                    }
                     message.setROOM_NUMBER(roomField.getText());
                     message.setProgramme_NAME(ProgrammeField.getText());
 

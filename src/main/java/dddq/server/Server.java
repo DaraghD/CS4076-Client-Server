@@ -102,6 +102,7 @@ public class Server {
                 }
                 //if its a new module and modules are > 5 then throw error
 
+                System.out.println(111111 + " " + ProgrammeTimetable.get(day));
                 ScheduleDay ProgrammeDay = ProgrammeTimetable.get(day).computeIfAbsent(Programme, k -> new ScheduleDay(Programme));
                 ScheduleDay roomDay = roomTimetable.get(day).computeIfAbsent(room, k -> {
                     var x = new ScheduleDay(Programme);
@@ -153,7 +154,6 @@ public class Server {
             case "REMOVE":
                 //remove - need room , time(multiple?), module, Programme
                 ArrayList<String> times = message.getListOfTimes();
-
                 ScheduleDay programmeDay = ProgrammeTimetable.get(day).get(Programme);
                 ScheduleDay roomD = roomTimetable.get(day).get(room);
 
@@ -168,16 +168,23 @@ public class Server {
                 break;
             case "DISPLAY":
                 System.out.println("DISPLAYING WEEK SCHEDULE FOR :" +Programme); // only needs to be displayed to terminal on SERVER side as per abdul's email
-                for (String d : ProgrammeTimetable.get(day).keySet()) {
-                    System.out.println("DAY : " + day + "\n"+ "-----------------");
+                for (String d : dayOfTheWeek){
+                    System.out.println("DAY : " + d + "\n"+ "-----------------");
 
-                    ScheduleDay s = ProgrammeTimetable.get(day).get(Programme);
+                    ScheduleDay s = ProgrammeTimetable.get(d).get(Programme);
+                    if(s == null){
+                        System.out.println("NO CLASSES SCHEDULED FOR : " + d);
+                        continue;
+                    }
                     for(String time: s.getTakenTimes()){
                         System.out.println("TIME : " + time);
                         System.out.println("ROOM : " + s.getTimeSlot(time).getRoom());
                         System.out.println("MODULE : " + s.getTimeSlot(time).getModule());
                     }
                 }
+                Message responseD = new Message("SUCCESS");
+                responseD.setCONTENTS("DISPLAYED WEEK SCHEDULE FOR : " + Programme);
+                objectOutputStream.writeObject(responseD);
                 break;
             case "STOP":
                 System.out.println("Stopping server as requested by client");
@@ -190,12 +197,6 @@ public class Server {
                 throw new IncorrectActionException("NOT A VALID COMMAND");
         }
     }
-
-    public boolean checkRoom(String time, String room, String day) {
-        return true;
-        // make a check room function -> need to go through every schedule ? -> use roomTimetables
-    }
-
     private static void saveData() throws IOException {
         // save data to disk
         FileOutputStream fileOut = new FileOutputStream(filePath);
@@ -217,9 +218,7 @@ public class Server {
         programmeModuleList = (HashMap<String, ArrayList<String>>) in.readObject();
         in.close();
         fileIn.close();
-
     }
-
 
 }
 

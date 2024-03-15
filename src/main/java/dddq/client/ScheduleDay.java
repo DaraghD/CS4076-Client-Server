@@ -77,7 +77,7 @@ public class ScheduleDay implements Serializable {
 
     public boolean bookTime(String time) throws IncorrectActionException {
         if (timeTable.get(time).isTaken()) {
-            return false;
+            throw new IncorrectActionException("Time slot already taken");
         }
         timeTable.get(time).takeSlot();
         return true;
