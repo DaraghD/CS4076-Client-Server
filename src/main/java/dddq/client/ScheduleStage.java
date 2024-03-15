@@ -2,7 +2,12 @@ package dddq.client;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.RowConstraints;
+import javafx.scene.text.Font;
 
 import java.util.ArrayList;
 
@@ -10,7 +15,6 @@ public class ScheduleStage {
 
     public static class buttonData {
         private boolean isTaken = false;
-        private boolean selected = false;
 
         public buttonData(boolean taken) {
             isTaken = taken;
@@ -25,70 +29,77 @@ public class ScheduleStage {
         }
     }
 
-    // Method to create a 4x5 grid pane with buttons
-    public static GridPane createButtonGrid(ArrayList<String> times, boolean remove) {
+    public static GridPane createButtonGrid(ArrayList<String> times, boolean remove,String displayLabel) {
         GridPane gridPane = new GridPane();
-        gridPane.setHgap(10);
-        gridPane.setVgap(10);
+        gridPane.setHgap(7);
+        gridPane.setVgap(7);
         gridPane.setPadding(new Insets(10));
 
-        boolean flagMinute = true;
-        boolean flagHour = false;
+        // Define column constraints for 4 columns
+        for (int i = 0; i < 4; i++) {
+            ColumnConstraints columnConstraints = new ColumnConstraints();
+            columnConstraints.setHgrow(Priority.ALWAYS);
+            gridPane.getColumnConstraints().add(columnConstraints);
+        }
+
+        // Define row constraints for an additional row for the label + 5 existing rows
+        for (int i = 0; i < 6; i++) { // Now 6 instead of 5 to account for the new label row
+            RowConstraints rowConstraints = new RowConstraints();
+            rowConstraints.setVgrow(Priority.ALWAYS);
+            gridPane.getRowConstraints().add(rowConstraints);
+        }
+
+        // Add a label spanning the entire top row
+        Label topLabel = new Label(displayLabel);
+        topLabel.setFont(Font.font("Arial", 24));
+        topLabel.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        topLabel.setStyle("-fx-background-color: #4063e5; -fx-text-fill: white; -fx-alignment: center;");
+        GridPane.setConstraints(topLabel, 0, 0, 4, 1); // Column index, Row index, Column span, Row span
+        gridPane.getChildren().add(topLabel);
+
+        boolean flagMinute = false;
         int currentHour = 9;
-        int currentMinute = 0;
-        // Add buttons to each cell using a for loop
-        for (int row = 0; row < 5; row++) {
+        for (int row = 1; row < 6; row++) {
             for (int col = 0; col < 4; col++) {
-                // Calculate the time
-                if (flagMinute) {
-                    currentMinute = 0;
-                    flagMinute = false;
-                } else {
-                    currentMinute = 30;
-                    flagMinute = true;
-                }
-                String formattedTime = String.format("%02d:%02d", currentHour, currentMinute);
-                if (formattedTime.equals("18:30")) {
+                if(row ==5 && col == 3){
                     Button button = new Button("Submit");
                     button.setStyle("-fx-background-color: #0022ff; -fx-text-fill:white");
+                    button.setFont(Font.font("Arial", 20));
+                    button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
                     Client.submitScheduleHandler handler = new Client.submitScheduleHandler();
                     button.setOnAction(handler);
                     gridPane.add(button, col, row);
                     continue;
                 }
-                if (flagHour) {
-                    currentHour++;
-                    flagHour = false;
-                } else {
-                    flagHour = true;
-                }
-                // Create a button with the time as text
-
+                // The logic for buttons remains the same, just adjust the row index by +1
+                String formattedTime = String.format("%02d:%02d", currentHour, flagMinute ? 30 : 0);
                 Button button = new Button(formattedTime);
+                button.setFont(Font.font("Arial", 20));
+                button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
                 if (remove) {
                     button.setUserData(new buttonData(!times.contains(formattedTime)));
                 } else {
                     button.setUserData(new buttonData(times.contains(formattedTime)));
                 }
-                //flase means its NOT TAKEN e.g availabl.e, true means its taken
 
-                boolean isTaken = times.contains(formattedTime);
-                if (remove) {
-                    isTaken = !isTaken;
-                }
-                if (isTaken) {
+                if (times.contains(formattedTime) != remove) {
                     button.setStyle("-fx-background-color: red; -fx-text-fill: white");
                 } else {
                     button.setStyle("-fx-background-color: green; -fx-text-fill: white");
                 }
-                Client.buttonScheduleHandler handler1 = new Client.buttonScheduleHandler();
-                button.setOnAction(handler1);
-                gridPane.add(button, col, row);
+
+                button.setOnAction(new Client.buttonScheduleHandler());
+                GridPane.setConstraints(button, col, row); // Adjust the row by +1
+
+                if (flagMinute) {
+                    currentHour++;
+                }
+                flagMinute = !flagMinute;
+
+                gridPane.getChildren().add(button);
             }
         }
         return gridPane;
     }
 }
-
-
