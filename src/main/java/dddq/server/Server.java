@@ -90,10 +90,15 @@ public class Server {
                     return x;
                 });
 
-                //if its a new module and modules are > 5 then throw error
-                if (programmeModuleList.get(Programme).size() == 5 && !programmeModuleList.get(Programme).contains(module)) {
+                if(programmeModuleList.get(Programme).size() < 5){
+                    if(!programmeModuleList.get(Programme).contains(module)){
+                        programmeModuleList.get(Programme).add(module);
+                    }
+                }
+                else{
                     throw new IncorrectActionException("Incorrect Action : Programme already has 5 classes");
                 }
+                //if its a new module and modules are > 5 then throw error
 
                 ScheduleDay ProgrammeDay = ProgrammeTimetable.get(day).computeIfAbsent(Programme, k -> new ScheduleDay(Programme));
                 ScheduleDay roomDay = roomTimetable.get(day).computeIfAbsent(room, k -> {
