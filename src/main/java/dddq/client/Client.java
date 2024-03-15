@@ -75,11 +75,6 @@ public class Client extends Application {
         //Putting things into { } lets us close it to make the file smaller when viewing.
         //components
         {
-            roomLabel.setLayoutX(50);
-            roomLabel.setLayoutY(158);
-            roomLabel.setPrefHeight(38);
-            roomLabel.setPrefWidth(202);
-            roomLabel.setVisible(true);
             roomLabel.setMouseTransparent(true);
 
             roomField.setPrefWidth(119);
@@ -88,7 +83,7 @@ public class Client extends Application {
             roomField.setLayoutY(150);
 
             chosenTimesLabel.setLayoutY(200);
-            chosenTimesLabel.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD, 20));
+            chosenTimesLabel.setFont(Font.font("Arial", 10));
 
             dayBox.setLayoutX(386);
             dayBox.setLayoutY(31);
@@ -101,6 +96,9 @@ public class Client extends Application {
             optionBox.setPrefHeight(38);
             optionBox.setPrefWidth(148);
 
+            dayBox.setPrefHeight(38);
+            dayBox.setPrefWidth(148);
+
             sendButton.setLayoutX(240);
             sendButton.setLayoutY(325);
             sendButton.setPrefWidth(119);
@@ -108,6 +106,7 @@ public class Client extends Application {
 
             gridButton.setLayoutX(31);
             gridButton.setLayoutY(325);
+            roomLabel.setVisible(true);
             gridButton.setPrefWidth(119);
             gridButton.setPrefHeight(47);
 
@@ -121,10 +120,6 @@ public class Client extends Application {
             moduleField.setPrefHeight(38);
             moduleField.setPrefWidth(177);
 
-            moduleLabel.setLayoutX(207);
-            moduleLabel.setLayoutY(75);
-            moduleLabel.setPrefHeight(38);
-            moduleLabel.setPrefWidth(134);
             moduleLabel.setMouseTransparent(true);
             sendButton.setStyle("-fx-background-color: #4abd22");
             stopButton.setStyle("-fx-background-color: #ea2727");
@@ -133,27 +128,10 @@ public class Client extends Application {
             stopButton.setLayoutX(453);
             stopButton.setLayoutY(325);
 
-            actionLabel.setLayoutX(37.0);
-            actionLabel.setLayoutY(31.0);
-            actionLabel.setPrefHeight(38.0);
-            actionLabel.setPrefWidth(134.0);
             actionLabel.setMouseTransparent(true);
 
-            ProgrammeLabel.setLayoutX(207.0);
-            ProgrammeLabel.setLayoutY(31.0);
-            ProgrammeLabel.setPrefHeight(38.0);
-            ProgrammeLabel.setPrefWidth(134.0);
             ProgrammeLabel.setMouseTransparent(true);
 
-            dayBox.setLayoutX(404.0);
-            dayBox.setLayoutY(31.0);
-            dayBox.setPrefHeight(38.0);
-            dayBox.setPrefWidth(134.0);
-
-            dayLabel.setLayoutX(404.0);
-            dayLabel.setLayoutY(31.0);
-            dayLabel.setPrefHeight(38.0);
-            dayLabel.setPrefWidth(134.0);
             dayLabel.setMouseTransparent(true);
         }
 
@@ -207,6 +185,7 @@ public class Client extends Application {
                         Message message = new Message("VIEW");
                         message.setDay(dayBox.getValue().toString());
                         message.setROOM_NUMBER(roomField.getText());
+                        System.out.println("ROOM : "+roomField.getText());
                         message.setProgramme_NAME(ProgrammeField.getText());
                         if (optionBox.getValue().equals("REMOVE")) {
                             message.setCONTENTS("r");
@@ -255,6 +234,13 @@ public class Client extends Application {
                     e.printStackTrace();
                 }
             });
+            moduleField.textProperty().addListener((observable, oldValue, newValue) -> {
+                if (!newValue.isEmpty()) {
+                    moduleLabel.setVisible(false); // Hide the label
+                } else {
+                    moduleLabel.setVisible(true); // Show the label
+                }
+            });
 
             sendButton.setOnAction(t -> {
                 switch (optionBox.getValue().toString()) {
@@ -279,7 +265,7 @@ public class Client extends Application {
                         }
                         break;
                     case "DISPLAY":
-                        if (ProgrammeField.getText().isEmpty() || dayBox.getValue() == null) {
+                        if (ProgrammeField.getText().isEmpty()) {
                             Alert alert = new Alert(Alert.AlertType.INFORMATION);
                             alert.setTitle("Display Schedule Error");
                             alert.setHeaderText(null);
@@ -296,7 +282,7 @@ public class Client extends Application {
                         message.addTime(time);
                     }
                     message.setModule(moduleField.getText());
-                    message.setDay(dayBox.getValue().toString());
+                    if(optionBox.getValue().toString() != "DISPLAY"){message.setDay(dayBox.getValue().toString());}
                     message.setROOM_NUMBER(roomField.getText());
                     message.setProgramme_NAME(ProgrammeField.getText());
 
@@ -501,8 +487,5 @@ public class Client extends Application {
         chosenTimesLabel.setVisible(false);
     }
 
-    private static void verifyInputs() {
-        //check if all fields are filled out
-    }
 
 }

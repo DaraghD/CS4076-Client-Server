@@ -78,6 +78,8 @@ public class Server {
         Message message = (Message) objectInputStream.readObject();
         System.out.println(message); // debug
         String room = message.getROOM_NUMBER();
+//            roomLabel.setPrefHeight(38);
+        System.out.println("ROOM : " + room);
         String day = message.getDay();
         String Programme = message.getProgramme_NAME();
         String module = message.getModule();
@@ -193,6 +195,7 @@ public class Server {
                 Message stopResponse = new Message("TERMINATE");
                 stopResponse.setCONTENTS("Closing connection to client as requested");
                 objectOutputStream.writeObject(stopResponse);
+                saveData();
                 link.close();
                 break;
             default:
