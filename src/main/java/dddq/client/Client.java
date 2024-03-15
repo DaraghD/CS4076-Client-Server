@@ -172,7 +172,7 @@ public class Client extends Application {
 
             //viewing schedules button
             gridButton.setOnAction(actionEvent -> {
-                if (dayBox.getValue() == null || ProgrammeField.getText().isEmpty() || roomField.getText().isEmpty()) {
+                if (dayBox.getValue() == null || ProgrammeField.getText().isEmpty() || roomField.getText().isEmpty() || dayBox.getValue().equals("")) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Viewing Schedule Error");
                     alert.setHeaderText(null);
@@ -205,8 +205,9 @@ public class Client extends Application {
                         if (optionBox.getValue().toString().equals("REMOVE")) {
                             remove = true;
                         }
-                        GridPane scheduleGrid = ScheduleStage.createButtonGrid(timesMessage.getListOfTimes(), remove);
-                        Scene scheduleScene = new Scene(scheduleGrid, 400, 300);
+                        String displayText = "Booking schedule for "+Programme + "\nAt room "+roomField.getText() + "\nOn "+dayBox.getValue().toString();
+                        GridPane scheduleGrid = ScheduleStage.createButtonGrid(timesMessage.getListOfTimes(), remove,displayText);
+                        Scene scheduleScene = new Scene(scheduleGrid, 600, 700);
                         scheduleStage.setScene(scheduleScene);
                         scheduleStage.show();
 
@@ -218,6 +219,7 @@ public class Client extends Application {
             });
 
             stopButton.setOnAction(actionEvent -> {
+                System.out.println("Closing");
                 try {
                     objectOutputStream.writeObject(new Message("STOP"));
 
@@ -242,8 +244,11 @@ public class Client extends Application {
                 }
             });
 
+
             sendButton.setOnAction(t -> {
+
                 switch (optionBox.getValue().toString()) {
+
                     case "ADD":
                         if (ProgrammeField.getText().isEmpty() || roomField.getText().isEmpty() || dayBox.getValue() == null || chosenTimes.isEmpty() || moduleField.getText().isEmpty()) {
                             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -286,15 +291,17 @@ public class Client extends Application {
                     message.setROOM_NUMBER(roomField.getText());
                     message.setProgramme_NAME(ProgrammeField.getText());
 
-
                     objectOutputStream.writeObject(message);
                     Message response = (Message) objectInputStream.readObject();
 
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle(response.getOPTION());
                     if (response.getOPTION().equals("SUCCESS")) {
                         chosenTimes = new ArrayList<>();
                     }
+                    chosenTimesLabel.setText("Chosen Times : " + chosenTimes.toString());
+
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle(response.getOPTION());
+
                     alert.setHeaderText(null);
                     alert.setContentText(response.getCONTENTS());
                     alert.showAndWait();
@@ -319,6 +326,25 @@ public class Client extends Application {
         gridPane.setPadding(new Insets(10, 10, 10, 10));
         gridPane.setVgap(10);
         gridPane.setHgap(10);
+
+        primaryStage.setOnCloseRequest(e-> {
+            System.out.println("Closing");
+            try {
+                objectOutputStream.writeObject(new Message("STOP"));
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Stop Alert");
+                alert.setHeaderText(null);
+                Message response = (Message) objectInputStream.readObject();
+
+                alert.setContentText(response.getOPTION() + " " + response.getCONTENTS());
+                alert.showAndWait();
+                System.exit(1);
+
+            } catch (Exception x) {
+                x.printStackTrace();
+            }
+        });
 
         // Setting up the column constraints
         for (int i = 0; i < 3; i++) {
@@ -456,6 +482,8 @@ public class Client extends Application {
         gridButton.setVisible(true);
         dayBox.setVisible(true);
         chosenTimesLabel.setVisible(true);
+        moduleField.setVisible(true);
+        moduleLabel.setVisible(true);
     }
 
     private static void removeActionFields() {
@@ -467,12 +495,13 @@ public class Client extends Application {
         gridButton.setVisible(true);
         dayBox.setVisible(true);
         chosenTimesLabel.setVisible(true);
+        moduleField.setVisible(true);
+        moduleLabel.setVisible(true);
     }
 
     private static void refreshLabels() {
         ProgrammeField.setText("");
         roomField.setText("");
-        dayBox.setValue("");
         dayBox.setValue("");
     }
 
@@ -485,6 +514,8 @@ public class Client extends Application {
         gridButton.setVisible(false);
         dayBox.setVisible(false);
         chosenTimesLabel.setVisible(false);
+        moduleField.setVisible(false);
+        moduleLabel.setVisible(false);
     }
 
 
