@@ -44,7 +44,6 @@ public class ScheduleDay implements Serializable {
     }
     public String getProgrammeName() {
         return ProgrammeName;
-
     }
 
     public String getRoom() {

@@ -15,9 +15,9 @@ public class Server {
     private static final int PORT = 1234;
     static String filePath = "database.ser";
     static Socket link;
-    static HashMap<String, HashMap<String, ScheduleDay>> ProgrammeTimetable = new HashMap<>(); // DAY : list of  Programme SCHEDULEs , maybe hashmap of room name to day instaad of list
-    static HashMap<String, HashMap<String, ScheduleDay>> roomTimetable = new HashMap<>(); // DAY : list of room schedules on that day
-    static HashMap<String, ArrayList<String>> programmeModuleList = new HashMap<>(); // Programme name : class list , class cant go over 5 (Unique)
+    static HashMap<String, HashMap<String, ScheduleDay>> ProgrammeTimetable = new HashMap<>(); // DAY : (PROGRAMME : SCHEDULE FOR THAT PROGRAMME DAY)
+    static HashMap<String, HashMap<String, ScheduleDay>> roomTimetable = new HashMap<>(); // DAY : ( ROOM : SCHEDULE FOR THAT ROOM)
+    static HashMap<String, ArrayList<String>> programmeModuleList = new HashMap<>(); // PROGRAMME: class list , class cant go over 5 (Unique)
     static String[] dayOfTheWeek = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
 
     public static void init() throws IncorrectActionException, IOException, ClassNotFoundException {
@@ -73,6 +73,15 @@ public class Server {
             }
         }
     }
+    private static int uniqueModules(ArrayList<String> modules){
+        ArrayList<String> unique = new ArrayList<>();
+        for(String x : modules){
+           if(!unique.contains(x)){
+               unique.add(x);
+           }
+        }
+        return unique.size();
+    }
 
     private static void processClientMessage(ObjectInputStream objectInputStream, ObjectOutputStream objectOutputStream) throws IOException, IncorrectActionException, ClassNotFoundException {
         Message message = (Message) objectInputStream.readObject();
@@ -92,12 +101,11 @@ public class Server {
                     return x;
                 });
 
-                if (programmeModuleList.get(Programme).size() < 5) {
-                    if (!programmeModuleList.get(Programme).contains(module)) {
-                        programmeModuleList.get(Programme).add(module);
-                    }
-                } else {
-                    throw new IncorrectActionException("Incorrect Action : Programme already has 5 classes");
+                if(uniqueModules(programmeModuleList.get(Programme)) < 5){
+                    programmeModuleList.get(Programme).add(module);
+                }
+                else{
+                    throw new IncorrectActionException(("Incorrect Action : Programme already has 5 classes"));
                 }
                 //if its a new module and modules are > 5 then throw error
 
@@ -156,6 +164,7 @@ public class Server {
                 objectOutputStream.writeObject(responseV);
                 break;
             case "REMOVE":
+                //takes list of times, programme and room, can identify module from these.
                 String removeDay = message.getDay();
                 String removeRoom = message.getROOM_NUMBER();
                 String removeProgramme = message.getProgramme_NAME();
@@ -164,13 +173,15 @@ public class Server {
                 ScheduleDay programmeDay = ProgrammeTimetable.get(removeDay).get(removeProgramme);
                 ScheduleDay roomD = roomTimetable.get(removeDay).get(removeRoom);
 
+                String mod = null;
                 for (String time : times) {
+                    mod = programmeDay.getTimeTable().get(time).getModule();
                     programmeDay.getTimeTable().get(time).freeSlot();
                     roomD.getTimeTable().get(time).freeSlot();
                 }
-
+                programmeModuleList.get(removeProgramme).remove(mod);
                 Message responseR = new Message("SUCCESS");
-                responseR.setCONTENTS("REMOVED TIMES +  " + times.toString());
+                responseR.setCONTENTS("Removed times : " + times.toString() + "\n Rooms free : " + message.getROOM_NUMBER() + "\n Removed module : "+mod);
                 objectOutputStream.writeObject(responseR);
                 break;
             case "DISPLAY":
