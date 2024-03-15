@@ -4,7 +4,8 @@ import java.io.Serializable;
 
 public class TimeSlot implements Serializable {
     private boolean isTaken;
-
+    private String module;
+    private String room;
 
     public TimeSlot() {
         //Time slots by default are not Taken, and thus have no Programme name
@@ -13,6 +14,13 @@ public class TimeSlot implements Serializable {
 
     public boolean isTaken(){
         return isTaken;
+    }
+    public void setModule(String module){
+        this.module = module;
+    }
+
+    public String getModule(){
+        return module;
     }
 
     public void freeSlot() throws IncorrectActionException {
@@ -29,5 +37,13 @@ public class TimeSlot implements Serializable {
         } else {
             isTaken = true;
         }
+    }
+
+    public String getRoom() {
+        return room;
+    }
+
+    public void setRoom(String room) {
+        this.room = room;
     }
 }

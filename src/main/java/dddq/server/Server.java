@@ -3,6 +3,7 @@ package dddq.server;
 import dddq.client.IncorrectActionException;
 import dddq.client.Message;
 import dddq.client.ScheduleDay;
+import dddq.client.TimeSlot;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -110,8 +111,10 @@ public class Server {
 
                 for (String time : message.getListOfTimes()) {
                     // we don't have to check time is taken because we only send a list of free times
+                    ProgrammeDay.getTimeSlot(time).setModule(module);
                     ProgrammeDay.bookTime(time);
                     roomDay.bookTime(time);
+                    roomDay.getTimeSlot(time).setRoom(room);
                 }
 
                 Message RESPONSE = new Message("SUCCESS");
@@ -163,7 +166,18 @@ public class Server {
                 responseR.setCONTENTS("REMOVED TIMES +  " + times.toString());
                 objectOutputStream.writeObject(responseR);
                 break;
-            case "DISPLAY": // only needs to be displayed to terminal on SERVER side as per abdul's email
+            case "DISPLAY":
+                System.out.println("DISPLAYING WEEK SCHEDULE FOR :" +Programme); // only needs to be displayed to terminal on SERVER side as per abdul's email
+                for (String d : ProgrammeTimetable.get(day).keySet()) {
+                    System.out.println("DAY : " + day + "\n"+ "-----------------");
+
+                    ScheduleDay s = ProgrammeTimetable.get(day).get(Programme);
+                    for(String time: s.getTakenTimes()){
+                        System.out.println("TIME : " + time);
+                        System.out.println("ROOM : " + s.getTimeSlot(time).getRoom());
+                        System.out.println("MODULE : " + s.getTimeSlot(time).getModule());
+                    }
+                }
                 break;
             case "STOP":
                 System.out.println("Stopping server as requested by client");

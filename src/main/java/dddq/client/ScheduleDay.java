@@ -44,6 +44,7 @@ public class ScheduleDay implements Serializable {
     }
     public String getProgrammeName() {
         return ProgrammeName;
+
     }
 
     public String getRoom() {
@@ -51,6 +52,10 @@ public class ScheduleDay implements Serializable {
     }
     public void setRoom(String room) {
         this.room = room;
+    }
+
+    public TimeSlot getTimeSlot(String time) {
+        return timeTable.get(time);
     }
 
     public void setProgrammeName(String ProgrammeName) {
