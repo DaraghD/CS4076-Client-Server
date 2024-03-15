@@ -9,7 +9,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.ScheduledExecutorService;
 
 public class Server {
     private static final int PORT = 1234;
@@ -115,8 +114,6 @@ public class Server {
                 //make it so it displays Programme + room etc for booked
                 objectOutputStream.writeObject(RESPONSE);
                 break;
-
-
             case "VIEW": // viewing schedule for a day
                 ArrayList<String> listOfTakenTimes = new ArrayList<>();
 
@@ -130,7 +127,11 @@ public class Server {
                 });
 
                 listOfTakenTimes.addAll(ProgrammeDay1.getTakenTimes());
-                listOfTakenTimes.addAll(roomDay1.getTakenTimes());
+
+                // dont show rooms if removing
+                if(!message.getCONTENTS().equals("r")){
+                    listOfTakenTimes.addAll(roomDay1.getTakenTimes());
+                }
                 for (String time : listOfTakenTimes) {
                     System.out.println("TIME TAKEN : " + time);
                 }
@@ -152,7 +153,6 @@ public class Server {
                     programmeDay.getTimeTable().get(time).freeSlot();
                     roomD.getTimeTable().get(time).freeSlot();
                 }
-
 
                 Message responseR = new Message("SUCCESS");
                 responseR.setCONTENTS("REMOVED TIMES +  " + times.toString());

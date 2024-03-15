@@ -189,11 +189,11 @@ public class Client extends Application {
 
             //viewing schedules button
             gridButton.setOnAction(actionEvent -> {
-                if (dayBox.getValue() == null) {
+                if (dayBox.getValue() == null || ProgrammeField.getText().isEmpty() || roomField.getText().isEmpty()) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Viewing Schedule Error");
                     alert.setHeaderText(null);
-                    alert.setContentText("You must select a day before viewing schedule");
+                    alert.setContentText("You must fill out required fields before viewing schedule");
                     alert.showAndWait();
                 } else {
                     try {
@@ -203,10 +203,13 @@ public class Client extends Application {
                         message.setDay(dayBox.getValue().toString());
                         message.setROOM_NUMBER(roomField.getText());
                         message.setProgramme_NAME(ProgrammeField.getText());
-
+                        if (optionBox.getValue().equals("REMOVE")) {
+                            message.setCONTENTS("r");
+                        }
                         objectOutputStream.writeObject(message);
                         objectOutputStream.flush();
                         System.out.println(dayBox.getValue().toString());
+
 
                         Message timesMessage = (Message) objectInputStream.readObject();
                         //schedule should show red for rooms booked at that time, aswell as classes of the same Programme
