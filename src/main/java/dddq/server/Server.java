@@ -77,16 +77,13 @@ public class Server {
     private static void processClientMessage(ObjectInputStream objectInputStream, ObjectOutputStream objectOutputStream) throws IOException, IncorrectActionException, ClassNotFoundException {
         Message message = (Message) objectInputStream.readObject();
         System.out.println(message); // debug
-        String room = message.getROOM_NUMBER();
-//            roomLabel.setPrefHeight(38);
-        System.out.println("ROOM : " + room);
-        String day = message.getDay();
-        String Programme = message.getProgramme_NAME();
-        String module = message.getModule();
-
         switch (message.getOPTION()) {
             case "ADD":
                 //room,Programme, day, list of times, class
+                String room = message.getROOM_NUMBER();
+                String Programme = message.getProgramme_NAME();
+                String day = message.getDay();
+                String module = message.getModule();
 
                 // Class doesnt have to be shown anywhere so we are only storing it to make sure that only 5 classes per Programme
                 programmeModuleList.computeIfAbsent(Programme, k -> {
@@ -117,7 +114,7 @@ public class Server {
                     ProgrammeDay.bookTime(time);
                     roomDay.bookTime(time);
                     roomDay.getTimeSlot(time).setRoom(room);
-                    System.out.println("THIS SHOULD PRINT ROOM FUC");
+                    ProgrammeDay.getTimeSlot(time).setRoom(room);
                     System.out.println(roomDay.getTimeSlot(time).getRoom());
                 }
 
@@ -127,14 +124,18 @@ public class Server {
                 objectOutputStream.writeObject(RESPONSE);
                 break;
             case "VIEW": // viewing schedule for a day
+                String viewDay = message.getDay();
+                String viewRoom = message.getROOM_NUMBER();
+                String viewProgramme = message.getProgramme_NAME();
+
                 ArrayList<String> listOfTakenTimes = new ArrayList<>();
 
                 // Basically tries to get scheduleDay form hashmap, if its not there adds it. Concise null check
-                ScheduleDay ProgrammeDay1 = ProgrammeTimetable.get(day).computeIfAbsent(Programme, k -> new ScheduleDay(Programme));
+                ScheduleDay ProgrammeDay1 = ProgrammeTimetable.get(viewDay).computeIfAbsent(viewProgramme, k -> new ScheduleDay(viewProgramme));
 
-                ScheduleDay roomDay1 = roomTimetable.get(day).computeIfAbsent(room, k -> {
-                    var x = new ScheduleDay(room);
-                    x.setRoom(room);
+                ScheduleDay roomDay1 = roomTimetable.get(viewDay).computeIfAbsent(viewRoom, k -> {
+                    var x = new ScheduleDay(viewRoom);
+                    x.setRoom(viewRoom);
                     return x;
                 });
 
@@ -148,17 +149,20 @@ public class Server {
                     System.out.println("TIME TAKEN : " + time);
                 }
 
-                System.out.println("VIEWING SCHEDULE FOR : " + day + " ROOM : " + room + " Programme : " + Programme);
+                System.out.println("VIEWING SCHEDULE FOR : " + viewDay+ " ROOM : " + viewRoom+ " Programme : " + viewProgramme);
 
                 Message responseV = new Message("VIEW");
                 responseV.setListOfTimes(listOfTakenTimes);
                 objectOutputStream.writeObject(responseV);
                 break;
             case "REMOVE":
+                String removeDay = message.getDay();
+                String removeRoom = message.getROOM_NUMBER();
+                String removeProgramme = message.getProgramme_NAME();
                 //remove - need room , time(multiple?), module, Programme
                 ArrayList<String> times = message.getListOfTimes();
-                ScheduleDay programmeDay = ProgrammeTimetable.get(day).get(Programme);
-                ScheduleDay roomD = roomTimetable.get(day).get(room);
+                ScheduleDay programmeDay = ProgrammeTimetable.get(removeDay).get(removeProgramme);
+                ScheduleDay roomD = roomTimetable.get(removeDay).get(removeRoom);
 
                 for (String time : times) {
                     programmeDay.getTimeTable().get(time).freeSlot();
@@ -170,10 +174,11 @@ public class Server {
                 objectOutputStream.writeObject(responseR);
                 break;
             case "DISPLAY":
-                System.out.println("DISPLAYING WEEK SCHEDULE FOR :" +Programme); // only needs to be displayed to terminal on SERVER side as per abdul's email
+                String displayProgramme = message.getProgramme_NAME();
+                System.out.println("DISPLAYING WEEK SCHEDULE FOR :" +displayProgramme); // only needs to be displayed to terminal on SERVER side as per abdul's email
                 for (String d : dayOfTheWeek){
                     System.out.println("DAY : " + d + "\n"+ "-----------------");
-                    ScheduleDay s = ProgrammeTimetable.get(d).get(Programme);
+                    ScheduleDay s = ProgrammeTimetable.get(d).get(displayProgramme);
                     if(s == null){
                         System.out.println("NO CLASSES SCHEDULED FOR : " + d  + "\n -----------------");
                         continue;
@@ -187,7 +192,7 @@ public class Server {
                     }
                 }
                 Message responseD = new Message("SUCCESS");
-                responseD.setCONTENTS("DISPLAYED WEEK SCHEDULE FOR : " + Programme);
+                responseD.setCONTENTS("DISPLAYED WEEK SCHEDULE FOR : " +displayProgramme);
                 objectOutputStream.writeObject(responseD);
                 break;
             case "STOP":

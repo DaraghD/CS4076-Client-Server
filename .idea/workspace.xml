@@ -4,19 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" name="Changes" comment="implemented remove time slots, seems to be working">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" name="Changes" comment="server now saves data to file, can load previous schedules made etc.&#10;Seems to be working, might need mor testing&#10;UI still bugged and need to get it working on netbeans">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/client/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/ScheduleDay.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/client/ScheduleDay.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/TimeSlot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/client/TimeSlot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dddq/server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/server/Server.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/dddq/client/client.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/dddq/client/client.fxml" afterDir="false" />
-    </list>
-    <list id="d08514e0-e65c-4171-a847-0367484b864c" name="Changes by daragh" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/client/Client.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/Course.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dddq/server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/server/Server.java" afterDir="false" />
     </list>
+    <list id="d08514e0-e65c-4171-a847-0367484b864c" name="Changes by daragh" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -25,8 +18,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="FxmlFile" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -50,46 +43,6 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/src/main/java/dddq/client/Client.java" root0="FORCE_HIGHLIGHTING" />
   </component>
-  <component name="LineStatusTrackerManager">
-    <file path="$PROJECT_DIR$/src/main/java/dddq/server/Server.java">
-      <ranges>
-        <range start1="5" end1="5" start2="5" end2="6" changelist="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" />
-        <range start1="79" end1="79" start2="80" end2="82" changelist="d08514e0-e65c-4171-a847-0367484b864c" />
-        <range start1="112" end1="112" start2="115" end2="116" changelist="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" />
-        <range start1="114" end1="114" start2="118" end2="121" changelist="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" />
-        <range start1="152" end1="153" start2="159" end2="159" changelist="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" />
-        <range start1="165" end1="166" start2="171" end2="191" changelist="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" />
-        <range start1="172" end1="172" start2="197" end2="198" changelist="d08514e0-e65c-4171-a847-0367484b864c" />
-        <range start1="178" end1="184" start2="204" end2="204" changelist="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" />
-        <range start1="205" end1="206" start2="225" end2="225" changelist="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" />
-        <range start1="208" end1="209" start2="227" end2="227" changelist="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" />
-        <range start1="210" end1="211" start2="228" end2="228" changelist="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" />
-      </ranges>
-    </file>
-    <file path="$PROJECT_DIR$/src/main/java/dddq/client/Client.java">
-      <ranges>
-        <range start1="6" end1="6" start2="6" end2="9" changelist="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" />
-        <range start1="9" end1="9" start2="12" end2="13" changelist="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" />
-        <range start1="10" end1="10" start2="14" end2="15" changelist="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" />
-        <range start1="43" end1="44" start2="48" end2="49" changelist="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" />
-        <range start1="72" end1="77" start2="77" end2="77" changelist="d08514e0-e65c-4171-a847-0367484b864c" />
-        <range start1="85" end1="86" start2="85" end2="86" changelist="d08514e0-e65c-4171-a847-0367484b864c" />
-        <range start1="97" end1="97" start2="97" end2="100" changelist="d08514e0-e65c-4171-a847-0367484b864c" />
-        <range start1="105" end1="105" start2="108" end2="109" changelist="d08514e0-e65c-4171-a847-0367484b864c" />
-        <range start1="118" end1="122" start2="122" end2="122" changelist="d08514e0-e65c-4171-a847-0367484b864c" />
-        <range start1="123" end1="124" start2="123" end2="124" changelist="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" />
-        <range start1="130" end1="134" start2="130" end2="130" changelist="d08514e0-e65c-4171-a847-0367484b864c" />
-        <range start1="136" end1="140" start2="132" end2="132" changelist="d08514e0-e65c-4171-a847-0367484b864c" />
-        <range start1="142" end1="151" start2="134" end2="134" changelist="d08514e0-e65c-4171-a847-0367484b864c" />
-        <range start1="204" end1="204" start2="187" end2="188" changelist="d08514e0-e65c-4171-a847-0367484b864c" />
-        <range start1="252" end1="252" start2="236" end2="243" changelist="d08514e0-e65c-4171-a847-0367484b864c" />
-        <range start1="276" end1="277" start2="267" end2="268" changelist="d08514e0-e65c-4171-a847-0367484b864c" />
-        <range start1="293" end1="294" start2="284" end2="285" changelist="d08514e0-e65c-4171-a847-0367484b864c" />
-        <range start1="322" end1="327" start2="313" end2="400" changelist="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" />
-        <range start1="416" end1="419" start2="489" end2="489" changelist="d08514e0-e65c-4171-a847-0367484b864c" />
-      </ranges>
-    </file>
-  </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
@@ -106,36 +59,38 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.App.executor": "Run",
-    "Application.Client.executor": "Run",
-    "Application.Server.executor": "Run",
-    "Application.TCPEchoServer.executor": "Run",
-    "Application.test.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "full.screen.before.presentation.mode": "false",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/daragh/CS4076/Midterm/Client/src/main/java/dddq/client",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.App.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Client.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Server.executor&quot;: &quot;Debug&quot;,
+    &quot;Application.TCPEchoServer.executor&quot;: &quot;Run&quot;,
+    &quot;Application.abc.executor&quot;: &quot;Run&quot;,
+    &quot;Application.test.executor&quot;: &quot;Run&quot;,
+    &quot;Attach to process.pid 117183.executor&quot;: &quot;ProcessAttachDebug&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;full.screen.before.presentation.mode&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/daragh/CS4076/Midterm/Client/src/main/java/dddq/client&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/main/java/dddq/client" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.Client">
     <configuration name="Client" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="dddq.client.Client" />
       <module name="Client" />
@@ -175,6 +130,19 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="abc" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="dddq.client.abc" />
+      <module name="Client" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="dddq.client.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="test" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="dddq.client.test" />
       <module name="Client" />
@@ -190,8 +158,9 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Server" />
         <item itemvalue="Application.Client" />
+        <item itemvalue="Application.Server" />
+        <item itemvalue="Application.abc" />
         <item itemvalue="Application.test" />
         <item itemvalue="Application.TCPEchoServer" />
       </list>
@@ -371,5 +340,94 @@
     <MESSAGE value="changed naming, programme and module, instead of module and class&#10;Need to work on persistent data -&gt; sql or jaxb" />
     <MESSAGE value="implemented remove time slots, seems to be working" />
     <option name="LAST_COMMIT_MESSAGE" value="implemented remove time slots, seems to be working" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/dddq/server/Server.java</url>
+          <line>193</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/dddq/server/Server.java</url>
+          <line>192</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/dddq/server/Server.java</url>
+          <line>191</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/dddq/server/Server.java</url>
+          <line>187</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/dddq/server/Server.java</url>
+          <line>188</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/dddq/server/Server.java</url>
+          <line>189</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/dddq/server/Server.java</url>
+          <line>190</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/dddq/server/Server.java</url>
+          <line>115</line>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/dddq/server/Server.java</url>
+          <line>114</line>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/dddq/server/Server.java</url>
+          <line>113</line>
+          <option name="timeStamp" value="12" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/dddq/server/Server.java</url>
+          <line>112</line>
+          <option name="timeStamp" value="13" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/dddq/server/Server.java</url>
+          <line>107</line>
+          <option name="timeStamp" value="15" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/dddq/server/Server.java</url>
+          <line>106</line>
+          <option name="timeStamp" value="16" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/dddq/server/Server.java</url>
+          <line>105</line>
+          <option name="timeStamp" value="17" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/dddq/server/Server.java</url>
+          <line>104</line>
+          <option name="timeStamp" value="18" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/dddq/server/Server.java</url>
+          <line>103</line>
+          <properties>
+            <option name="lambda-ordinal" value="-1" />
+          </properties>
+          <option name="timeStamp" value="19" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
