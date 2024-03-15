@@ -3,6 +3,7 @@ package dddq.server;
 import dddq.client.IncorrectActionException;
 import dddq.client.Message;
 import dddq.client.ScheduleDay;
+import dddq.client.TimeSlot;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -110,8 +111,12 @@ public class Server {
 
                 for (String time : message.getListOfTimes()) {
                     // we don't have to check time is taken because we only send a list of free times
+                    ProgrammeDay.getTimeSlot(time).setModule(module);
                     ProgrammeDay.bookTime(time);
                     roomDay.bookTime(time);
+                    roomDay.getTimeSlot(time).setRoom(room);
+                    System.out.println("THIS SHOULD PRINT ROOM FUC");
+                    System.out.println(roomDay.getTimeSlot(time).getRoom());
                 }
 
                 Message RESPONSE = new Message("SUCCESS");
@@ -150,7 +155,6 @@ public class Server {
             case "REMOVE":
                 //remove - need room , time(multiple?), module, Programme
                 ArrayList<String> times = message.getListOfTimes();
-
                 ScheduleDay programmeDay = ProgrammeTimetable.get(day).get(Programme);
                 ScheduleDay roomD = roomTimetable.get(day).get(room);
 
@@ -163,7 +167,26 @@ public class Server {
                 responseR.setCONTENTS("REMOVED TIMES +  " + times.toString());
                 objectOutputStream.writeObject(responseR);
                 break;
-            case "DISPLAY": // only needs to be displayed to terminal on SERVER side as per abdul's email
+            case "DISPLAY":
+                System.out.println("DISPLAYING WEEK SCHEDULE FOR :" +Programme); // only needs to be displayed to terminal on SERVER side as per abdul's email
+                for (String d : dayOfTheWeek){
+                    System.out.println("DAY : " + d + "\n"+ "-----------------");
+                    ScheduleDay s = ProgrammeTimetable.get(d).get(Programme);
+                    if(s == null){
+                        System.out.println("NO CLASSES SCHEDULED FOR : " + d  + "\n -----------------");
+                        continue;
+                    }
+                    for(String time: s.getTakenTimes()){
+                        TimeSlot t = s.getTimeSlot(time);
+                        System.out.println(t);
+                        System.out.println("TIME : " + time);
+                        System.out.println("ROOM : " + s.getTimeSlot(time).getRoom());
+                        System.out.println("MODULE : " + s.getTimeSlot(time).getModule());
+                    }
+                }
+                Message responseD = new Message("SUCCESS");
+                responseD.setCONTENTS("DISPLAYED WEEK SCHEDULE FOR : " + Programme);
+                objectOutputStream.writeObject(responseD);
                 break;
             case "STOP":
                 System.out.println("Stopping server as requested by client");
@@ -176,12 +199,6 @@ public class Server {
                 throw new IncorrectActionException("NOT A VALID COMMAND");
         }
     }
-
-    public boolean checkRoom(String time, String room, String day) {
-        return true;
-        // make a check room function -> need to go through every schedule ? -> use roomTimetables
-    }
-
     private static void saveData() throws IOException {
         // save data to disk
         FileOutputStream fileOut = new FileOutputStream(filePath);
@@ -203,10 +220,7 @@ public class Server {
         programmeModuleList = (HashMap<String, ArrayList<String>>) in.readObject();
         in.close();
         fileIn.close();
-
     }
 
-
 }
-
 

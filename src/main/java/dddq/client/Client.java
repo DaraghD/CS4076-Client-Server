@@ -4,10 +4,15 @@ import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
+import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
@@ -41,7 +46,7 @@ public class Client extends Application {
     static Label ProgrammeLabel = new Label("Choose Programme");
     static Label dayLabel = new Label("Choose Day");
     Button sendButton = new Button("Send");
-    AnchorPane anchorPane = new AnchorPane();
+
     static Button gridButton = new Button("Choose Slots");
     Socket link;
     ObjectOutputStream objectOutputStream;
@@ -121,7 +126,7 @@ public class Client extends Application {
             moduleLabel.setPrefHeight(38);
             moduleLabel.setPrefWidth(134);
             moduleLabel.setMouseTransparent(true);
-
+            sendButton.setStyle("-fx-background-color: #4abd22");
             stopButton.setStyle("-fx-background-color: #ea2727");
             stopButton.setPrefWidth(119);
             stopButton.setPrefHeight(47);
@@ -320,11 +325,93 @@ public class Client extends Application {
     }
 
     @Override
-    public void start(Stage stage) throws IOException {
-        anchorPane.getChildren().addAll(stopButton, dayBox, optionBox, sendButton, ProgrammeField, ProgrammeLabel, actionLabel, gridButton, chosenTimesLabel, dayLabel, roomField, roomLabel, moduleField, moduleLabel);
-        Scene scene = new Scene(anchorPane, 600, 400);
-        stage.setScene(scene);
-        stage.show();
+    public void start(Stage primaryStage) {
+        GridPane gridPane = new GridPane();
+        gridPane.setMaxSize(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY);
+        gridPane.setMinSize(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY);
+        gridPane.setPrefSize(600.0, 400.0);
+        gridPane.setPadding(new Insets(10, 10, 10, 10));
+        gridPane.setVgap(10);
+        gridPane.setHgap(10);
+
+        // Setting up the column constraints
+        for (int i = 0; i < 3; i++) {
+            ColumnConstraints column = new ColumnConstraints(100, 200, Double.MAX_VALUE);
+            column.setHgrow(javafx.scene.layout.Priority.SOMETIMES);
+            gridPane.getColumnConstraints().add(column);
+        }
+
+        // Setting up the row constraints
+        for (int i = 0; i < 3; i++) {
+            RowConstraints row = new RowConstraints(30, 60, Double.MAX_VALUE);
+            row.setVgrow(javafx.scene.layout.Priority.SOMETIMES);
+            gridPane.getRowConstraints().add(row);
+        }
+
+        // Adding components to the grid, COL , ROW
+        GridPane.setConstraints(optionBox, 0, 0);
+        GridPane.setConstraints(ProgrammeField, 1, 0);
+        GridPane.setConstraints(dayBox, 2, 0);
+        GridPane.setConstraints(dayLabel, 2, 0);
+        GridPane.setConstraints(actionLabel, 0, 0);
+        GridPane.setConstraints(moduleField, 1, 1);
+        GridPane.setConstraints(gridButton, 0, 2);
+        GridPane.setConstraints(sendButton, 2, 1);
+        GridPane.setConstraints(stopButton, 2, 2);
+        GridPane.setConstraints(roomField, 1, 2);
+        GridPane.setConstraints(ProgrammeLabel,1,0);
+        GridPane.setConstraints(moduleLabel,1,1);
+        GridPane.setConstraints(roomLabel,1,2);
+        GridPane.setConstraints(chosenTimesLabel,0,1);
+        gridPane.getChildren().addAll(optionBox, ProgrammeField, dayBox, moduleField, gridButton, sendButton, stopButton, roomField, actionLabel,dayLabel,ProgrammeLabel,roomLabel,moduleLabel,chosenTimesLabel);
+
+        GridPane.setHalignment(optionBox, HPos.CENTER);
+        GridPane.setValignment(optionBox, VPos.CENTER);
+        GridPane.setValignment(actionLabel, VPos.CENTER);
+
+        GridPane.setHalignment(ProgrammeField, HPos.CENTER);
+        GridPane.setValignment(ProgrammeField, VPos.CENTER);
+
+        GridPane.setHalignment(dayBox, HPos.CENTER);
+        GridPane.setValignment(dayBox, VPos.CENTER);
+
+        GridPane.setHalignment(actionLabel, HPos.CENTER);
+        GridPane.setValignment(actionLabel, VPos.CENTER);
+
+        GridPane.setHalignment(dayLabel, HPos.CENTER);
+        GridPane.setValignment(dayLabel, VPos.CENTER);
+
+        GridPane.setHalignment(roomLabel, HPos.CENTER);
+        GridPane.setValignment(roomLabel, VPos.CENTER);
+
+        GridPane.setHalignment(ProgrammeLabel, HPos.CENTER);
+        GridPane.setValignment(ProgrammeLabel, VPos.CENTER);
+
+        GridPane.setHalignment(chosenTimesLabel, HPos.LEFT);
+        GridPane.setValignment(chosenTimesLabel, VPos.BOTTOM);
+
+        GridPane.setHalignment(moduleLabel, HPos.CENTER);
+        GridPane.setValignment(moduleLabel, VPos.CENTER);
+
+        GridPane.setHalignment(moduleField, HPos.CENTER);
+        GridPane.setValignment(moduleField, VPos.CENTER);
+
+        GridPane.setHalignment(gridButton, HPos.CENTER);
+        GridPane.setValignment(gridButton, VPos.CENTER);
+
+        GridPane.setHalignment(sendButton, HPos.CENTER);
+        GridPane.setValignment(sendButton, VPos.CENTER);
+
+        GridPane.setHalignment(stopButton, HPos.CENTER);
+        GridPane.setValignment(stopButton, VPos.CENTER);
+
+        GridPane.setHalignment(roomField, HPos.CENTER);
+        GridPane.setValignment(roomField, VPos.CENTER);
+
+        Scene scene = new Scene(gridPane);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("JavaFX Application Using Components");
+        primaryStage.show();
     }
 
     public static void main(String[] args) {

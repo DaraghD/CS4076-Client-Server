@@ -5,8 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" name="Changes" comment="implemented remove time slots, seems to be working">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/Course.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/client/Course.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/client/Client.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/ScheduleDay.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/client/ScheduleDay.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/TimeSlot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/client/TimeSlot.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dddq/server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/server/Server.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/dddq/client/client.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/dddq/client/client.fxml" afterDir="false" />
+    </list>
+    <list id="d08514e0-e65c-4171-a847-0367484b864c" name="Changes by daragh" comment="">
+      <change beforePath="$PROJECT_DIR$/src/main/java/dddq/client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/client/Client.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dddq/server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dddq/server/Server.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -25,12 +33,12 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "DaraghD"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;DaraghD&quot;
   }
-}]]></component>
+}</component>
   <component name="GithubPullRequestsUISettings">
     <option name="selectedUrlAndAccountId">
       <UrlAndAccount>
@@ -41,6 +49,46 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/src/main/java/dddq/client/Client.java" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="LineStatusTrackerManager">
+    <file path="$PROJECT_DIR$/src/main/java/dddq/server/Server.java">
+      <ranges>
+        <range start1="5" end1="5" start2="5" end2="6" changelist="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" />
+        <range start1="79" end1="79" start2="80" end2="82" changelist="d08514e0-e65c-4171-a847-0367484b864c" />
+        <range start1="112" end1="112" start2="115" end2="116" changelist="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" />
+        <range start1="114" end1="114" start2="118" end2="121" changelist="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" />
+        <range start1="152" end1="153" start2="159" end2="159" changelist="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" />
+        <range start1="165" end1="166" start2="171" end2="191" changelist="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" />
+        <range start1="172" end1="172" start2="197" end2="198" changelist="d08514e0-e65c-4171-a847-0367484b864c" />
+        <range start1="178" end1="184" start2="204" end2="204" changelist="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" />
+        <range start1="205" end1="206" start2="225" end2="225" changelist="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" />
+        <range start1="208" end1="209" start2="227" end2="227" changelist="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" />
+        <range start1="210" end1="211" start2="228" end2="228" changelist="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" />
+      </ranges>
+    </file>
+    <file path="$PROJECT_DIR$/src/main/java/dddq/client/Client.java">
+      <ranges>
+        <range start1="6" end1="6" start2="6" end2="9" changelist="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" />
+        <range start1="9" end1="9" start2="12" end2="13" changelist="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" />
+        <range start1="10" end1="10" start2="14" end2="15" changelist="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" />
+        <range start1="43" end1="44" start2="48" end2="49" changelist="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" />
+        <range start1="72" end1="77" start2="77" end2="77" changelist="d08514e0-e65c-4171-a847-0367484b864c" />
+        <range start1="85" end1="86" start2="85" end2="86" changelist="d08514e0-e65c-4171-a847-0367484b864c" />
+        <range start1="97" end1="97" start2="97" end2="100" changelist="d08514e0-e65c-4171-a847-0367484b864c" />
+        <range start1="105" end1="105" start2="108" end2="109" changelist="d08514e0-e65c-4171-a847-0367484b864c" />
+        <range start1="118" end1="122" start2="122" end2="122" changelist="d08514e0-e65c-4171-a847-0367484b864c" />
+        <range start1="123" end1="124" start2="123" end2="124" changelist="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" />
+        <range start1="130" end1="134" start2="130" end2="130" changelist="d08514e0-e65c-4171-a847-0367484b864c" />
+        <range start1="136" end1="140" start2="132" end2="132" changelist="d08514e0-e65c-4171-a847-0367484b864c" />
+        <range start1="142" end1="151" start2="134" end2="134" changelist="d08514e0-e65c-4171-a847-0367484b864c" />
+        <range start1="204" end1="204" start2="187" end2="188" changelist="d08514e0-e65c-4171-a847-0367484b864c" />
+        <range start1="252" end1="252" start2="236" end2="243" changelist="d08514e0-e65c-4171-a847-0367484b864c" />
+        <range start1="276" end1="277" start2="267" end2="268" changelist="d08514e0-e65c-4171-a847-0367484b864c" />
+        <range start1="293" end1="294" start2="284" end2="285" changelist="d08514e0-e65c-4171-a847-0367484b864c" />
+        <range start1="322" end1="327" start2="313" end2="400" changelist="1b799b8b-bb7c-403a-ba99-e70cd29e76cd" />
+        <range start1="416" end1="419" start2="489" end2="489" changelist="d08514e0-e65c-4171-a847-0367484b864c" />
+      </ranges>
+    </file>
   </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
@@ -68,6 +116,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
     "full.screen.before.presentation.mode": "false",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
@@ -86,7 +135,7 @@
       <recent name="$PROJECT_DIR$/src/main/java/dddq/client" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Client">
+  <component name="RunManager">
     <configuration name="Client" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="dddq.client.Client" />
       <module name="Client" />
@@ -174,6 +223,8 @@
       <workItem from="1710294632814" duration="9364000" />
       <workItem from="1710347940277" duration="1171000" />
       <workItem from="1710373266661" duration="645000" />
+      <workItem from="1710504578075" duration="2103000" />
+      <workItem from="1710506711449" duration="7647000" />
     </task>
     <task id="LOCAL-00001" summary="Basic UI setup">
       <option name="closed" value="true" />
