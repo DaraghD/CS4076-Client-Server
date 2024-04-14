@@ -422,7 +422,7 @@ public class Client extends Application {
 
         Scene scene = new Scene(gridPane);
         primaryStage.setScene(scene);
-        primaryStage.setTitle("JavaFX Application Using Components");
+        primaryStage.setTitle("CS4076 Client");
         primaryStage.show();
     }
 
