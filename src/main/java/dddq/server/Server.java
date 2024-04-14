@@ -44,6 +44,7 @@ public class Server { // TODO: make thread safe / syncrhonized, probably have to
     }
 
     public static void main(String[] args) throws IOException, IncorrectActionException, ClassNotFoundException {
+        System.out.println("Server is running");
         Server server = new Server();
         try {
             server.init();
