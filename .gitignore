@@ -6,6 +6,7 @@ database.ser
 src/main/resources/dddq/client/*
 .idea/**
 .idea/workspace.xml
+.idea/*
 
 
 ### IntelliJ IDEA ###
@@ -41,3 +42,5 @@ build/
 
 ### Mac OS ###
 .DS_Store
+/.idea/
+/.mvn/
