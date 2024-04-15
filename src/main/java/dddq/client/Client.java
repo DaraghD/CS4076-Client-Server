@@ -1,5 +1,12 @@
 package dddq.client;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.net.*;
+import java.io.*;
+import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -9,19 +16,23 @@ import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import javafx.application.Application;
 
-import java.io.*;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
+
+// client stuff  
+// TODO : refactor to MVC structure, do this 
+//
+// display timetable on client side using gui (schedule gui) 
+// javafx.concurrent ? implement
+// refactor to MVC structure 
+// rest is server stuff 
+//
+
 
 public class Client extends Application {
     static InetAddress host;
@@ -34,6 +45,7 @@ public class Client extends Application {
             System.exit(1);
         }
     }
+
 
     static final int PORT = 1234;
     static TextField ProgrammeField = new TextField();
