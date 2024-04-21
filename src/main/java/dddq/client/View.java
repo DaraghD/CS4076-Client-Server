@@ -16,7 +16,6 @@ import javafx.scene.text.Font;
 import javafx.stage.*;
 import javafx.scene.control.Button;
 
-
 public class View {
     // contains only graphical contents ?
     // model contains actual data
@@ -54,17 +53,13 @@ public class View {
         return new Scene(gridPane);
     }
 
-    private void log(String x) {
+    static private void log(String x) {
         System.out.println(x);
     }
 
     public Label getChosenTimesLabel() {
         return chosenTimesLabel;
     }
-
-
-
-
 
     private void bind_model() {
         //bind variables in model to gui controls
@@ -79,6 +74,8 @@ public class View {
     public Button getSendButton() {
         return sendButton;
     }
+    public Button getChooseTimesButton(){
+        return chooseTimesButton;}
 
 
     public void init() {

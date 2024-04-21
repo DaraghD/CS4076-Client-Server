@@ -14,6 +14,7 @@ public class Client2 extends Application{
     public void start(Stage primaryStage) {
         Model model = new Model();
         View view = new View(primaryStage, model);
+        model.setView(view);
         //i think model or view will need controller later?
         // if not, then idk where it goes or just storage for buttons method
         Controller controller = new Controller(model, view);

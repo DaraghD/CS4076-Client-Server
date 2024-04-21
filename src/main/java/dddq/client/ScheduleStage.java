@@ -68,6 +68,7 @@ public class ScheduleStage {
                     button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
                     Client.submitScheduleHandler handler = new Client.submitScheduleHandler();
                     button.setOnAction(handler);
+                    //replace with controller handler for submit
                     gridPane.add(button, col, row);
                     continue;
                 }
@@ -89,7 +90,9 @@ public class ScheduleStage {
                     button.setStyle("-fx-background-color: green; -fx-text-fill: white");
                 }
 
-                button.setOnAction(new Client.buttonScheduleHandler());
+                // addtimehandelr
+//                button.setOnAction(new Client.buttonScheduleHandler());
+                button.setOnAction(new Controller.addTimeHandler());
                 GridPane.setConstraints(button, col, row); // Adjust the row by +1
 
                 if (flagMinute) {

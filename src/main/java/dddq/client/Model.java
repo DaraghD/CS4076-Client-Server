@@ -17,13 +17,13 @@ public class Model {
     // I don't think model needs controller or view?
     //if it does just create setters and set in main
 
-    Model(View view, Controller controller) {
-        this.view = view;
-        this.controller = controller;
-    }
 
     Model() {
 
+    }
+
+    public void setView(View v){
+        view=v;
     }
 
     // These variables contain the state of the programme.
@@ -89,7 +89,14 @@ public class Model {
 
     public void setTimes(ArrayList<String> times) {
         this.times = times;
+        //maybe move this around >
         view.getChosenTimesLabel().setText("Chosen Times : " + times.toString());
+    }
+
+    public void addTime(String time){
+        times.add(time);
+        view.getChosenTimesLabel().setText("Chosen Times : " + times.toString());
+        // make the view bind to the arraylist somehoiw ?
     }
 
     public String getAction() {

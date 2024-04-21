@@ -108,7 +108,7 @@ public class clientHandler implements Runnable {
 
                 listOfTakenTimes.addAll(ProgrammeDay1.getTakenTimes());
 
-                // dont show rooms if removing
+                // dont show rooms if removing, because then they could  remove another class
                 if (!message.getCONTENTS().equals("r")) {
                     listOfTakenTimes.addAll(roomDay1.getTakenTimes());
                 }
