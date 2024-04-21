@@ -12,7 +12,7 @@ import java.util.HashMap;
 public class Server { // TODO: make thread safe / syncrhonized, probably have to use wait & notify
     // maybe split datafields into separate class
     private static final int PORT = 1234;
-    static String filePath = "database.ser";
+    static String filePath = "database.ser"; // .ser needed (windows)
     static Socket link;
     static HashMap<String, HashMap<String, ScheduleDay>> ProgrammeTimetable = new HashMap<>(); // DAY : (PROGRAMME : SCHEDULE FOR THAT PROGRAMME DAY)
     static HashMap<String, HashMap<String, ScheduleDay>> roomTimetable = new HashMap<>(); // DAY : ( ROOM : SCHEDULE FOR THAT ROOM)
@@ -31,7 +31,7 @@ public class Server { // TODO: make thread safe / syncrhonized, probably have to
         return ProgrammeTimetable;
     }
 
-    public void init() throws IncorrectActionException, IOException, ClassNotFoundException {
+    public void init() throws IOException, ClassNotFoundException {
         File data = new File(filePath);
         if (data.length() == 0) {
             for (String day : dayOfTheWeek) {
@@ -56,10 +56,15 @@ public class Server { // TODO: make thread safe / syncrhonized, probably have to
         ServerSocket serverSocket = new ServerSocket(PORT);
 
         while(true){
-            Socket link = serverSocket.accept();
-            clientHandler clientHandler = new clientHandler(new Server(), link);
-            Thread t = new Thread(clientHandler);
-            t.start();
+            try {
+                Socket link = serverSocket.accept();
+                //i dont think new Server() is correct ? Does it update correctly
+                clientHandler clientHandler = new clientHandler(server, link);
+                Thread t = new Thread(clientHandler);
+                t.start();
+            }catch(Exception e){
+                e.printStackTrace();
+            }
         }
     }
 
@@ -86,7 +91,7 @@ public class Server { // TODO: make thread safe / syncrhonized, probably have to
 
     }
 
-    void readData() throws FileNotFoundException, IOException, ClassNotFoundException {
+    void readData() throws IOException, ClassNotFoundException {
         FileInputStream fileIn = new FileInputStream(filePath);
         ObjectInputStream in = new ObjectInputStream(fileIn);
         ProgrammeTimetable = (HashMap<String, HashMap<String, ScheduleDay>>) in.readObject();
