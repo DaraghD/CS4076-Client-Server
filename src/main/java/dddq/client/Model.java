@@ -1,7 +1,10 @@
 package dddq.client;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringBinding;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 
 import java.util.ArrayList;
 
@@ -96,7 +99,6 @@ public class Model {
     public void addTime(String time){
         times.add(time);
         view.getChosenTimesLabel().setText("Chosen Times : " + times.toString());
-        // make the view bind to the arraylist somehoiw ?
     }
 
     public String getAction() {
@@ -110,6 +112,5 @@ public class Model {
     public StringProperty actionProperty() {
         return action;
     }
-
 
 }

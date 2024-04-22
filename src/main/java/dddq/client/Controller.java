@@ -16,6 +16,8 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 
+//TODO: Bring over things that switch textlabels / refresh them etc
+
 public class Controller {
     static InetAddress host;
 
@@ -32,7 +34,7 @@ public class Controller {
     private static Model model; //this might be a problem later - static, only one controller class gets made so probably not
     private View view;
     Socket link;
-
+    private Stage stage;
     ObjectOutputStream out;
     ObjectInputStream in;
 
@@ -40,9 +42,10 @@ public class Controller {
     // hide labels / buttons bottom of Client.java
 
 
-    public Controller(Model model, View view) {
+    public Controller(Model model, View view, Stage stage) {
         this.model = model;
         this.view = view;
+        this.stage = stage;
         init();
 
     }
@@ -53,19 +56,41 @@ public class Controller {
             out = new ObjectOutputStream(link.getOutputStream());
             in = new ObjectInputStream(link.getInputStream());
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Couldn't initialise in/out/connection to server, closing");
+            System.exit(1);
         }
         view.getSendButton().setOnAction(new SendHandler());
         view.getChooseTimesButton().setOnAction(new selectTimesHandler());
-        //fix select times handler, times getting reset?
-        // selected times not showing or something ? 
+        view.getStopButton().setOnAction(new closeHandle());
+        stage.setOnCloseRequest(event -> { // identical to closeHandle but cant use because incompatible type
+            Message closing = new Message("STOP");
+            try {
+                out.writeObject(closing);
+            } catch (IOException e) {
+                System.out.println("Couldn't send message to exit, server probably already closed");
+            }
+            System.exit(1);
+        });
 
+    }
+
+    class closeHandle implements EventHandler<ActionEvent> {
+        @Override
+        public void handle(ActionEvent event) {
+            Message closing = new Message("STOP");
+            try {
+                out.writeObject(closing);
+            } catch (IOException e) {
+                System.out.println("Couldn't send message to exit");
+            }
+            System.exit(1);
+        }
     }
 
     class selectTimesHandler implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent event) {
-            if (model.getDay() == null || model.getProgramme_name().isEmpty() || model.getRoom_name().isEmpty() || model.getDay().isEmpty()) {
+            if (model.getDay() == null || model.getProgramme_name()==null || model.getRoom_name() == null || model.getDay().isEmpty()) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Viewing Schedule Error");
                 alert.setHeaderText(null);
@@ -146,6 +171,12 @@ public class Controller {
         public void handle(ActionEvent event) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             String action = model.getAction();
+            if(action == null){
+                alert.setTitle("No action chosen");
+                alert.setContentText("Please choose an action");
+                alert.showAndWait();
+                return;
+            }
             switch (action) {
                 case "ADD":
                     if (model.getProgramme_name().isEmpty() || model.getRoom_name().isEmpty() || model.getDay() == null || model.getTimes().isEmpty() || model.getModule_name().isEmpty()) {

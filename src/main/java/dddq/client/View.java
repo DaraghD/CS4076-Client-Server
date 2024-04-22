@@ -61,21 +61,26 @@ public class View {
         return chosenTimesLabel;
     }
 
+    public Button getStopButton() {
+        return stopButton;
+    }
+
     private void bind_model() {
         //bind variables in model to gui controls
         roomField.textProperty().bindBidirectional(model.roomNameProperty());
         ProgrammeField.textProperty().bindBidirectional(model.programmeNameProperty());
         moduleField.textProperty().bindBidirectional(model.moduleNameProperty());
         dayBox.valueProperty().bindBidirectional(model.dayProperty());
-        //time_field.textProperty().bindBidirectional(model.timeProperty());, not sure what to do here? Bind text field to values of the array
         optionBox.valueProperty().bindBidirectional(model.actionProperty());
-
     }
+
     public Button getSendButton() {
         return sendButton;
     }
-    public Button getChooseTimesButton(){
-        return chooseTimesButton;}
+
+    public Button getChooseTimesButton() {
+        return chooseTimesButton;
+    }
 
 
     public void init() {
@@ -220,5 +225,33 @@ public class View {
 
         GridPane.setHalignment(roomField, HPos.CENTER);
         GridPane.setValignment(roomField, VPos.CENTER);
+
+
+        ProgrammeField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.isEmpty()) {
+                ProgrammeLabel.setVisible(false); // Hide the label
+            } else {
+                ProgrammeLabel.setVisible(true); // Show the label
+            }
+        });
+
+        optionBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.isEmpty()) {
+                actionLabel.setVisible(true);
+            } else {
+                actionLabel.setVisible(false);
+            }
+        });
+
+        dayBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.isEmpty()) {
+                dayLabel.setVisible(true);
+            } else {
+                dayLabel.setVisible(false);
+            }
+        });
+
+
     }
+
 }

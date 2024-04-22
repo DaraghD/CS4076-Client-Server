@@ -74,6 +74,7 @@ public class Message implements Serializable {
                 ", Programme_NAME='" + Programme_NAME + '\'' +
                 ", Day='" + Day + '\'' +
                 ", ROOM_NUMBER='" + ROOM_NUMBER + '\'' +
+                ", module=" + module+
                 ", listOfTimes=" + listOfTimes +
                 '}';
     }

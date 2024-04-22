@@ -55,21 +55,21 @@ public class clientHandler implements Runnable {
                 String module = message.getModule();
 
                 // Class doesnt have to be shown anywhere so we are only storing it to make sure that only 5 classes per Programme
-                server.getProgrammeModuleList().computeIfAbsent(Programme, k -> {
+                Server.programmeModuleList.computeIfAbsent(Programme, k -> {
                     ArrayList<String> x = new ArrayList<String>();
                     x.add(module);
                     return x;
                 });
 
-                if (server.uniqueModules(server.getProgrammeModuleList().get(Programme)) < 5) { // think this is not correct ?
-                    server.getProgrammeModuleList().get(Programme).add(module);
+                if (server.uniqueModules(Server.programmeModuleList.get(Programme)) < 5) { // think this is not correct ?
+                    Server.programmeModuleList.get(Programme).add(module);
                 } else {
                     throw new IncorrectActionException(("Incorrect Action : Programme already has 5 classes"));
                 }
                 //if its a new module and modules are > 5 then throw error
 
-                ScheduleDay ProgrammeDay = server.getProgrammeTimetable().get(day).computeIfAbsent(Programme, k -> new ScheduleDay(Programme));
-                ScheduleDay roomDay = server.getRoomTimetable().get(day).computeIfAbsent(room, k -> {
+                ScheduleDay ProgrammeDay = Server.ProgrammeTimetable.get(day).computeIfAbsent(Programme, k -> new ScheduleDay(Programme));
+                ScheduleDay roomDay = Server.roomTimetable.get(day).computeIfAbsent(room, k -> {
                     var x = new ScheduleDay(Programme);
                     x.setRoom(room);
                     return x;
@@ -98,9 +98,9 @@ public class clientHandler implements Runnable {
                 ArrayList<String> listOfTakenTimes = new ArrayList<>();
 
                 // Basically tries to get scheduleDay form hashmap, if its not there adds it. Concise null check
-                ScheduleDay ProgrammeDay1 = server.getProgrammeTimetable().get(viewDay).computeIfAbsent(viewProgramme, k -> new ScheduleDay(viewProgramme));
+                ScheduleDay ProgrammeDay1 = Server.ProgrammeTimetable.get(viewDay).computeIfAbsent(viewProgramme, k -> new ScheduleDay(viewProgramme));
 
-                ScheduleDay roomDay1 = server.getRoomTimetable().get(viewDay).computeIfAbsent(viewRoom, k -> {
+                ScheduleDay roomDay1 =Server.roomTimetable.get(viewDay).computeIfAbsent(viewRoom, k -> {
                     var x = new ScheduleDay(viewRoom);
                     x.setRoom(viewRoom);
                     return x;
@@ -129,8 +129,8 @@ public class clientHandler implements Runnable {
                 String removeProgramme = message.getProgramme_NAME();
                 //remove - need room , time(multiple?), module, Programme
                 ArrayList<String> times = message.getListOfTimes();
-                ScheduleDay programmeDay = server.getProgrammeTimetable().get(removeDay).get(removeProgramme);
-                ScheduleDay roomD = server.getRoomTimetable().get(removeDay).get(removeRoom);
+                ScheduleDay programmeDay = Server.ProgrammeTimetable.get(removeDay).get(removeProgramme);
+                ScheduleDay roomD = Server.roomTimetable.get(removeDay).get(removeRoom);
 
                 String mod = null;
                 for (String time : times) {
@@ -138,7 +138,7 @@ public class clientHandler implements Runnable {
                     programmeDay.getTimeTable().get(time).freeSlot();
                     roomD.getTimeTable().get(time).freeSlot();
                 }
-                server.getProgrammeModuleList().get(removeProgramme).remove(mod);
+                Server.programmeModuleList.get(removeProgramme).remove(mod);
                 Message responseR = new Message("SUCCESS");
                 responseR.setCONTENTS("Removed times : " + times.toString() + "\n Rooms free : " + message.getROOM_NUMBER() + "\n Removed module : " + mod);
                 objectOutputStream.writeObject(responseR);
@@ -148,7 +148,7 @@ public class clientHandler implements Runnable {
                 System.out.println("DISPLAYING WEEK SCHEDULE FOR :" + displayProgramme); // only needs to be displayed to terminal on SERVER side as per abdul's email
                 for (String d : server.dayOfTheWeek) {
                     System.out.println("DAY : " + d + "\n" + "-----------------");
-                    ScheduleDay s = server.getProgrammeTimetable().get(d).get(displayProgramme);
+                    ScheduleDay s = Server.ProgrammeTimetable.get(d).get(displayProgramme);
                     if (s == null) {
                         System.out.println("NO CLASSES SCHEDULED FOR : " + d + "\n -----------------");
                         continue;
@@ -165,6 +165,10 @@ public class clientHandler implements Runnable {
                 responseD.setCONTENTS("DISPLAYED WEEK SCHEDULE FOR : " + displayProgramme);
                 objectOutputStream.writeObject(responseD);
                 break;
+            case "EARLY":
+                String programme = message.getProgramme_NAME(); // all lectures for this programme?
+
+
             case "STOP":
                 System.out.println("Stopping server as requested by client");
                 Message stopResponse = new Message("TERMINATE");

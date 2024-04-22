@@ -9,6 +9,8 @@ public class Client2 extends Application{
     public static void main(String[] args) {
         launch(args);
     }
+    //TODO: early lectures, assuming that its for all lectures within a programme?
+    // and not all lectures in the entire server /!\/
 
     @Override
     public void start(Stage primaryStage) {
@@ -17,7 +19,7 @@ public class Client2 extends Application{
         model.setView(view);
         //i think model or view will need controller later?
         // if not, then idk where it goes or just storage for buttons method
-        Controller controller = new Controller(model, view);
+        Controller controller = new Controller(model, view,primaryStage);
 
         primaryStage.setScene(view.getScene());
         primaryStage.setTitle("Client MVC");
