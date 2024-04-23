@@ -14,7 +14,7 @@ public class Client2 extends Application{
 
     @Override
     public void start(Stage primaryStage) {
-        Model model = new Model();
+        Model model = new Model(true);
         View view = new View(primaryStage, model);
         model.setView(view);
         //i think model or view will need controller later?

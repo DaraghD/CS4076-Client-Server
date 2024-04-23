@@ -15,14 +15,21 @@ public class Model {
     //controller is the one that manipulates this data
 
     private View view;
+    private boolean debug;
     private Controller controller;
 
     // I don't think model needs controller or view?
     //if it does just create setters and set in main
 
 
-    Model() {
-
+    Model(boolean debug) {
+        this.debug = debug;
+        if(debug){
+            room_name.set("a");
+            programme_name.set("b");
+            day.set("Monday");
+            action.set("ADD");
+        }
     }
 
     public void setView(View v){

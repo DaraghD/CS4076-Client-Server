@@ -79,14 +79,19 @@ public class Controller {
         @Override
         public void handle(ActionEvent event) {
             Message closing = new Message("STOP");
-            try {
-                out.writeObject(closing);
-            } catch (IOException e) {
-                System.out.println("Couldn't send message to exit");
-            }
-            System.exit(1);
+            MessageTask closingMessage = new MessageTask(closing, in, out);
+            new Thread(closingMessage).start();
+            closingMessage.setOnSucceeded(e -> {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Closing");
+                alert.setHeaderText("Closing client");
+                alert.setContentText("Disconnected successfully");
+                alert.showAndWait();
+                System.exit(1);
+            });
         }
     }
+
 
     class selectTimesHandler implements EventHandler<ActionEvent> {
         @Override
@@ -200,7 +205,7 @@ public class Controller {
                     }
                     break;
                 case "EARLY":
-                    //do
+                    //TODO
                     break;
             }
 
