@@ -234,6 +234,13 @@ public class View {
                 ProgrammeLabel.setVisible(true); // Show the label
             }
         });
+        moduleField.textProperty().addListener((observable ,oldValue, newValue)->{
+
+        });
+
+        ProgrammeField.textProperty().addListener((observable ,oldValue, newValue)->{
+        ProgrammeLabel.setVisible(false);
+        });
 
         optionBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.isEmpty()) {
