@@ -8,6 +8,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import javafx.concurrent.WorkerStateEvent;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -59,7 +60,7 @@ public class Controller {
             System.out.println("Couldn't initialise in/out/connection to server, closing");
             System.exit(1);
         }
-        view.getSendButton().setOnAction(new SendHandler());
+        view.getSendButton().setOnAction(new sendHandler());
         view.getChooseTimesButton().setOnAction(new selectTimesHandler());
         view.getStopButton().setOnAction(new closeHandle());
         stage.setOnCloseRequest(event -> { // identical to closeHandle but cant use because incompatible type
@@ -90,31 +91,32 @@ public class Controller {
     class selectTimesHandler implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent event) {
-            if (model.getDay() == null || model.getProgramme_name()==null || model.getRoom_name() == null || model.getDay().isEmpty()) {
+            if (model.getDay() == null || model.getProgramme_name() == null || model.getRoom_name() == null || model.getDay().isEmpty()) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Viewing Schedule Error");
                 alert.setHeaderText(null);
                 alert.setContentText("You must fill out required fields before viewing schedule");
                 alert.showAndWait();
             } else {
-                try {
-                    String Programme = model.getProgramme_name();
-                    model.setTimes(new ArrayList<>()); // Clearing arraylist, if they choose times then reopen schedule- it resets chosen times.
-                    Message message = new Message("VIEW");
-                    message.setDay(model.getDay());
-                    message.setROOM_NUMBER(model.getRoom_name());
-                    System.out.println("ROOM : " + model.getRoom_name());
-                    message.setProgramme_NAME(model.getProgramme_name());
-                    if (model.getAction().equals("REMOVE")) {
-                        message.setCONTENTS("r");
-                    } else {
-                        message.setCONTENTS("v");
-                    }
-                    out.writeObject(message);
-                    out.flush();
+                String Programme = model.getProgramme_name();
+                model.setTimes(new ArrayList<>()); // Clearing arraylist, if they choose times then reopen schedule- it resets chosen times.
+                Message message = new Message("VIEW");
+                message.setDay(model.getDay());
+                message.setROOM_NUMBER(model.getRoom_name());
+                System.out.println("ROOM : " + model.getRoom_name());
+                message.setProgramme_NAME(model.getProgramme_name());
+                if (model.getAction().equals("REMOVE")) {
+                    message.setCONTENTS("r");
+                } else {
+                    message.setCONTENTS("v");
+                }
 
+                MessageTask viewMessage = new MessageTask(message, in, out);
+                new Thread(viewMessage).start();
 
-                    Message timesMessage = (Message) in.readObject();
+                viewMessage.setOnSucceeded(event1 -> {
+                    Message timesMessage = viewMessage.getValue();
+
                     //schedule should show red for rooms booked at that time, aswell as classes of the same Programme
                     Stage scheduleStage = new Stage();
                     scheduleStage.setMinHeight(700);
@@ -129,11 +131,7 @@ public class Controller {
                     Scene scheduleScene = new Scene(scheduleGrid, 600, 700);
                     scheduleStage.setScene(scheduleScene);
                     scheduleStage.show();
-
-                } catch (IOException | ClassNotFoundException e) {
-                    System.out.println("Couldnt send object");
-                    e.printStackTrace();
-                }
+                });
             }
         }
 
@@ -164,12 +162,13 @@ public class Controller {
         }
     }
 
-    class SendHandler implements EventHandler<ActionEvent> {
+    class sendHandler implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent event) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText(null);
             String action = model.getAction();
-            if(action == null){
+            if (action == null) {
                 alert.setTitle("No action chosen");
                 alert.setContentText("Please choose an action");
                 alert.showAndWait();
@@ -179,7 +178,6 @@ public class Controller {
                 case "ADD":
                     if (model.getProgramme_name().isEmpty() || model.getRoom_name().isEmpty() || model.getDay() == null || model.getTimes().isEmpty() || model.getModule_name().isEmpty()) {
                         alert.setTitle("Add Schedule Error");
-                        alert.setHeaderText(null);
                         alert.setContentText("You must fill out all fields before adding a schedule");
                         alert.showAndWait();
                         return;
@@ -188,7 +186,6 @@ public class Controller {
                 case "REMOVE":
                     if (model.getProgramme_name().isEmpty() || model.getDay() == null || model.getTimes().isEmpty()) {
                         alert.setTitle("Remove Schedule Error");
-                        alert.setHeaderText(null);
                         alert.setContentText("You must fill out all fields before removing a schedule");
                         alert.showAndWait();
                         return;
@@ -197,7 +194,6 @@ public class Controller {
                 case "DISPLAY":
                     if (model.getProgramme_name().isEmpty()) {
                         alert.setTitle("Display Schedule Error");
-                        alert.setHeaderText(null);
                         alert.setContentText("You must fill out all fields before displaying a schedule");
                         alert.showAndWait();
                         return;
@@ -208,35 +204,42 @@ public class Controller {
                     break;
             }
 
-            try {
-                Message request = new Message(action);
-                for (String time : model.getTimes()) {
-                    request.addTime(time);
-                }
-                request.setModule(model.getModule_name());
-                if (!action.equals("DISPLAY")) {
-                    request.setDay(model.getDay());
-                }
-                request.setROOM_NUMBER(model.getRoom_name());
-                request.setProgramme_NAME(model.getProgramme_name());
-
-                out.writeObject(request);
-                Message response = (Message) in.readObject();
-
-                if (response.getOPTION().equals("SUCCESS")) {
-                    model.setTimes(new ArrayList<>());
-                }
-
-                alert.setTitle(response.getOPTION());
-
-                alert.setHeaderText(null);
-                alert.setContentText(response.getCONTENTS());
-                alert.showAndWait();
-                //refreshLabels(); bring this over later ?
-
-            } catch (Exception e) {
-                e.printStackTrace();
+            Message request = new Message(action);
+            for (String time : model.getTimes()) {
+                request.addTime(time);
             }
+            request.setModule(model.getModule_name());
+            if (!action.equals("DISPLAY")) {
+                request.setDay(model.getDay());
+            }
+            request.setROOM_NUMBER(model.getRoom_name());
+            request.setProgramme_NAME(model.getProgramme_name());
+
+            // this is where javafx.concurrent is used for spec, I/O bound operations are taken into a seperate thread.
+            MessageTask messageTask = new MessageTask(request, in, out);
+            new Thread(messageTask).start();
+            messageTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+                @Override
+                public void handle(WorkerStateEvent event) {
+                    Message response = messageTask.getValue();
+
+                    if (response != null) {
+                        if (response.getOPTION().equals("SUCCESS")) {
+                            model.setTimes(new ArrayList<>());
+                        }
+
+                        alert.setTitle(response.getOPTION());
+                        alert.setHeaderText(null);
+                        alert.setContentText(response.getCONTENTS());
+                    } else {
+                        alert.setTitle("Error");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Failed to receive response from server.");
+                    }
+                    alert.showAndWait();
+                }
+            });
+
         }
     }
 }

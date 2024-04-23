@@ -33,7 +33,7 @@ public class clientHandler implements Runnable {
                 processClientMessage(input, output);
                 server.saveData();
             }
-        } catch (IOException | ClassNotFoundException | IncorrectActionException e) {
+        } catch (IOException | InterruptedException |ClassNotFoundException | IncorrectActionException e) {
             var x = new Message("ERROR");
             x.setCONTENTS(e.getMessage());
             try {
@@ -45,9 +45,10 @@ public class clientHandler implements Runnable {
         }
     }
 
-    private void processClientMessage(ObjectInputStream input, ObjectOutputStream output) throws ClassNotFoundException, IncorrectActionException, IOException {
+    private void processClientMessage(ObjectInputStream input, ObjectOutputStream output) throws ClassNotFoundException, IncorrectActionException, IOException, InterruptedException {
         Message message = (Message) input.readObject();
         System.out.println(message); // debug
+//        Thread.sleep(2000);  for testing delay on server for javafx.concurrent, keep here in case need to show it during interview
 
         switch (message.getOPTION()) {
             case "ADD":
