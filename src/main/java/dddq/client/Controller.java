@@ -6,6 +6,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.concurrent.WorkerStateEvent;
@@ -32,8 +33,8 @@ public class Controller {
     }
 
     private final int PORT = 1234;
-    private static Model model; //this might be a problem later - static, only one controller class gets made so probably not
-    private View view;
+    private static Model model;
+    private static View view;
     Socket link;
     private Stage stage;
     ObjectOutputStream out;
@@ -167,6 +168,19 @@ public class Controller {
         }
     }
 
+    public static class submitScheduleHandler implements EventHandler<ActionEvent> {
+        @Override
+        public void handle(ActionEvent actionEvent) {
+            Label chosenTimesLabel = view.getChosenTimesLabel();
+            Button button = (Button) actionEvent.getSource();
+            Scene scene = button.getScene();
+            Stage stage = (Stage) scene.getWindow();
+            chosenTimesLabel.setText("Chosen Times : " + model.getTimes().toString());
+            //might need some submit logic here ?>
+            stage.close();
+        }
+    }
+
     class sendHandler implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent event) {
@@ -205,7 +219,12 @@ public class Controller {
                     }
                     break;
                 case "EARLY":
-                    //TODO
+                    if (model.getProgramme_name().isEmpty()) {
+                        alert.setTitle("Display Schedule Error");
+                        alert.setContentText("You must fill out all fields before displaying a schedule");
+                        alert.showAndWait();
+                        return;
+                    }
                     break;
             }
 

@@ -25,7 +25,7 @@ public class View {
 
     //TODO: Seperate view for schedule selector / maybe some others ?
     private TextField ProgrammeField = new TextField();
-    String[] options = {"DISPLAY", "ADD", "REMOVE"};
+    String[] options = {"DISPLAY","ADD","REMOVE","EARLY LECTURE"};
     private ChoiceBox<String> optionBox = new ChoiceBox<>(FXCollections.observableArrayList(options));
     static String[] days = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
     private ChoiceBox<String> dayBox = new ChoiceBox<String>(FXCollections.observableArrayList(days));
@@ -242,11 +242,38 @@ public class View {
         ProgrammeLabel.setVisible(false);
         });
 
+
+
+        moduleField.textProperty().addListener((observable ,oldValue, newValue)->{
+           moduleLabel.setVisible(false);
+        });
+
         optionBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.isEmpty()) {
                 actionLabel.setVisible(true);
             } else {
                 actionLabel.setVisible(false);
+            }
+
+            if(newValue.equals("DISPLAY")){
+                roomField.setVisible(false);
+                roomLabel.setVisible(false);
+
+            }
+            if(newValue.equals("ADD")){
+
+            }
+            if(newValue.equals("REMOVE")){
+
+            }
+            if(newValue.equals("EARLY LECTURE")){
+                roomField.setVisible(false);
+                roomLabel.setVisible(false);
+                chooseTimesButton.setVisible(false);
+                chosenTimesLabel.setVisible(false);
+                dayBox.setVisible(false);
+                dayLabel.setVisible(false);
+
             }
         });
 

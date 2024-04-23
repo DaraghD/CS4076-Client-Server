@@ -11,6 +11,7 @@ public class Module implements Serializable {
     private ConcurrentHashMap<String, ScheduleDay> classes; // DAY : Schedule for that day ?
     private String programme;
     private String name;
+
     Module(String programme, String name){
         this.programme = programme;
         this.name = name;
@@ -22,6 +23,7 @@ public class Module implements Serializable {
         classes.put("Thursday", new ScheduleDay(programme,false));
         classes.put("Friday", new ScheduleDay(programme,false));
     }
+
     public void addClass(String className, String day, String time, String room) throws IncorrectActionException {
         TimeSlot timeSlot = classes.get(day).getTimeTable().get(time);
         if(timeSlot.isTaken()){
@@ -31,12 +33,17 @@ public class Module implements Serializable {
         timeSlot.setRoom(room);
         timeSlot.setModule(className);
     }
+
     public String getName(){
         return name;
     }
 
     public ScheduleDay getDay(String day){
         return classes.get(day);
+    }
+
+    public ConcurrentHashMap<String, ScheduleDay> getClasses(){
+        return classes;
     }
 
     public String getProgramme(){

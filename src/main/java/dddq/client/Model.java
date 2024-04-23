@@ -29,6 +29,7 @@ public class Model {
             programme_name.set("b");
             day.set("Monday");
             action.set("ADD");
+            module_name.set("m");
         }
     }
 

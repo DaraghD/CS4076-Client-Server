@@ -140,6 +140,9 @@ public class clientHandler implements Runnable {
             case "DISPLAY": //TODO: make this gui similar to view
                 break;
             case "EARLY":
+                String earlyProgramme = message.getProgramme_NAME();
+
+
                 break;
             case "STOP":
                 System.out.println("Stopping server as requested by client");
