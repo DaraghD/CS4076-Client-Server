@@ -110,9 +110,7 @@ public class Controller {
                     } else {
                         message.setCONTENTS("v");
                     }
-                    System.out.println("writing message");
                     out.writeObject(message);
-                    System.out.println("wrote message");
                     out.flush();
 
 

@@ -74,7 +74,7 @@ public class Server {
         while (true) {
             try {
                 Socket link = serverSocket.accept();
-                clientHandler2 clientHandler = new clientHandler2(server, link);
+                clientHandler clientHandler = new clientHandler(server, link);
                 Thread t = new Thread(clientHandler);
                 t.start();
             } catch (Exception e) {

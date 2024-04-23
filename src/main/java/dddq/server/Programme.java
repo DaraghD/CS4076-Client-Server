@@ -4,10 +4,11 @@ import dddq.client.IncorrectActionException;
 import dddq.client.ScheduleDay;
 import dddq.server.Module;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class Programme {
+public class Programme implements Serializable {
     private CopyOnWriteArrayList<Module> modules;
     private String name;
     Programme(String name){
