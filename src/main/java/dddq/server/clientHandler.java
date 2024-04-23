@@ -1,12 +1,15 @@
 package dddq.server;
 
-import dddq.client.*;
+import dddq.client.IncorrectActionException;
+import dddq.client.Message;
+import dddq.client.ScheduleDay;
 
-import java.io.*;
-import java.net.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.util.ArrayList;
 
-//call client handelr?
 public class clientHandler implements Runnable {
 
     private Socket link;
@@ -20,6 +23,7 @@ public class clientHandler implements Runnable {
         this.link = socket;
     }
 
+
     @Override
     public void run() {
         try {
@@ -29,7 +33,7 @@ public class clientHandler implements Runnable {
                 processClientMessage(input, output);
                 server.saveData();
             }
-        } catch (IOException | ClassNotFoundException | IncorrectActionException e) {
+        } catch (IOException | InterruptedException |ClassNotFoundException | IncorrectActionException e) {
             var x = new Message("ERROR");
             x.setCONTENTS(e.getMessage());
             try {
@@ -41,146 +45,114 @@ public class clientHandler implements Runnable {
         }
     }
 
-
-    private void processClientMessage(ObjectInputStream objectInputStream, ObjectOutputStream objectOutputStream) throws
-            IOException, IncorrectActionException, ClassNotFoundException {
-        Message message = (Message) objectInputStream.readObject();
+    private void processClientMessage(ObjectInputStream input, ObjectOutputStream output) throws ClassNotFoundException, IncorrectActionException, IOException, InterruptedException {
+        Message message = (Message) input.readObject();
         System.out.println(message); // debug
+//        Thread.sleep(2000);  for testing delay on server for javafx.concurrent, keep here in case need to show it during interview
+
         switch (message.getOPTION()) {
             case "ADD":
                 //room,Programme, day, list of times, class
                 String room = message.getROOM_NUMBER();
-                String Programme = message.getProgramme_NAME();
+                String Programme_name = message.getProgramme_NAME();
                 String day = message.getDay();
-                String module = message.getModule();
+                String module_name = message.getModule();
+                ArrayList<String> times = message.getListOfTimes();
 
-                // Class doesnt have to be shown anywhere so we are only storing it to make sure that only 5 classes per Programme
-                Server.programmeModuleList.computeIfAbsent(Programme, k -> {
-                    ArrayList<String> x = new ArrayList<String>();
-                    x.add(module);
-                    return x;
-                });
-
-                if (server.uniqueModules(Server.programmeModuleList.get(Programme)) < 5) { // think this is not correct ?
-                    Server.programmeModuleList.get(Programme).add(module);
-                } else {
-                    throw new IncorrectActionException(("Incorrect Action : Programme already has 5 classes"));
+                // booking module
+                if (!Server.programmeExists(Programme_name)) {
+                    server.getProgrammes().add(new Programme(Programme_name));
                 }
-                //if its a new module and modules are > 5 then throw error
+                Programme programme = Server.getProgramme(Programme_name);
+                assert programme != null;
+                if (programme.getModule(module_name) == null) {
+                    programme.addModule(module_name);
+                }
+                for (String time : times) {
+                    programme.bookClass(module_name, day, time, room);
+                }
 
-                ScheduleDay ProgrammeDay = Server.ProgrammeTimetable.get(day).computeIfAbsent(Programme, k -> new ScheduleDay(Programme));
+
+                // updating room tiemtable
                 ScheduleDay roomDay = Server.roomTimetable.get(day).computeIfAbsent(room, k -> {
-                    var x = new ScheduleDay(Programme);
-                    x.setRoom(room);
-                    return x;
+                    // gets timetable for day, puts new _room_ key with value as this new schedule day for that room
+                    // day : ( room : scheduleDay )
+                    return new ScheduleDay(room, true);
                 });
 
-                for (String time : message.getListOfTimes()) {
-                    // we don't have to check time is taken because we only send a list of free times
-                    ProgrammeDay.getTimeSlot(time).setModule(module);
-                    ProgrammeDay.bookTime(time);
+                for (String time : times) {
                     roomDay.bookTime(time);
-                    roomDay.getTimeSlot(time).setRoom(room);
-                    ProgrammeDay.getTimeSlot(time).setRoom(room);
-                    System.out.println(roomDay.getTimeSlot(time).getRoom());
                 }
 
+                //we know its a succses since exception would of been thrown otherwise
                 Message RESPONSE = new Message("SUCCESS");
-                RESPONSE.setCONTENTS("BOOKED TIMES +  " + message.getListOfTimes().toString());
-                //make it so it displays Programme + room etc for booked
-                objectOutputStream.writeObject(RESPONSE);
+                RESPONSE.setCONTENTS("Programme : " + Programme_name + "\nBOOKED TIMES +  " + message.getListOfTimes().toString());
+                //format this ^
+                output.writeObject(RESPONSE);
                 break;
-            case "VIEW": // viewing schedule for a day
+            case "VIEW":
                 String viewDay = message.getDay();
                 String viewRoom = message.getROOM_NUMBER();
                 String viewProgramme = message.getProgramme_NAME();
-
                 ArrayList<String> listOfTakenTimes = new ArrayList<>();
 
-                // Basically tries to get scheduleDay form hashmap, if its not there adds it. Concise null check
-                ScheduleDay ProgrammeDay1 = Server.ProgrammeTimetable.get(viewDay).computeIfAbsent(viewProgramme, k -> new ScheduleDay(viewProgramme));
+                // checks for classes on at that programme day , and that room, cant have two classes on at same day for programme
 
-                ScheduleDay roomDay1 =Server.roomTimetable.get(viewDay).computeIfAbsent(viewRoom, k -> {
-                    var x = new ScheduleDay(viewRoom);
-                    x.setRoom(viewRoom);
-                    return x;
+                ScheduleDay room_times = Server.roomTimetable.get(viewDay).computeIfAbsent(viewRoom, k -> {
+                    return new ScheduleDay(viewRoom, true);
                 });
-
-                listOfTakenTimes.addAll(ProgrammeDay1.getTakenTimes());
-
-                // dont show rooms if removing, because then they could  remove another class
                 if (!message.getCONTENTS().equals("r")) {
-                    listOfTakenTimes.addAll(roomDay1.getTakenTimes());
+                    // if its not the remove option we show times from room
+                    listOfTakenTimes.addAll(room_times.getTakenTimes());
                 }
-                for (String time : listOfTakenTimes) {
-                    System.out.println("TIME TAKEN : " + time);
+                if (Server.getProgramme(viewProgramme) == null) {
+                    Server.programmes.add(new Programme(viewProgramme));
                 }
-
-                System.out.println("VIEWING SCHEDULE FOR : " + viewDay + " ROOM : " + viewRoom + " Programme : " + viewProgramme);
-
-                Message responseV = new Message("VIEW");
-                responseV.setListOfTimes(listOfTakenTimes);
-                objectOutputStream.writeObject(responseV);
+                listOfTakenTimes.addAll(Server.getProgramme(viewProgramme).getTakenTimes(viewDay));
+                Message responseView = new Message("VIEW");
+                responseView.setListOfTimes(listOfTakenTimes);
+                output.writeObject(responseView);
                 break;
+
             case "REMOVE":
-                //takes list of times, programme and room, can identify module from these.
                 String removeDay = message.getDay();
                 String removeRoom = message.getROOM_NUMBER();
                 String removeProgramme = message.getProgramme_NAME();
+                String removeModule = message.getModule();
+                assert removeModule != null; //TODO: make sure client can pass in module
                 //remove - need room , time(multiple?), module, Programme
-                ArrayList<String> times = message.getListOfTimes();
-                ScheduleDay programmeDay = Server.ProgrammeTimetable.get(removeDay).get(removeProgramme);
-                ScheduleDay roomD = Server.roomTimetable.get(removeDay).get(removeRoom);
+                ArrayList<String> removeTimes = message.getListOfTimes();
 
-                String mod = null;
-                for (String time : times) {
-                    mod = programmeDay.getTimeTable().get(time).getModule();
-                    programmeDay.getTimeTable().get(time).freeSlot();
-                    roomD.getTimeTable().get(time).freeSlot();
+                ScheduleDay removeRoomDay = Server.roomTimetable.get(removeDay).get(removeRoom);
+                if (removeRoomDay == null) {
+                    throw new IncorrectActionException("No bookings for this room");
                 }
-                Server.programmeModuleList.get(removeProgramme).remove(mod);
-                Message responseR = new Message("SUCCESS");
-                responseR.setCONTENTS("Removed times : " + times.toString() + "\n Rooms free : " + message.getROOM_NUMBER() + "\n Removed module : " + mod);
-                objectOutputStream.writeObject(responseR);
+                ScheduleDay removeModuleDay = Server.getProgramme(removeProgramme).getModule(removeModule).getDay(removeDay);
+
+                for (String t : removeTimes) {
+                    removeRoomDay.getTimeSlot(t).freeSlot();
+                    removeModuleDay.getTimeSlot(t).freeSlot();
+                }
+
+                Message removeResponse = new Message("SUCCESS");
+                output.writeObject(removeResponse);
                 break;
-            case "DISPLAY":
-                String displayProgramme = message.getProgramme_NAME();
-                System.out.println("DISPLAYING WEEK SCHEDULE FOR :" + displayProgramme); // only needs to be displayed to terminal on SERVER side as per abdul's email
-                for (String d : server.dayOfTheWeek) {
-                    System.out.println("DAY : " + d + "\n" + "-----------------");
-                    ScheduleDay s = Server.ProgrammeTimetable.get(d).get(displayProgramme);
-                    if (s == null) {
-                        System.out.println("NO CLASSES SCHEDULED FOR : " + d + "\n -----------------");
-                        continue;
-                    }
-                    for (String time : s.getTakenTimes()) {
-                        TimeSlot t = s.getTimeSlot(time);
-                        System.out.println(t);
-                        System.out.println("TIME : " + time);
-                        System.out.println("ROOM : " + s.getTimeSlot(time).getRoom());
-                        System.out.println("MODULE : " + s.getTimeSlot(time).getModule());
-                    }
-                }
-                Message responseD = new Message("SUCCESS");
-                responseD.setCONTENTS("DISPLAYED WEEK SCHEDULE FOR : " + displayProgramme);
-                objectOutputStream.writeObject(responseD);
+            case "DISPLAY": //TODO: make this gui similar to view
                 break;
             case "EARLY":
-                String programme = message.getProgramme_NAME(); // all lectures for this programme?
-
-
+                break;
             case "STOP":
                 System.out.println("Stopping server as requested by client");
                 Message stopResponse = new Message("TERMINATE");
                 stopResponse.setCONTENTS("Closing connection to client as requested");
-                objectOutputStream.writeObject(stopResponse);
+                output.writeObject(stopResponse);
                 server.saveData();
                 link.close();
                 running = false;
                 break;
-            default:
-                throw new IncorrectActionException("NOT A VALID COMMAND");
         }
+
+
     }
 
 

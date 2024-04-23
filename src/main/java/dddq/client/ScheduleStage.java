@@ -73,7 +73,7 @@ public class ScheduleStage {
                     continue;
                 }
                 // The logic for buttons remains the same, just adjust the row index by +1
-                String formattedTime = String.format("%02d:%02d", currentHour, flagMinute ? 30 : 0);
+                String formattedTime = String.format("%02d:%02d", currentHour, flagMinute ? 30: 0);
                 Button button = new Button(formattedTime);
                 button.setFont(Font.font("Arial", 20));
                 button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
