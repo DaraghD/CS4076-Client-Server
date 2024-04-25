@@ -19,9 +19,6 @@ public class Server {
     static String[] dayOfTheWeek = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
     CopyOnWriteArrayList<Programme> programmes = new CopyOnWriteArrayList<Programme>(); // Stores all programmes, which have their own modules that have timetable for that module
 
-    // still need a room timetable to make sure room isnt booked before adding module ?
-    // need to check if room is booked before adding module
-
     public CopyOnWriteArrayList<Programme> getProgrammes() {
         return programmes;
     }
@@ -29,7 +26,6 @@ public class Server {
     public ConcurrentHashMap<String, ConcurrentHashMap<String, ScheduleDay>> getRoomTimetable() {
         return roomTimetable;
     }
-
 
     public synchronized boolean programmeExists(String name){
         for(Programme p : programmes){

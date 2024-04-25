@@ -18,23 +18,14 @@ public class ScheduleDay implements Serializable {
             this.ProgrammeName = name;
         }
         timeTable.put("09:00", new TimeSlot());
-        timeTable.put("09:30", new TimeSlot());
         timeTable.put("10:00", new TimeSlot());
-        timeTable.put("10:30", new TimeSlot());
         timeTable.put("11:00", new TimeSlot());
-        timeTable.put("11:30", new TimeSlot());
         timeTable.put("12:00", new TimeSlot());
-        timeTable.put("12:30", new TimeSlot());
         timeTable.put("13:00", new TimeSlot());
-        timeTable.put("13:30", new TimeSlot());
         timeTable.put("14:00", new TimeSlot());
-        timeTable.put("14:30", new TimeSlot());
         timeTable.put("15:00", new TimeSlot());
-        timeTable.put("15:30", new TimeSlot());
         timeTable.put("16:00", new TimeSlot());
-        timeTable.put("16:30", new TimeSlot());
         timeTable.put("17:00", new TimeSlot());
-        timeTable.put("17:30", new TimeSlot());
         timeTable.put("18:00", new TimeSlot());
     }
 

@@ -22,8 +22,6 @@ public class View {
     private Model model;
     private Stage stage;
     private GridPane gridPane = new GridPane();
-
-    //TODO: Seperate view for schedule selector / maybe some others ?
     private TextField ProgrammeField = new TextField();
     String[] options = {"DISPLAY","ADD","REMOVE","EARLY LECTURE"};
     private ChoiceBox<String> optionBox = new ChoiceBox<>(FXCollections.observableArrayList(options));
@@ -145,7 +143,6 @@ public class View {
 
         gridPane.getChildren().addAll(optionBox, ProgrammeField, dayBox, moduleField, chooseTimesButton, sendButton, stopButton, roomField, actionLabel, dayLabel, ProgrammeLabel, roomLabel, moduleLabel, chosenTimesLabel);
 
-
         gridPane.setMaxSize(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY);
         gridPane.setMinSize(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY);
         gridPane.setPrefSize(600.0, 400.0);
@@ -243,13 +240,9 @@ public class View {
             }
         });
 
-
-
         ProgrammeField.textProperty().addListener((observable ,oldValue, newValue)->{
         ProgrammeLabel.setVisible(false);
         });
-
-
 
         moduleField.textProperty().addListener((observable ,oldValue, newValue)->{
             moduleLabel.setVisible(false);
@@ -281,7 +274,6 @@ public class View {
             if(newValue.equals("DISPLAY")){
                 roomField.setVisible(false);
                 roomLabel.setVisible(false);
-                //TODO: make everything invisible except programme field and optionbox .
                 chooseTimesButton.setVisible(false);
                 chosenTimesLabel.setVisible(false);
                 dayBox.setVisible(false);

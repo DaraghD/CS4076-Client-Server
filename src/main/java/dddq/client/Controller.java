@@ -18,8 +18,6 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 
-//TODO: Bring over things that switch textlabels / refresh them etc
-
 public class Controller {
     static InetAddress host;
 
@@ -219,8 +217,12 @@ public class Controller {
                     }
                     break;
                 case "EARLY":
-                    //TODO:
-
+                    if (model.getProgramme_name().isEmpty()) {
+                        alert.setTitle("Early Lecture Schedule Error");
+                        alert.setContentText("You must fill out all fields before shifting lectures to earliest time");
+                        alert.showAndWait();
+                        return;
+                    }
                     break;
             }
 

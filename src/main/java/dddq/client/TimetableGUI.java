@@ -52,7 +52,7 @@ public class TimetableGUI  {
         }
 
         // Time labels
-        for (int i = 0; i <= 8; i++) {
+        for (int i = 0; i <= 9; i++) {
             Label timeLabel = new Label((i + 9) + ":00");
             timeLabel.setStyle("-fx-font-weight: bold");
             GridPane.setConstraints(timeLabel, 0, i + 1);
@@ -64,8 +64,7 @@ public class TimetableGUI  {
 
         // Time slots
         for (int day = 1; day <= 5; day++) {
-            //TODO: remove 18:00 from everywhere i think?
-            for (int time = 1; time <= 9; time++) {
+            for (int time = 1; time <= 10; time++) {
                 TextArea textField = new TextArea();
                 for (Module m : programme.getModules()) {
                     ScheduleDay currentDay = m.getDay(days[day - 1]);

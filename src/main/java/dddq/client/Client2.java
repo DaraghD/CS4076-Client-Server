@@ -9,9 +9,6 @@ public class Client2 extends Application{
     public static void main(String[] args) {
         launch(args);
     }
-    //TODO: early lectures, assuming that its for all lectures within a programme?
-    // and not all lectures in the entire server /!\/
-
     @Override
     public void start(Stage primaryStage) {
         Model model = new Model(true);
