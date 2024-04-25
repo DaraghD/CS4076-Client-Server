@@ -234,9 +234,16 @@ public class View {
                 ProgrammeLabel.setVisible(true); // Show the label
             }
         });
-        moduleField.textProperty().addListener((observable ,oldValue, newValue)->{
 
+        roomField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.isEmpty()) {
+                roomLabel.setVisible(false); // Hide the label
+            } else {
+                roomLabel.setVisible(true); // Show the label
+            }
         });
+
+
 
         ProgrammeField.textProperty().addListener((observable ,oldValue, newValue)->{
         ProgrammeLabel.setVisible(false);
@@ -245,8 +252,9 @@ public class View {
 
 
         moduleField.textProperty().addListener((observable ,oldValue, newValue)->{
-           moduleLabel.setVisible(false);
+            moduleLabel.setVisible(false);
         });
+
 
         optionBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.isEmpty()) {
@@ -254,6 +262,13 @@ public class View {
             } else {
                 actionLabel.setVisible(false);
             }
+            if(dayBox.getValue()!=null) {
+                if(dayBox.getValue().isEmpty()){
+                    dayLabel.setVisible(true);
+                }
+
+            else {dayLabel.setVisible(false);
+            }}
 
             if(newValue.equals("DISPLAY")){
                 roomField.setVisible(false);
@@ -261,9 +276,17 @@ public class View {
 
             }
             if(newValue.equals("ADD")){
+                roomField.setVisible(true);
+                chooseTimesButton.setVisible(true);
+                chosenTimesLabel.setVisible(true);
+                dayBox.setVisible(true);
 
             }
             if(newValue.equals("REMOVE")){
+                roomField.setVisible(true);
+                chooseTimesButton.setVisible(true);
+                chosenTimesLabel.setVisible(true);
+                dayBox.setVisible(true);
 
             }
             if(newValue.equals("EARLY LECTURE")){
