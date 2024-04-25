@@ -26,7 +26,7 @@ public class Model {
         this.debug = debug;
         if(debug){
             room_name.set("a");
-            programme_name.set("b");
+            programme_name.set("Computer Science");
             day.set("Monday");
             action.set("ADD");
             module_name.set("m");

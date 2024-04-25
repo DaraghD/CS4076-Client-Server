@@ -20,7 +20,7 @@ public class Client2 extends Application{
         Controller controller = new Controller(model, view,primaryStage);
 
         primaryStage.setScene(view.getScene());
-        primaryStage.setTitle("Client MVC");
+        primaryStage.setTitle("CS4076 Client");
         primaryStage.show();
     }
 }

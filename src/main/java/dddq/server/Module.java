@@ -25,7 +25,17 @@ public class Module implements Serializable {
     }
 
     public void addClass(String className, String day, String time, String room) throws IncorrectActionException {
-        TimeSlot timeSlot = classes.get(day).getTimeTable().get(time);
+
+//        TimeSlot timeSlot = classes.get(day).getTimeTable().get(time);
+        TimeSlot timeSlot = classes.get(day).getTimeSlot(time);
+
+        for(String key : classes.get(day).getTimeTable().keySet()){
+            System.out.println(key + " : " + classes.get(day).getTimeTable().get(key));
+        }
+
+        if(timeSlot == null){
+            throw new IncorrectActionException("Time slot does not exist : " + day + ": " + time);
+        }
         if(timeSlot.isTaken()){
             throw new IncorrectActionException("Time slot occupied : " + day + ": " + time);
         }

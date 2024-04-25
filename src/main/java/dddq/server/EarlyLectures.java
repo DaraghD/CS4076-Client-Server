@@ -1,6 +1,8 @@
 package dddq.server;
 
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.RecursiveAction;
 
 public class EarlyLectures extends RecursiveAction {
@@ -35,6 +37,9 @@ public class EarlyLectures extends RecursiveAction {
     }
 
     public void earlyModule(Module m) {
+        ExecutorService executor = Executors.newFixedThreadPool(5);
+
+
 
 
     }

@@ -33,7 +33,7 @@ public class clientHandler implements Runnable {
                 processClientMessage(input, output);
                 server.saveData();
             }
-        } catch (IOException | InterruptedException |ClassNotFoundException | IncorrectActionException e) {
+        } catch (IOException | InterruptedException | ClassNotFoundException | IncorrectActionException e) {
             var x = new Message("ERROR");
             x.setCONTENTS(e.getMessage());
             try {
@@ -102,7 +102,7 @@ public class clientHandler implements Runnable {
                     return new ScheduleDay(viewRoom, true);
                 });
                 if (!message.getCONTENTS().equals("r")) {
-                    // if its not the remove option we show times from room
+                    // if it's not the remove option we show times from room
                     listOfTakenTimes.addAll(room_times.getTakenTimes());
                 }
                 if (Server.getProgramme(viewProgramme) == null) {
@@ -137,11 +137,22 @@ public class clientHandler implements Runnable {
                 Message removeResponse = new Message("SUCCESS");
                 output.writeObject(removeResponse);
                 break;
-            case "DISPLAY": //TODO: make this gui similar to view
+            case "DISPLAY":
+                if (!Server.programmeExists(message.getProgramme_NAME())) {
+                    Message displayResponse = new Message("ERROR");
+                    displayResponse.setCONTENTS("Programme does not exist");
+                    output.writeObject(displayResponse);
+                    break;
+                }
+
+                Programme displayProgramme = Server.getProgramme(message.getProgramme_NAME());
+                Message displayProgrammeResponse = new Message("SUCCESS");
+                displayProgrammeResponse.setCONTENTS("Programme exists, timetable will be displayed");
+                displayProgrammeResponse.setProgrammeObject(displayProgramme);
+                output.writeObject(displayProgrammeResponse);
                 break;
             case "EARLY":
                 String earlyProgramme = message.getProgramme_NAME();
-
 
                 break;
             case "STOP":

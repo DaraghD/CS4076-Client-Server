@@ -1,5 +1,7 @@
 package dddq.client;
 
+import dddq.server.Programme;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -12,6 +14,7 @@ public class Message implements Serializable {
     private String Programme_NAME;
     private String Day;
     private String ROOM_NUMBER;
+    private Programme programmeObject= null;
     private String module;
     private ArrayList<String> listOfTimes = new ArrayList<String>();
     // list of times,
@@ -53,6 +56,12 @@ public class Message implements Serializable {
         return CONTENTS;
     }
 
+    public void setProgrammeObject(Programme p){
+        this.programmeObject = p;
+    }
+    public Programme getProgrammeObject(){
+        return this.programmeObject;
+    }
     public String getROOM_NUMBER() {
         return ROOM_NUMBER;
     }

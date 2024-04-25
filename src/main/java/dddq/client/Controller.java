@@ -219,12 +219,8 @@ public class Controller {
                     }
                     break;
                 case "EARLY":
-                    if (model.getProgramme_name().isEmpty()) {
-                        alert.setTitle("Display Schedule Error");
-                        alert.setContentText("You must fill out all fields before displaying a schedule");
-                        alert.showAndWait();
-                        return;
-                    }
+                    //TODO:
+
                     break;
             }
 
@@ -261,6 +257,16 @@ public class Controller {
                         alert.setContentText("Failed to receive response from server.");
                     }
                     alert.showAndWait();
+                    if (response.getProgrammeObject() != null) {
+                        Stage timetableStage = new Stage();
+                        GridPane grid = TimetableGUI.makeTimetable(response.getProgrammeObject());
+                        Scene timetableScene = new Scene(grid, 1000, 1000);
+                        timetableStage.setMinHeight(1000);
+                        timetableStage.setMinWidth(1000);
+                        timetableStage.setScene(timetableScene);
+                        timetableStage.show();
+
+                    }
                 }
             });
 

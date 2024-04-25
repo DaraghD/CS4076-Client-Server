@@ -257,6 +257,14 @@ public class View {
 
 
         optionBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if(dayBox.getValue() != null) {
+                if (dayBox.getValue().isEmpty()) {
+                    dayLabel.setVisible(true);
+                } else {
+                    dayLabel.setVisible(false);
+                }
+            }
+
             if (newValue.isEmpty()) {
                 actionLabel.setVisible(true);
             } else {
@@ -273,13 +281,21 @@ public class View {
             if(newValue.equals("DISPLAY")){
                 roomField.setVisible(false);
                 roomLabel.setVisible(false);
-
+                //TODO: make everything invisible except programme field and optionbox .
+                chooseTimesButton.setVisible(false);
+                chosenTimesLabel.setVisible(false);
+                dayBox.setVisible(false);
+                dayLabel.setVisible(false);
+                moduleField.setVisible(false);
+                moduleLabel.setVisible(false);
             }
             if(newValue.equals("ADD")){
                 roomField.setVisible(true);
                 chooseTimesButton.setVisible(true);
                 chosenTimesLabel.setVisible(true);
                 dayBox.setVisible(true);
+                moduleField.setVisible(true);
+                moduleLabel.setVisible(true);
 
             }
             if(newValue.equals("REMOVE")){
@@ -287,7 +303,8 @@ public class View {
                 chooseTimesButton.setVisible(true);
                 chosenTimesLabel.setVisible(true);
                 dayBox.setVisible(true);
-
+                moduleField.setVisible(true);
+                moduleLabel.setVisible(true);
             }
             if(newValue.equals("EARLY LECTURE")){
                 roomField.setVisible(false);

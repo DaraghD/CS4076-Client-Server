@@ -61,10 +61,6 @@ public class ScheduleDay implements Serializable {
         return timeTable.get(time);
     }
 
-    public void setProgrammeName(String ProgrammeName) {
-        this.ProgrammeName = ProgrammeName;
-    }
-
     public ArrayList<String> getTakenTimes() {
         ArrayList<String> listOfTakenTimes = new ArrayList<>();
         for (Map.Entry<String, TimeSlot> entry : timeTable.entrySet()) {
