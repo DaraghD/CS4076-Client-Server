@@ -23,6 +23,7 @@ public class MessageTask extends Task<Message> {
     protected Message call() throws Exception {
         out.writeObject(message);
         Message response = (Message) in.readObject();
+        out.flush();
         return response;
     }
 

@@ -9,6 +9,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.concurrent.ForkJoinPool;
 
 public class clientHandler implements Runnable {
 
@@ -30,20 +31,26 @@ public class clientHandler implements Runnable {
             input = new ObjectInputStream(link.getInputStream());
             output = new ObjectOutputStream(link.getOutputStream());
             while (running) {
-                processClientMessage(input, output);
-                server.saveData();
+                try {
+                    processClientMessage(input, output);
+                    server.saveData();
+                } catch (IOException | InterruptedException | ClassNotFoundException | IncorrectActionException e) {
+                    var x = new Message("ERROR");
+                    x.setCONTENTS(e.getMessage());
+                    try {
+                        output.writeObject(x);
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    e.printStackTrace();
+                }
+
             }
-        } catch (IOException | InterruptedException | ClassNotFoundException | IncorrectActionException e) {
-            var x = new Message("ERROR");
-            x.setCONTENTS(e.getMessage());
-            try {
-                output.writeObject(x);
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
     private void processClientMessage(ObjectInputStream input, ObjectOutputStream output) throws ClassNotFoundException, IncorrectActionException, IOException, InterruptedException {
         Message message = (Message) input.readObject();
@@ -59,11 +66,10 @@ public class clientHandler implements Runnable {
                 String module_name = message.getModule();
                 ArrayList<String> times = message.getListOfTimes();
 
-                // booking module
-                if (!Server.programmeExists(Programme_name)) {
+                if (!server.programmeExists(Programme_name)) {
                     server.getProgrammes().add(new Programme(Programme_name));
                 }
-                Programme programme = Server.getProgramme(Programme_name);
+                Programme programme = server.getProgramme(Programme_name);
                 assert programme != null;
                 if (programme.getModule(module_name) == null) {
                     programme.addModule(module_name);
@@ -89,6 +95,7 @@ public class clientHandler implements Runnable {
                 RESPONSE.setCONTENTS("Programme : " + Programme_name + "\nBOOKED TIMES +  " + message.getListOfTimes().toString());
                 //format this ^
                 output.writeObject(RESPONSE);
+                output.flush();
                 break;
             case "VIEW":
                 String viewDay = message.getDay();
@@ -105,13 +112,14 @@ public class clientHandler implements Runnable {
                     // if it's not the remove option we show times from room
                     listOfTakenTimes.addAll(room_times.getTakenTimes());
                 }
-                if (Server.getProgramme(viewProgramme) == null) {
-                    Server.programmes.add(new Programme(viewProgramme));
+                if (server.getProgramme(viewProgramme) == null) {
+                    server.programmes.add(new Programme(viewProgramme));
                 }
-                listOfTakenTimes.addAll(Server.getProgramme(viewProgramme).getTakenTimes(viewDay));
+                listOfTakenTimes.addAll(server.getProgramme(viewProgramme).getTakenTimes(viewDay));
                 Message responseView = new Message("VIEW");
                 responseView.setListOfTimes(listOfTakenTimes);
                 output.writeObject(responseView);
+                output.flush();
                 break;
 
             case "REMOVE":
@@ -127,7 +135,7 @@ public class clientHandler implements Runnable {
                 if (removeRoomDay == null) {
                     throw new IncorrectActionException("No bookings for this room");
                 }
-                ScheduleDay removeModuleDay = Server.getProgramme(removeProgramme).getModule(removeModule).getDay(removeDay);
+                ScheduleDay removeModuleDay = server.getProgramme(removeProgramme).getModule(removeModule).getDay(removeDay);
 
                 for (String t : removeTimes) {
                     removeRoomDay.getTimeSlot(t).freeSlot();
@@ -138,22 +146,35 @@ public class clientHandler implements Runnable {
                 output.writeObject(removeResponse);
                 break;
             case "DISPLAY":
-                if (!Server.programmeExists(message.getProgramme_NAME())) {
+                if (!server.programmeExists(message.getProgramme_NAME())) {
                     Message displayResponse = new Message("ERROR");
                     displayResponse.setCONTENTS("Programme does not exist");
                     output.writeObject(displayResponse);
                     break;
                 }
-
-                Programme displayProgramme = Server.getProgramme(message.getProgramme_NAME());
+                Programme displayProgramme = server.getProgramme(message.getProgramme_NAME());
+                var x = displayProgramme;
                 Message displayProgrammeResponse = new Message("SUCCESS");
                 displayProgrammeResponse.setCONTENTS("Programme exists, timetable will be displayed");
                 displayProgrammeResponse.setProgrammeObject(displayProgramme);
+                output.reset(); // java is so bad
                 output.writeObject(displayProgrammeResponse);
                 break;
-            case "EARLY":
-                String earlyProgramme = message.getProgramme_NAME();
+            case "EARLY LECTURE":
+                String earlyProgrammeName = message.getProgramme_NAME();
+                if (!server.programmeExists(earlyProgrammeName)) {
+                    throw new IncorrectActionException("Programme does not exist");
+                }
+                System.out.println(7777);
+                Programme earlyProgramme = server.getProgramme(earlyProgrammeName);
+                assert earlyProgramme != null;
 
+                ForkJoinPool fjPool = new ForkJoinPool();
+                ForkJoinPool.commonPool().invoke(new EarlyLectures(earlyProgramme, 0, earlyProgramme.getModules().size()));
+                Message earlyResponse = new Message("SUCCESS");
+                earlyResponse.setCONTENTS("All lectures that in programme : " + earlyProgrammeName + " have been moved to earliest possible time.");
+                output.writeObject(earlyResponse);
+                output.flush();
                 break;
             case "STOP":
                 System.out.println("Stopping server as requested by client");

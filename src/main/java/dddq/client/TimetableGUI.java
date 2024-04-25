@@ -13,7 +13,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 
-import java.util.ArrayList;
 
 public class TimetableGUI  {
 
@@ -63,18 +62,17 @@ public class TimetableGUI  {
         }
 
 
-
         // Time slots
         for (int day = 1; day <= 5; day++) {
             //TODO: remove 18:00 from everywhere i think?
             for (int time = 1; time <= 9; time++) {
                 TextArea textField = new TextArea();
-                for(Module m:programme.getModules()){
-                   ScheduleDay currentDay= m.getDay(days[day-1]);
-                   TimeSlot currentTime = currentDay.getTimeSlot(times_string[time-1]);
-                     if(currentTime.isTaken()){
-                          textField.setText(currentTime.getModule() + "\n" + currentTime.getRoom());
-                     }
+                for (Module m : programme.getModules()) {
+                    ScheduleDay currentDay = m.getDay(days[day - 1]);
+                    TimeSlot currentTime = currentDay.getTimeSlot(times_string[time - 1]);
+                    if (currentTime.isTaken()) {
+                        textField.setText(currentTime.getModule() + "\n" + currentTime.getRoom());
+                    }
                 }
                 //Could make the taken slots a different colour text from available ?
                 textField.setPrefWidth(100);

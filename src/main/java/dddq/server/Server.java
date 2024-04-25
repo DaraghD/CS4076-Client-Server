@@ -17,7 +17,7 @@ public class Server {
     static Socket link;
     static ConcurrentHashMap<String, ConcurrentHashMap<String, ScheduleDay>> roomTimetable = new ConcurrentHashMap<>(); // DAY : ( ROOM : SCHEDULE FOR THAT ROOM)
     static String[] dayOfTheWeek = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
-    static CopyOnWriteArrayList<Programme> programmes = new CopyOnWriteArrayList<Programme>(); // Stores all programmes, which have their own modules that have timetable for that module
+    CopyOnWriteArrayList<Programme> programmes = new CopyOnWriteArrayList<Programme>(); // Stores all programmes, which have their own modules that have timetable for that module
 
     // still need a room timetable to make sure room isnt booked before adding module ?
     // need to check if room is booked before adding module
@@ -30,7 +30,8 @@ public class Server {
         return roomTimetable;
     }
 
-    public static boolean programmeExists(String name){
+
+    public synchronized boolean programmeExists(String name){
         for(Programme p : programmes){
             if(p.getName().equals(name)){
                 return true;
@@ -38,7 +39,7 @@ public class Server {
         }
         return false;
     }
-    public static Programme getProgramme(String name){
+    public synchronized Programme getProgramme(String name){
         for(Programme p: programmes){
             if(p.getName().equals(name)){
                 return p;
@@ -81,16 +82,6 @@ public class Server {
                 e.printStackTrace();
             }
         }
-    }
-
-    int uniqueModules(ArrayList<String> modules) {
-        ArrayList<String> unique = new ArrayList<>();
-        for (String x : modules) {
-            if (!unique.contains(x)) {
-                unique.add(x);
-            }
-        }
-        return unique.size();
     }
 
     void saveData() throws IOException {
