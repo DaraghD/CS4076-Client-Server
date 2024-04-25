@@ -169,7 +169,6 @@ public class clientHandler implements Runnable {
                 Programme earlyProgramme = server.getProgramme(earlyProgrammeName);
                 assert earlyProgramme != null;
 
-                ForkJoinPool fjPool = new ForkJoinPool();
                 ForkJoinPool.commonPool().invoke(new EarlyLectures(earlyProgramme, 0, earlyProgramme.getModules().size()));
                 Message earlyResponse = new Message("SUCCESS");
                 earlyResponse.setCONTENTS("All lectures that in programme : " + earlyProgrammeName + " have been moved to earliest possible time.");

@@ -37,10 +37,12 @@ public class EarlyLectures extends RecursiveAction {
     }
 
     public void earlyModule(Module m) {
-        ExecutorService executor = Executors.newFixedThreadPool(5);
-
-
-
+        System.out.println(77777);
+        new Thread(new EarlyLectureThread(m.getDay("Monday"), "Monday")).start();
+        new Thread(new EarlyLectureThread(m.getDay("Tuesday"), "Tuesday")).start();
+        new Thread(new EarlyLectureThread(m.getDay("Wednesday"), "Wednesday")).start();
+        new Thread(new EarlyLectureThread(m.getDay("Thursday"), "Thursday")).start();
+        new Thread(new EarlyLectureThread(m.getDay("Friday"), "Friday")).start();
 
     }
 }

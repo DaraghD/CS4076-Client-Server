@@ -21,12 +21,16 @@ public class EarlyLectureThread implements Runnable {
     @Override
     public void run() {
         for (String time : timeArray) {
+            if(day.getTimeSlot(time).getRoom() == null){
+                continue;
+            }
             TimeSlot current = day.getTimeSlot(time);
             String currentRoom = current.getRoom();
             ScheduleDay roomTimetable = Server.roomTimetable.get(sDay).get(currentRoom);
 
             if (current.isTaken()) { // timeslot free for module and ROOM
                 String earliestTime = findEarliestFreeTime(time, roomTimetable);
+                System.out.println("Earliest :   " +earliestTime );
                 if(earliestTime == null){
                     continue;
                 }
