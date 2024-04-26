@@ -30,7 +30,7 @@ public class Controller {
         }
     }
 
-    private final int PORT = 1234;
+    private final int PORT = 4444;
     private static Model model;
     private static View view;
     Socket link;
@@ -174,7 +174,6 @@ public class Controller {
             Scene scene = button.getScene();
             Stage stage = (Stage) scene.getWindow();
             chosenTimesLabel.setText("Chosen Times : " + model.getTimes().toString());
-            //might need some submit logic here ?>
             stage.close();
         }
     }
@@ -237,7 +236,7 @@ public class Controller {
             request.setROOM_NUMBER(model.getRoom_name());
             request.setProgramme_NAME(model.getProgramme_name());
 
-            // this is where javafx.concurrent is used for spec, I/O bound operations are taken into a seperate thread.
+            // this is where javafx.concurrent is used for spec, I/O bound operations are taken into a separate thread.
             MessageTask messageTask = new MessageTask(request, in, out);
             new Thread(messageTask).start();
             messageTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {

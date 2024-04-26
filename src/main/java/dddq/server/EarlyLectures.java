@@ -9,11 +9,13 @@ public class EarlyLectures extends RecursiveAction {
     Programme programme;
     int start;
     int end;
+    Server server;
     CopyOnWriteArrayList<Module> modules;
-    static final int SEQUENTIAL_CUTOFF = 1000; // Threshold for sequential processing
+    static final int SEQUENTIAL_CUTOFF = 2; // Recommended higher but low to force fork join to occur for demonstration purposes
 
-    EarlyLectures(Programme p, int start, int end) {
+    EarlyLectures(Programme p, int start, int end,Server server) {
         this.programme = p;
+        this.server = server;
         this.start = start;
         this.end = end;
         this.modules = p.getModules();
@@ -28,8 +30,8 @@ public class EarlyLectures extends RecursiveAction {
             }
         } else {
             int mid = (start + end) / 2;
-            EarlyLectures left = new EarlyLectures(programme, start, mid);
-            EarlyLectures right = new EarlyLectures(programme, mid, end);
+            EarlyLectures left = new EarlyLectures(programme, start, mid,server);
+            EarlyLectures right = new EarlyLectures(programme, mid, end, server);
             left.fork();
             right.compute();
             left.join();
@@ -37,12 +39,11 @@ public class EarlyLectures extends RecursiveAction {
     }
 
     public void earlyModule(Module m) {
-        System.out.println(77777);
-        new Thread(new EarlyLectureThread(m.getDay("Monday"), "Monday")).start();
-        new Thread(new EarlyLectureThread(m.getDay("Tuesday"), "Tuesday")).start();
-        new Thread(new EarlyLectureThread(m.getDay("Wednesday"), "Wednesday")).start();
-        new Thread(new EarlyLectureThread(m.getDay("Thursday"), "Thursday")).start();
-        new Thread(new EarlyLectureThread(m.getDay("Friday"), "Friday")).start();
+        new Thread(new EarlyLectureThread(server,m.getDay("Monday"), "Monday")).start();
+        new Thread(new EarlyLectureThread(server,m.getDay("Tuesday"), "Tuesday")).start();
+        new Thread(new EarlyLectureThread(server,m.getDay("Wednesday"), "Wednesday")).start();
+        new Thread(new EarlyLectureThread(server,m.getDay("Thursday"), "Thursday")).start();
+        new Thread(new EarlyLectureThread(server,m.getDay("Friday"), "Friday")).start();
 
     }
 }

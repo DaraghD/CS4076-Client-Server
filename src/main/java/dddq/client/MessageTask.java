@@ -18,7 +18,6 @@ public class MessageTask extends Task<Message> {
         this.in = in;
     }
 
-
     @Override
     protected Message call() throws Exception {
         out.writeObject(message);

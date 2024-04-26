@@ -35,6 +35,9 @@ public class clientHandler implements Runnable {
                     processClientMessage(input, output);
                     server.saveData();
                 } catch (IOException | InterruptedException | ClassNotFoundException | IncorrectActionException e) {
+                    System.out.println("\n\n\n\n\n\n");
+                    e.printStackTrace();
+                    System.out.println("\n\n\n\n\n\n");
                     var x = new Message("ERROR");
                     x.setCONTENTS(e.getMessage());
                     try {
@@ -55,11 +58,9 @@ public class clientHandler implements Runnable {
     private void processClientMessage(ObjectInputStream input, ObjectOutputStream output) throws ClassNotFoundException, IncorrectActionException, IOException, InterruptedException {
         Message message = (Message) input.readObject();
         System.out.println(message); // debug
-//        Thread.sleep(2000);  for testing delay on server for javafx.concurrent, keep here in case need to show it during interview
-
+//        Thread.sleep(5000);  //5 second delay for testing delay on server for javafx.concurrent, keep here in case need to show it during interview
         switch (message.getOPTION()) {
             case "ADD":
-                //room,Programme, day, list of times, class
                 String room = message.getROOM_NUMBER();
                 String Programme_name = message.getProgramme_NAME();
                 String day = message.getDay();
@@ -80,7 +81,7 @@ public class clientHandler implements Runnable {
 
 
                 // updating room tiemtable
-                ScheduleDay roomDay = Server.roomTimetable.get(day).computeIfAbsent(room, k -> {
+                ScheduleDay roomDay = server.getRoomTimetable().get(day).computeIfAbsent(room, k -> {
                     // gets timetable for day, puts new _room_ key with value as this new schedule day for that room
                     // day : ( room : scheduleDay )
                     return new ScheduleDay(room, true);
@@ -105,7 +106,7 @@ public class clientHandler implements Runnable {
 
                 // checks for classes on at that programme day , and that room, cant have two classes on at same day for programme
 
-                ScheduleDay room_times = Server.roomTimetable.get(viewDay).computeIfAbsent(viewRoom, k -> {
+                ScheduleDay room_times =server.getRoomTimetable().get(viewDay).computeIfAbsent(viewRoom, k -> {
                     return new ScheduleDay(viewRoom, true);
                 });
                 if (!message.getCONTENTS().equals("r")) {
@@ -113,7 +114,7 @@ public class clientHandler implements Runnable {
                     listOfTakenTimes.addAll(room_times.getTakenTimes());
                 }
                 if (server.getProgramme(viewProgramme) == null) {
-                    server.programmes.add(new Programme(viewProgramme));
+                    server.getProgrammes().add(new Programme(viewProgramme));
                 }
                 listOfTakenTimes.addAll(server.getProgramme(viewProgramme).getTakenTimes(viewDay));
                 Message responseView = new Message("VIEW");
@@ -127,11 +128,10 @@ public class clientHandler implements Runnable {
                 String removeRoom = message.getROOM_NUMBER();
                 String removeProgramme = message.getProgramme_NAME();
                 String removeModule = message.getModule();
-                assert removeModule != null; //TODO: make sure client can pass in module
-                //remove - need room , time(multiple?), module, Programme
+                assert removeModule != null;
                 ArrayList<String> removeTimes = message.getListOfTimes();
 
-                ScheduleDay removeRoomDay = Server.roomTimetable.get(removeDay).get(removeRoom);
+                ScheduleDay removeRoomDay = server.getRoomTimetable().get(removeDay).get(removeRoom);
                 if (removeRoomDay == null) {
                     throw new IncorrectActionException("No bookings for this room");
                 }
@@ -153,7 +153,6 @@ public class clientHandler implements Runnable {
                     break;
                 }
                 Programme displayProgramme = server.getProgramme(message.getProgramme_NAME());
-                var x = displayProgramme;
                 Message displayProgrammeResponse = new Message("SUCCESS");
                 displayProgrammeResponse.setCONTENTS("Programme exists, timetable will be displayed");
                 displayProgrammeResponse.setProgrammeObject(displayProgramme);
@@ -161,19 +160,27 @@ public class clientHandler implements Runnable {
                 output.writeObject(displayProgrammeResponse);
                 break;
             case "EARLY LECTURE":
-                String earlyProgrammeName = message.getProgramme_NAME();
-                if (!server.programmeExists(earlyProgrammeName)) {
+                String earlyProgrammeName= message.getProgramme_NAME();
+                if(!server.programmeExists(earlyProgrammeName)){
                     throw new IncorrectActionException("Programme does not exist");
                 }
-                System.out.println(7777);
-                Programme earlyProgramme = server.getProgramme(earlyProgrammeName);
-                assert earlyProgramme != null;
+                // Decouple early lecture from main thread
+                //Specification asked for javafx.concurrent? No gui for server, javafx.concurrent used only on client, Thread accomplishes same thing here
+                Thread earlyThread = new Thread(()->{
+                    Programme earlyProgramme = server.getProgramme(earlyProgrammeName);
+                    assert earlyProgramme != null;
 
-                ForkJoinPool.commonPool().invoke(new EarlyLectures(earlyProgramme, 0, earlyProgramme.getModules().size()));
-                Message earlyResponse = new Message("SUCCESS");
-                earlyResponse.setCONTENTS("All lectures that in programme : " + earlyProgrammeName + " have been moved to earliest possible time.");
-                output.writeObject(earlyResponse);
-                output.flush();
+                    ForkJoinPool.commonPool().invoke(new EarlyLectures(earlyProgramme,0,earlyProgramme.getModules().size(),server));
+                    Message earlyResponse = new Message("SUCCESS");
+                    earlyResponse.setCONTENTS("All lectures that in programme : " + earlyProgrammeName + " have been moved to earliest possible time.");
+                    try {
+                        output.writeObject(earlyResponse);
+                        output.flush();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+                earlyThread.start();
                 break;
             case "STOP":
                 System.out.println("Stopping server as requested by client");

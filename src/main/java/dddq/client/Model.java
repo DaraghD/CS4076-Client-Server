@@ -18,9 +18,6 @@ public class Model {
     private boolean debug;
     private Controller controller;
 
-    // I don't think model needs controller or view?
-    //if it does just create setters and set in main
-
 
     Model(boolean debug) {
         this.debug = debug;
@@ -36,7 +33,6 @@ public class Model {
     public void setView(View v){
         view=v;
     }
-
     // These variables contain the state of the programme.
     private StringProperty room_name = new SimpleStringProperty();
     private StringProperty programme_name = new SimpleStringProperty();
@@ -100,7 +96,6 @@ public class Model {
 
     public void setTimes(ArrayList<String> times) {
         this.times = times;
-        //maybe move this around >
         view.getChosenTimesLabel().setText("Chosen Times : " + times.toString());
     }
 

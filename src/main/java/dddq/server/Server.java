@@ -11,19 +11,18 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Server {
-    // TODO: make thread safe / synchronized, probably have to use wait & notify
-    private static final int PORT = 1234;
+    private static final int PORT = 4444;
     static String filePath = "database.ser"; // .ser needed (windows)
     static Socket link;
-    static ConcurrentHashMap<String, ConcurrentHashMap<String, ScheduleDay>> roomTimetable = new ConcurrentHashMap<>(); // DAY : ( ROOM : SCHEDULE FOR THAT ROOM)
+    private ConcurrentHashMap<String, ConcurrentHashMap<String, ScheduleDay>> roomTimetable = new ConcurrentHashMap<>(); // DAY : ( ROOM : SCHEDULE FOR THAT ROOM)
     static String[] dayOfTheWeek = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
-    CopyOnWriteArrayList<Programme> programmes = new CopyOnWriteArrayList<Programme>(); // Stores all programmes, which have their own modules that have timetable for that module
+    private CopyOnWriteArrayList<Programme> programmes = new CopyOnWriteArrayList<Programme>(); // Stores all programmes, which have their own modules that have timetable for that module
 
-    public CopyOnWriteArrayList<Programme> getProgrammes() {
+    public synchronized CopyOnWriteArrayList<Programme> getProgrammes() {
         return programmes;
     }
 
-    public ConcurrentHashMap<String, ConcurrentHashMap<String, ScheduleDay>> getRoomTimetable() {
+    public synchronized ConcurrentHashMap<String, ConcurrentHashMap<String, ScheduleDay>> getRoomTimetable() {
         return roomTimetable;
     }
 
@@ -81,8 +80,8 @@ public class Server {
     }
 
     void saveData() throws IOException {
-        // save data to disk
-        //order matters ?
+        //save data to disk
+        //order matters
         FileOutputStream fileOut = new FileOutputStream(filePath);
         ObjectOutputStream out = new ObjectOutputStream(fileOut);
         out.writeObject(programmes);

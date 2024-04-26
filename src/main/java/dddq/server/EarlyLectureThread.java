@@ -12,10 +12,12 @@ public class EarlyLectureThread implements Runnable {
     };
     ScheduleDay day;
     String sDay;
+    Server server;
 
-    EarlyLectureThread(ScheduleDay day, String dayString) {
+    EarlyLectureThread(Server server,ScheduleDay day, String dayString) {
         this.day = day;
         this.sDay = dayString;
+        this.server = server;
     }
 
     @Override
@@ -26,7 +28,7 @@ public class EarlyLectureThread implements Runnable {
             }
             TimeSlot current = day.getTimeSlot(time);
             String currentRoom = current.getRoom();
-            ScheduleDay roomTimetable = Server.roomTimetable.get(sDay).get(currentRoom);
+            ScheduleDay roomTimetable = server.getRoomTimetable().get(sDay).get(currentRoom);
 
             if (current.isTaken()) { // timeslot free for module and ROOM
                 String earliestTime = findEarliestFreeTime(time, roomTimetable);
